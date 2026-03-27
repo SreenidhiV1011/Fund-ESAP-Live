@@ -808,7 +808,7 @@ function renderT(){
   var tb=document.getElementById('tb');
   if(!fil.length){tb.innerHTML='<tr><td colspan="5"><div class="empty-s"><div class="ei">&#128203;</div><div class="et">No items</div><div class="es">Try a different filter or add action items</div></div></td></tr>';return;}
 
-  tb.innerHTML=fil.map(function(item,idx){
+  tb.innerHTML=fil.map(function(item,rowNum){
     var rd=resolveDL(item,c),d=daysTo(rd);
     var rc=item.status==='done'?'done':'';
     if(item.status!=='done'){if(d!==null&&d<0)rc+=' ov';else if(d!==null&&d<=15)rc+=' due-soon';}
@@ -820,36 +820,71 @@ function renderT(){
       else if(d<=15){bt=d+'d left';bc='dbg-w';}
     }
     var dlCell='';
-    if(item.deadlineDays!=null){dlCell='<div class="dl-date '+dlc+'">'+(rd?fmtDate(rd):'Set start date')+'</div><div class="dl-sub">Day '+item.deadlineDays+'</div>';}
-    else if(item.deadlineDate){dlCell='<div class="dl-date '+dlc+'">'+fmtDate(item.deadlineDate)+'</div>';}
-    else{dlCell='<div class="dl-ok" style="color:var(--txtf)">--</div><div class="dl-sub" style="cursor:pointer;color:var(--acc)" onclick="inlineSetDays(\''+item.id+'\')">+ set deadline</div>';}
-    if(bt)dlCell+='<div><span class="dbg '+bc+'">'+bt+'</span></div>';
+    if(item.deadlineDays!=null){
+      dlCell='<div class="dl-date '+dlc+'">'+(rd?fmtDate(rd):'Set start date')+'</div>'
+        +'<div class="dl-sub">Day '+item.deadlineDays+'</div>';
+    } else if(item.deadlineDate){
+      dlCell='<div class="dl-date '+dlc+'">'+fmtDate(item.deadlineDate)+'</div>';
+    } else {
+      dlCell='<div style="color:var(--txtf)">--</div>'
+        +'<div class="dl-sub dl-set" data-id="'+item.id+'" style="cursor:pointer;color:var(--acc)">+ set deadline</div>';
+    }
+    if(bt) dlCell+='<div><span class="dbg '+bc+'">'+bt+'</span></div>';
 
-    var iid=item.id,com=item.comment||'';
-    var ch='<div class="com-area"><div class="com-disp'+(com?'':' emp')+'" id="cd-'+iid+'" onclick="editCom(\''+iid+'\')">'+(com?esc(com):'+ Add note...')+'</div>'
-      +'<div id="ce-'+iid+'" style="display:none"><textarea class="com-inp" id="ct-'+iid+'" rows="2">'+esc(com)+'</textarea>'
-      +'<div class="com-row"><button class="com-save" onclick="saveCom(\''+iid+'\')">Save</button><button class="com-cancel" onclick="cancelCom(\''+iid+'\')">Cancel</button></div></div></div>';
+    var iid=item.id, com=item.comment||'';
+    var ch='<div class="com-area">'
+      +'<div class="com-disp'+(com?'':' emp')+' cdp" id="cd-'+iid+'" data-id="'+iid+'">'+(com?esc(com):'+ Add note...')+'</div>'
+      +'<div id="ce-'+iid+'" style="display:none">'
+      +'<textarea class="com-inp" id="ct-'+iid+'" rows="2">'+esc(com)+'</textarea>'
+      +'<div class="com-row">'
+      +'<button class="com-save csave" data-id="'+iid+'">Save</button>'
+      +'<button class="com-cancel ccancel" data-id="'+iid+'">Cancel</button>'
+      +'</div></div></div>';
 
-    var ab=item.status!=='done'
-      ?'<button class="btn btn-pri btn-xs" onclick="markDone(\''+iid+'\')">&#10003; Done</button>'
-      :'<button class="btn btn-red btn-xs" onclick="markPend(\''+iid+'\')">&#8617; Reopen</button>';
+    var actBtn=item.status!=='done'
+      ?'<button class="btn btn-pri btn-xs bdone" data-id="'+iid+'">&#10003; Done</button>'
+      :'<button class="btn btn-red btn-xs bpend" data-id="'+iid+'">&#8617; Reopen</button>';
 
-    return'<tr class="'+rc+'">'
-      +'<td class="td-num">'+(idx+1)+'</td>'
+    return '<tr class="'+rc+'">'
+      +'<td class="td-num">'+(rowNum+1)+'</td>'
       +'<td class="td-action">'
-      +'<div class="action-text" id="at-'+iid+'" contenteditable="false" onclick="startEditAction(\''+iid+'\')" title="Click to edit">'+esc(item.action)+'</div>'
-      +'<div class="action-edit-hint">Click to edit</div>'
-      +ch+'</td>'
+        +'<div class="action-text aed" id="at-'+iid+'" data-id="'+iid+'" contenteditable="false" title="Click to edit">'+esc(item.action)+'</div>'
+        +'<div class="action-edit-hint">Click to edit</div>'
+        +ch
+      +'</td>'
       +'<td class="td-dl">'+dlCell+'</td>'
       +'<td><span class="pill '+(item.status==='done'?'pill-d':'pill-p')+'">'+(item.status==='done'?'&#10003; Done':'Pending')+'</span></td>'
-      +'<td class="td-act"><div class="abg">'+ab+'</div></td></tr>';
+      +'<td class="td-act"><div class="abg">'+actBtn+'</div></td>'
+      +'</tr>';
   }).join('');
-}
+
+  // Event delegation — no inline onclicks, safe for any text content
+  tb.onclick=function(e){
+    var el=e.target;
+    var id=el.dataset.id||(el.closest('[data-id]')&&el.closest('[data-id]').dataset.id);
+    if(!id) return;
+    if(el.classList.contains('bdone')){markDone(id);return;}
+    if(el.classList.contains('bpend')){markPend(id);return;}
+    if(el.classList.contains('cdp')){editCom(id);return;}
+    if(el.classList.contains('csave')){saveCom(id);return;}
+    if(el.classList.contains('ccancel')){cancelCom(id);return;}
+    if(el.classList.contains('dl-set')){inlineSetDays(id);return;}
+    if(el.classList.contains('aed')||el.closest('.aed')){
+      var aEl=el.classList.contains('aed')?el:el.closest('.aed');
+      if(aEl) startEditAction(aEl.dataset.id);
+      return;
+    }
+  };
+
 
 // ── INLINE EDIT ACTION TEXT ───────────────────────────────
 function startEditAction(iid){
   var el=document.getElementById('at-'+iid);
+  if(!el)return;
+  if(el.contentEditable==='true')return; // already editing
   el.contentEditable='true';el.focus();
+  // move cursor to end
+  try{var r=document.createRange();r.selectNodeContents(el);r.collapse(false);var s=window.getSelection();s.removeAllRanges();s.addRange(r);}catch(e){}
   el.onblur=function(){
     el.contentEditable='false';
     var c=coById(curId);if(!c)return;
@@ -981,7 +1016,23 @@ function parseExcelCSV(file,ext){
     try{
       var wb=XLSX.read(ev.target.result,{type:'array'});
       var ws=wb.Sheets[wb.SheetNames[0]];
-      rawAOA=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      // Use header:'A' to get column-letter keys, then convert to
+      // proper 0-indexed arrays anchored at column A regardless of sheet origin
+      var rawObj=XLSX.utils.sheet_to_json(ws,{header:'A',defval:''});
+      // Find the column range from the sheet ref
+      var ref=ws['!ref']||'A1';
+      var range=XLSX.utils.decode_range(ref);
+      var minCol=range.s.c; // e.g. 1 if sheet starts at column B
+      var maxCol=range.e.c;
+      // Rebuild rawAOA so index 0 = column A always (pad with empty strings)
+      rawAOA=rawObj.map(function(row){
+        var arr=[];
+        for(var ci=0;ci<=maxCol;ci++){
+          var colLetter=XLSX.utils.encode_col(ci);
+          arr.push(row[colLetter]!==undefined?row[colLetter]:'');
+        }
+        return arr;
+      });
       // Find header row — scan each cell individually (handles leading quotes + merged cells)
       var hdrIdx=-1;
       for(var r=0;r<Math.min(rawAOA.length,12);r++){
