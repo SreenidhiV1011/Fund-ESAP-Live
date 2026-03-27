@@ -351,11 +351,20 @@ window.addEventListener('load', function(){
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.firestore();
-    // Enable offline persistence so it works even with brief network drops
-    db.enablePersistence({synchronizeTabs:true}).catch(function(){});
+    // Enable offline persistence (failure here is non-fatal, ignore it)
+    db.enablePersistence({synchronizeTabs:true}).catch(function(e){
+      console.warn('Persistence unavailable:', e.code);
+    });
     startListener();
   } catch(e) {
-    showBootError(e);
+    console.error('Init error:', e);
+    // Don't show boot error for non-critical failures — try connecting anyway
+    if(e.code === 'app/duplicate-app'){
+      db = firebase.firestore();
+      startListener();
+    } else {
+      showBootError(e);
+    }
   }
 });
 
@@ -373,6 +382,7 @@ function showApp(){
 
 // ── FIRESTORE LISTENER ─────────────────────────────────
 function startListener(){
+  if(!db){ toast('Database not initialized'); return; }
   setSyncStatus('loading','Connecting...');
   unsubscribe = db.collection('companies').orderBy('createdAt','asc').onSnapshot(function(snap){
     companies = [];
