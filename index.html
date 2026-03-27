@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════
-//  CLEAN AUTO-FIREBASE VERSION (NO SETUP SCREEN)
+// CLEAN AUTO-FIREBASE VERSION
 // ══════════════════════════════════════════════════════
 
 var db = null;
@@ -9,12 +9,12 @@ var curF = 'all', curId = null, dF = 'all', delId = null;
 var pendingUpload = null, pendingFileName = '';
 var notifications = [];
 
-// 🔥 FIREBASE CONFIG (PUT YOUR REAL VALUES)
+// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyB8J-qZ9g76-_GDqitqX5M5dVaogFMQMFs",
   authDomain: "esap-9c987.firebaseapp.com",
   projectId: "esap-9c987",
-  storageBucket: "esap-9c987.firebasestorage.app",
+  storageBucket: "esap-9c987.appspot.com",
   messagingSenderId: "41120222356",
   appId: "1:41120222356:web:cc7d174b4277dadb997881"
 };
@@ -26,7 +26,7 @@ db = firebase.firestore();
 // 🚀 AUTO LOAD APP
 document.addEventListener("DOMContentLoaded", function () {
 
-  // Remove setup screen completely
+  // Remove setup screen
   var setup = document.getElementById('setup-screen');
   if (setup) setup.remove();
 
@@ -34,65 +34,68 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById('main-app').style.display = 'block';
 
   setSyncStatus('live', 'Live');
+
   startListener();
 });
 
 // ── FIRESTORE LISTENER ────────────────────────────────
-function startListener(){
-  if(unsubscribe) unsubscribe();
+function startListener() {
+  if (unsubscribe) unsubscribe();
 
   setSyncStatus('', 'Syncing...');
 
   unsubscribe = db.collection('companies')
-    .orderBy('createdAt','asc')
-    .onSnapshot(function(snap){
+    .orderBy('createdAt', 'asc')
+    .onSnapshot(function (snap) {
 
       companies = [];
 
-      snap.forEach(function(doc){
+      snap.forEach(function (doc) {
         var d = doc.data();
         d.id = doc.id;
         companies.push(d);
       });
 
-      setSyncStatus('live','Live • '+companies.length+' companies');
+      setSyncStatus('live', 'Live • ' + companies.length + ' companies');
 
-      if(typeof renderDash === "function") renderDash();
-      if(typeof refreshN === "function") refreshN();
+      if (typeof renderDash === "function") renderDash();
+      if (typeof refreshN === "function") refreshN();
 
-      if(curId && document.getElementById('vdet')?.classList.contains('on')){
-        var c = companies.find(function(x){return x.id===curId;});
-        if(c && typeof renderT === "function") renderT();
-        else if(typeof goBack === "function") goBack();
+      if (curId && document.getElementById('vdet')?.classList.contains('on')) {
+        var c = companies.find(function (x) { return x.id === curId; });
+        if (c && typeof renderT === "function") renderT();
+        else if (typeof goBack === "function") goBack();
       }
 
-    }, function(err){
+    }, function (err) {
       console.error(err);
-      setSyncStatus('err','Connection error');
+      setSyncStatus('err', 'Connection error');
     });
 }
 
 // ── FIRESTORE HELPERS ────────────────────────────────
-function fsSet(companyId, data){
-  return db.collection('companies').doc(companyId).set(data, {merge:true});
+function fsSet(companyId, data) {
+  return db.collection('companies').doc(companyId).set(data, { merge: true });
 }
-function fsAdd(data){
+
+function fsAdd(data) {
   return db.collection('companies').add(data);
 }
-function fsDel(companyId){
+
+function fsDel(companyId) {
   return db.collection('companies').doc(companyId).delete();
 }
 
 // ── SYNC STATUS ──────────────────────────────────────
-function setSyncStatus(state, label){
+function setSyncStatus(state, label) {
   var dot = document.getElementById('sync-dot');
   var lbl = document.getElementById('sync-label');
 
-  if(dot){
-    dot.className = 'sync-dot' + (state==='live'?' live':state==='err'?' err':'');
+  if (dot) {
+    dot.className = 'sync-dot' + (state === 'live' ? ' live' : state === 'err' ? ' err' : '');
   }
 
-  if(lbl){
+  if (lbl) {
     lbl.textContent = label;
   }
 }
