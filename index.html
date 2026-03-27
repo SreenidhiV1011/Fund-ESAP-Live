@@ -587,8 +587,8 @@ function parseTL(raw){
     if(raw>40000){var xd=new Date(Math.round((raw-25569)*86400000));if(!isNaN(xd))return{date:xd.toISOString().slice(0,10)};}
     return null;
   }
-  // Clean all whitespace variants including \n \r \t from Excel cells
-  var s=String(raw).replace(/[\r\n\t]/g,' ').trim().replace(/\s+/g,' ');
+  // Strip leading quote (Excel formula artifact) then clean whitespace
+  var s=String(raw).replace(/^'+/,'').replace(/[\r\n\t]/g,' ').trim().replace(/\s+/g,' ');
   if(!s)return null;
   // "120 days", "120 Days\n", "within 120 days", "120 days from start" — extract number
   var dm=s.match(/(\d+)\s*days?/i);
@@ -982,26 +982,30 @@ function parseExcelCSV(file,ext){
       var wb=XLSX.read(ev.target.result,{type:'array'});
       var ws=wb.Sheets[wb.SheetNames[0]];
       rawAOA=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-      // Find header row — must contain BOTH an action-like AND a timeline-like column
+      // Find header row — scan each cell individually (handles leading quotes + merged cells)
       var hdrIdx=-1;
       for(var r=0;r<Math.min(rawAOA.length,12);r++){
-        var rs=rawAOA[r].join('|').toLowerCase();
-        var hasAction=rs.includes('action')||rs.includes('description');
-        var hasTimeline=rs.includes('timeline')||rs.includes('deadline')||rs.includes('days');
-        if(hasAction&&hasTimeline){hdrIdx=r;break;}
+        var rowHasAction=false,rowHasTimeline=false;
+        for(var ci=0;ci<rawAOA[r].length;ci++){
+          // Strip leading quote artifact before checking
+          var cv=String(rawAOA[r][ci]||'').replace(/^'+/,'').trim().toLowerCase();
+          if(cv==='actions'||cv==='action'||cv==='action item'||cv==='description')rowHasAction=true;
+          if(cv==='timeline'||cv==='deadline'||cv==='days'||cv==='duration')rowHasTimeline=true;
+        }
+        if(rowHasAction&&rowHasTimeline){hdrIdx=r;break;}
       }
-      // Fallback: find first row that has 'action' as a cell value (not in text)
+      // Fallback: row that has exact cell value 'actions' or 'action item'
       if(hdrIdx<0){
         for(var r=0;r<Math.min(rawAOA.length,12);r++){
           for(var ci=0;ci<rawAOA[r].length;ci++){
-            var cell=String(rawAOA[r][ci]||'').trim().toLowerCase();
-            if(cell==='actions'||cell==='action'||cell==='action item'){hdrIdx=r;break;}
+            var cv2=String(rawAOA[r][ci]||'').replace(/^'+/,'').trim().toLowerCase();
+            if(cv2==='actions'||cv2==='action'||cv2==='action item'){hdrIdx=r;break;}
           }
           if(hdrIdx>=0)break;
         }
       }
       if(hdrIdx<0)hdrIdx=0;
-      parsedHeaders=rawAOA[hdrIdx].map(function(h){return String(h||'');});
+      parsedHeaders=rawAOA[hdrIdx].map(function(h){return String(h||'').replace(/^'+/,'').trim();});
       // Build col picker
       buildColPicker(parsedHeaders);
       // Auto-detect columns — match exact header names first, then partial
@@ -1049,11 +1053,22 @@ function buildRowsFromAOA(startRow,ac,tc,sc){
   parsedRows=[];
   for(var r=startRow;r<rawAOA.length;r++){
     var row=rawAOA[r];
-    var a=String(row[ac]||'').trim();
-    if(!a||a.length<3||/^\d+$/.test(a))continue;
-    if(['actions','action item','sr. no.','sr no','s.no'].includes(a.toLowerCase()))continue;
-    var tl=parseTL(row[tc]);
-    var sraw=sc>=0?String(row[sc]||'').trim():'';
+    // Strip leading quote (Excel formula artifact e.g. '120 days')
+    var a=String(row[ac]||'').replace(/^'+/,'').trim();
+    if(!a||a.length<3)continue;
+    // Skip pure numbers (serial numbers)
+    if(/^\d+$/.test(a))continue;
+    // Skip known header/label strings
+    var al=a.toLowerCase();
+    if(['actions','action item','sr. no.','sr no','s.no','action','reference'].includes(al))continue;
+    // Skip section header rows — short text with nothing in timeline column
+    var tlRaw=String(row[tc]||'').replace(/^'+/,'').trim();
+    var isSection=tlRaw===''&&a.length<40&&!a.includes('\n')&&Object.values(row).filter(function(v){return v!=null&&String(v).trim()!=='';}).length<=2;
+    if(isSection)continue;
+    // Parse timeline — strip leading quote first
+    var tl=parseTL(tlRaw);
+    // Status
+    var sraw=sc>=0?String(row[sc]||'').replace(/^'+/,'').trim():'';
     var ni={action:a,status:mapStatus(sraw)};
     if(tl){if(tl.days!=null)ni.deadlineDays=tl.days;else if(tl.date)ni.deadlineDate=tl.date;}
     parsedRows.push(ni);
