@@ -1028,7 +1028,23 @@ function showDet(id){
   document.getElementById('vd').classList.remove('on');document.getElementById('vdet').classList.add('on');
   renderT();
 }
-function goBack(){document.getElementById('vdet').classList.remove('on');document.getElementById('vd').classList.add('on');curId=null;renderDash();}
+function goBack(){
+  document.getElementById('vdet').classList.remove('on');
+  document.getElementById('vanalytics').style.display='none';
+  document.getElementById('vd').classList.add('on');
+  curId=null;
+  
+  // Reset navigation tabs to Dashboard
+  document.querySelectorAll('.nav-tab-btn').forEach(function(btn){
+    var isActive = btn.dataset.view === 'dashboard';
+    btn.classList.toggle('active', isActive);
+    btn.style.background = isActive ? 'var(--acc)' : 'var(--sur2)';
+    btn.style.color = isActive ? '#0b0e0d' : 'var(--txtm)';
+    btn.style.borderColor = isActive ? 'var(--acc)' : 'var(--bor)';
+  });
+  
+  renderDash();
+}
 function setDF(btn,f){dF=f;document.querySelectorAll('[data-df]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');renderT();}
 
 // ── START DATE ─────────────────────────────────────────
