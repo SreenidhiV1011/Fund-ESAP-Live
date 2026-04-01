@@ -380,6 +380,22 @@ td{padding:12px 16px;font-size:.82rem;vertical-align:top}
     <div class="empty-s" id="emp" style="display:none"><div class="ei">&#127807;</div><div class="et">No companies yet</div><div class="es">Add a company or upload an ESAP file to get started</div></div>
   </div>
 
+  
+  <!-- ANALYTICS VIEW -->
+  <div class="view" id="vanalytics" style="display:none">
+    <div class="dash-hd">
+      <div><div class="page-title">Analytics Dashboard</div><div class="page-sub">Performance metrics and insights</div></div>
+    </div>
+
+    <div style="margin-bottom:2rem">
+      <select class="finp" id="analyticsSelect" onchange="renderAnalytics()" style="max-width:350px">
+        <option value="all">🌐 Entire Fund Analytics</option>
+      </select>
+    </div>
+
+    <div id="analyticsContent"></div>
+  </div>
+
   <!-- DETAIL VIEW -->
   <div class="view" id="vdet">
     <div class="det-top">
@@ -405,6 +421,39 @@ td{padding:12px 16px;font-size:.82rem;vertical-align:top}
       <div class="ds"><div class="ds-lbl">Completed</div><div class="ds-val gc" id="dp2">0</div></div>
       <div class="ds"><div class="ds-lbl">Overdue</div><div class="ds-val rc" id="dp3">0</div></div>
     </div>
+    <!-- SPOC & EMAIL SECTION -->
+    <div style="background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:24px;margin:1.5rem 0">
+      <div style="font-size:1rem;font-weight:700;margin-bottom:16px">📧 Point of Contact & Nudge Settings</div>
+      
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:16px">
+        <div class="fg">
+          <label class="flbl">SPOC Name</label>
+          <input class="finp" id="spocName" placeholder="Enter contact name" onchange="updateSPOC()">
+        </div>
+        <div class="fg">
+          <label class="flbl">SPOC Email</label>
+          <input class="finp" id="spocEmail" type="email" placeholder="contact@company.com" onchange="updateSPOC()">
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="flbl">Additional Email Recipients</label>
+        <div id="emailChips" style="display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;min-height:50px">
+          <span style="color:var(--txtf);font-size:.8rem">No additional emails</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <input class="finp" id="newEmail" type="email" placeholder="Add email address..." style="flex:1">
+        <button class="btn btn-gh btn-sm" onclick="addEmail()">+ Add</button>
+      </div>
+
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--bor);display:flex;align-items:center;gap:12px">
+        <button class="btn btn-pri" onclick="openNudgeModal()" style="background:var(--warn)">📧 Send Nudge</button>
+        <span style="font-family:var(--font-mono);font-size:.7rem;color:var(--txtf)">Request implementation status update</span>
+      </div>
+    </div>
+
     <div class="tw">
       <div class="ttb">
         <div class="ttb-t">ESAP Action Items</div>
@@ -513,9 +562,37 @@ td{padding:12px 16px;font-size:.82rem;vertical-align:top}
   </div>
 </div>
 
+
+<!-- NUDGE MODAL -->
+<div class="ov-wrap" id="mnudge">
+  <div class="modal" style="width:600px">
+    <div class="modal-title">Send Implementation Status Nudge</div>
+    
+    <div class="fg">
+      <label class="flbl">Recipients</label>
+      <div id="nudgeRecipients" style="background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:12px;font-family:var(--font-mono);font-size:.75rem"></div>
+    </div>
+
+    <div class="fg">
+      <label class="flbl">Email Preview</label>
+      <div id="emailPreview" style="background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:16px;font-family:var(--font-mono);font-size:.75rem;line-height:1.8;white-space:pre-wrap;color:var(--txtm)"></div>
+    </div>
+
+    <div class="fg">
+      <label class="flbl">Custom Message (Optional)</label>
+      <textarea class="finp" id="customNudgeMsg" placeholder="Add any additional notes..." rows="4"></textarea>
+    </div>
+
+    <div class="fact">
+      <button class="btn btn-gh" onclick="closeM('mnudge')">Cancel</button>
+      <button class="btn btn-pri" onclick="confirmSendNudge()">📧 Send Email</button>
+    </div>
+  </div>
+</div>
+
 <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-app-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
@@ -1285,9 +1362,12 @@ document.querySelectorAll('.ov-wrap').forEach(function(o){o.addEventListener('cl
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.ov-wrap.open').forEach(function(m){m.classList.remove('open');});document.getElementById('nd').classList.remove('open');}});
 
 
-// Navigation function
+// ═══════════════════════════════════════════════════════
+//  ENHANCED FEATURES: Analytics, SPOC, Email Nudges
+// ═══════════════════════════════════════════════════════
+
+// ── NAVIGATION ─────────────────────────────────────────
 function switchMainView(view){
-  console.log('Switching to view:', view);
   document.querySelectorAll('.nav-tab-btn').forEach(function(btn){
     var isActive = btn.dataset.view === view;
     btn.classList.toggle('active', isActive);
@@ -1295,10 +1375,255 @@ function switchMainView(view){
     btn.style.color = isActive ? '#0b0e0d' : 'var(--txtm)';
     btn.style.borderColor = isActive ? 'var(--acc)' : 'var(--bor)';
   });
+  
+  document.getElementById('vd').style.display = view === 'dashboard' ? 'block' : 'none';
+  document.getElementById('vanalytics').style.display = view === 'analytics' ? 'block' : 'none';
+  document.getElementById('vdet').style.display = 'none';
+  
   if(view === 'analytics'){
-    alert('Analytics feature will be added here');
+    populateAnalyticsSelect();
+    renderAnalytics();
   }
 }
+
+// ── ANALYTICS ──────────────────────────────────────────
+function populateAnalyticsSelect(){
+  var sel = document.getElementById('analyticsSelect');
+  if(!sel) return;
+  sel.innerHTML = '<option value="all">🌐 Entire Fund Analytics</option>' +
+    companies.map(function(c){ 
+      return '<option value="'+c.id+'">'+esc(c.name)+' ('+esc(c.code||'N/A')+')</option>'; 
+    }).join('');
+}
+
+function renderAnalytics(){
+  var sel = document.getElementById('analyticsSelect');
+  var container = document.getElementById('analyticsContent');
+  if(!sel || !container) return;
+  
+  var selectedId = sel.value;
+  
+  if(selectedId === 'all'){
+    // Fund-wide analytics
+    var totalCompanies = companies.length;
+    var totalItems = companies.reduce(function(sum, c){ return sum + (c.items||[]).length; }, 0);
+    var completedItems = companies.reduce(function(sum, c){
+      return sum + (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
+    }, 0);
+    var avgProgress = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+    
+    container.innerHTML = '<div class="stats-row">'
+      +'<div class="sc"><div class="sc-label">Total Companies</div><div class="sc-val">'+totalCompanies+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Total Items</div><div class="sc-val">'+totalItems+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Completed</div><div class="sc-val">'+completedItems+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Avg Progress</div><div class="sc-val">'+avgProgress+'%</div></div>'
+      +'</div>'
+      +'<div class="tw" style="margin-top:2rem"><div class="ttb"><div class="ttb-t">Company Performance Breakdown</div></div>'
+      +'<table><thead><tr><th>Company</th><th>Total</th><th>Done</th><th>Pending</th><th>Progress</th></tr></thead><tbody>'
+      +companies.map(function(c){
+        var total = (c.items||[]).length;
+        var done = (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
+        var pending = total - done;
+        var prog = total > 0 ? Math.round((done/total)*100) : 0;
+        return '<tr style="cursor:pointer" onclick="showDetFromAnalytics(\''+c.id+'\')">'
+          +'<td><strong>'+esc(c.name)+'</strong><br><span style="font-size:.7rem;color:var(--txtf)">'+esc(c.code||'N/A')+'</span></td>'
+          +'<td>'+total+'</td><td>'+done+'</td><td>'+pending+'</td><td><strong>'+prog+'%</strong></td></tr>';
+      }).join('')
+      +'</tbody></table></div>';
+      
+  } else {
+    // Company-specific analytics
+    var company = companies.find(function(c){ return c.id === selectedId; });
+    if(!company){ 
+      container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--txtf)">Company not found</div>'; 
+      return; 
+    }
+    
+    var total = (company.items||[]).length;
+    var done = (company.items||[]).filter(function(i){ return i.status==='done'; }).length;
+    var pending = total - done;
+    var progress = total > 0 ? Math.round((done/total)*100) : 0;
+    
+    container.innerHTML = '<div class="stats-row">'
+      +'<div class="sc"><div class="sc-label">Total Items</div><div class="sc-val">'+total+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Completed</div><div class="sc-val">'+done+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Pending</div><div class="sc-val">'+pending+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Progress</div><div class="sc-val">'+progress+'%</div></div>'
+      +'</div>'
+      +'<div style="background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:24px;margin-top:2rem">'
+      +'<div style="font-size:1rem;font-weight:700;margin-bottom:16px">Company Information</div>'
+      +'<div style="display:grid;gap:12px">'
+      +'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">Code</span><strong>'+esc(company.code||'N/A')+'</strong></div>'
+      +'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">Sector</span><strong>'+esc(company.sector||'N/A')+'</strong></div>'
+      +'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">Start Date</span><strong>'+(company.startDate?fmt(company.startDate):'Not set')+'</strong></div>'
+      +(company.spocName?'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">SPOC</span><strong>'+esc(company.spocName)+'</strong></div>':'')
+      +(company.spocEmail?'<div style="display:flex;justify-content:space-between;padding:10px 0"><span style="color:var(--txtm)">SPOC Email</span><strong style="font-size:.85rem">'+esc(company.spocEmail)+'</strong></div>':'')
+      +'</div></div>';
+  }
+}
+
+function showDetFromAnalytics(id){
+  switchMainView('dashboard');
+  setTimeout(function(){ showDet(id); }, 100);
+}
+
+// ── SPOC & EMAIL ───────────────────────────────────────
+function updateSPOC(){
+  if(!curId) return;
+  var spocName = document.getElementById('spocName').value.trim();
+  var spocEmail = document.getElementById('spocEmail').value.trim();
+  fsSet(curId, {spocName: spocName, spocEmail: spocEmail})
+    .then(function(){ toast('SPOC information updated'); })
+    .catch(function(e){ toast('Error: ' + e.message); });
+}
+
+function addEmail(){
+  if(!curId) return;
+  var emailInput = document.getElementById('newEmail');
+  if(!emailInput) return;
+  
+  var email = emailInput.value.trim();
+  if(!email){ toast('Enter an email address'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ toast('Invalid email format'); return; }
+  
+  var c = companies.find(function(x){ return x.id === curId; });
+  if(!c) return;
+  
+  var emails = c.additionalEmails || [];
+  if(emails.indexOf(email) !== -1){ toast('Email already added'); return; }
+  
+  emails.push(email);
+  fsSet(curId, {additionalEmails: emails})
+    .then(function(){
+      emailInput.value = '';
+      renderEmailChips();
+      toast('Email added');
+    })
+    .catch(function(e){ toast('Error: ' + e.message); });
+}
+
+function removeEmail(email){
+  if(!curId) return;
+  var c = companies.find(function(x){ return x.id === curId; });
+  if(!c) return;
+  
+  var emails = (c.additionalEmails || []).filter(function(e){ return e !== email; });
+  fsSet(curId, {additionalEmails: emails})
+    .then(function(){
+      renderEmailChips();
+      toast('Email removed');
+    })
+    .catch(function(e){ toast('Error: ' + e.message); });
+}
+
+function renderEmailChips(){
+  var c = companies.find(function(x){ return x.id === curId; });
+  if(!c) return;
+  
+  var emails = c.additionalEmails || [];
+  var container = document.getElementById('emailChips');
+  if(!container) return;
+  
+  if(emails.length === 0){
+    container.innerHTML = '<span style="color:var(--txtf);font-size:.8rem">No additional emails</span>';
+    return;
+  }
+  
+  container.innerHTML = emails.map(function(email){
+    return '<div style="display:inline-flex;align-items:center;gap:8px;background:var(--accd);border:1px solid var(--acc);color:var(--acc);font-family:var(--font-mono);font-size:.75rem;padding:6px 12px;border-radius:6px">'
+      +'<span>'+esc(email)+'</span>'
+      +'<span onclick="removeEmail(\''+esc(email).replace(/'/g,"\\'")+'\' )" style="cursor:pointer;font-weight:700;opacity:.7;transition:opacity .2s">×</span>'
+      +'</div>';
+  }).join('');
+}
+
+function openNudgeModal(){
+  if(!curId) return;
+  var c = companies.find(function(x){ return x.id === curId; });
+  if(!c) return;
+  
+  var recipients = [];
+  if(c.spocEmail) recipients.push(c.spocEmail);
+  if(c.additionalEmails) recipients = recipients.concat(c.additionalEmails);
+  
+  if(recipients.length === 0){
+    toast('No email addresses configured. Add SPOC email or additional recipients first.');
+    return;
+  }
+  
+  var total = (c.items||[]).length;
+  var completed = (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
+  var pending = total - completed;
+  
+  var emailBody = 'Dear ' + (c.spocName || 'Team') + ',\n\n'
+    + 'I hope this message finds you well.\n\n'
+    + 'I\'m reaching out to request a status update on the ESAP implementation progress for ' + c.name + ' (' + (c.code || 'N/A') + ').\n\n'
+    + 'Current Status Summary:\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+    + '• Total Action Items: ' + total + '\n'
+    + '• Completed: ' + completed + '\n'
+    + '• Pending: ' + pending + '\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n'
+    + 'Could you please provide an update on the pending items at your earliest convenience? If there are any blockers or challenges, I\'d be happy to discuss them.\n\n'
+    + 'Best regards';
+  
+  var recipientsEl = document.getElementById('nudgeRecipients');
+  if(recipientsEl){
+    recipientsEl.innerHTML = recipients.map(function(r){
+      return '<div style="padding:6px 0;border-bottom:1px solid var(--bor)">'+esc(r)+'</div>';
+    }).join('');
+  }
+  
+  var previewEl = document.getElementById('emailPreview');
+  if(previewEl) previewEl.textContent = emailBody;
+  
+  var customMsgEl = document.getElementById('customNudgeMsg');
+  if(customMsgEl) customMsgEl.value = '';
+  
+  openM('mnudge');
+}
+
+function confirmSendNudge(){
+  var c = companies.find(function(x){ return x.id === curId; });
+  if(!c) return;
+  
+  var recipients = [];
+  if(c.spocEmail) recipients.push(c.spocEmail);
+  if(c.additionalEmails) recipients = recipients.concat(c.additionalEmails);
+  
+  var customMsgEl = document.getElementById('customNudgeMsg');
+  var customMsg = customMsgEl ? customMsgEl.value.trim() : '';
+  
+  var previewEl = document.getElementById('emailPreview');
+  var emailBody = previewEl ? previewEl.textContent : '';
+  
+  if(customMsg) emailBody += '\n\nAdditional Notes:\n' + customMsg;
+  
+  var subject = encodeURIComponent('ESAP Implementation Status Update Request - ' + c.name);
+  var body = encodeURIComponent(emailBody);
+  var mailto = 'mailto:' + recipients.join(',') + '?subject=' + subject + '&body=' + body;
+  
+  window.location.href = mailto;
+  closeM('mnudge');
+  toast('Opening email client with ' + recipients.length + ' recipient(s)...');
+}
+
+// Enhance the existing showDet function to load SPOC data
+var _originalShowDet = showDet;
+showDet = function(id){
+  _originalShowDet(id);
+  
+  // Load SPOC data
+  var c = companies.find(function(x){ return x.id === id; });
+  if(c){
+    var spocNameEl = document.getElementById('spocName');
+    var spocEmailEl = document.getElementById('spocEmail');
+    if(spocNameEl) spocNameEl.value = c.spocName || '';
+    if(spocEmailEl) spocEmailEl.value = c.spocEmail || '';
+    renderEmailChips();
+  }
+};
+
 </script>
 </body>
 </html>
