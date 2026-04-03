@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fund ESAP Tracker</title>
+<title>Fund ESAP Tracker v2</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ══ THEME TOKENS ══════════════════════════════════════ */
@@ -490,6 +490,24 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
           <input type="text" id="spocEmail" placeholder="email@company.com">
         </div>
       </div>
+      
+      <div class="form-row">
+        <label>Upload ESAP Document</label>
+        <input type="file" id="esapFile" accept=".pdf,.doc,.docx,.xls,.xlsx" style="display:none" onchange="handleESAPUpload(event)">
+        <div style="display:flex;gap:8px;align-items:center">
+          <button type="button" class="btn secondary" onclick="document.getElementById('esapFile').click()">
+            📎 Choose File
+          </button>
+          <span id="esapFileName" style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">No file selected</span>
+        </div>
+        <div id="currentESAP" style="margin-top:8px;display:none">
+          <div style="padding:8px 12px;background:var(--accd);border:1px solid var(--acc);border-radius:10px;display:inline-flex;align-items:center;gap:8px">
+            <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--acc)">📄 <span id="currentESAPName"></span></span>
+            <a href="#" id="downloadESAP" target="_blank" style="color:var(--acc);font-size:.75rem">Download</a>
+            <button type="button" onclick="removeESAP()" style="background:none;border:none;color:var(--acc);cursor:pointer;font-weight:700;font-size:1rem">×</button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn secondary" onclick="closeM('mAdd')">Cancel</button>
@@ -609,6 +627,8 @@ var editingId = null;
 var moveTargetId = null;
 var notifications = [];
 var isEditMode = false;
+var pendingESAPFile = null;
+var pendingESAPFileName = '';
 
 // ── INITIALIZATION ─────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function(){
@@ -704,11 +724,11 @@ function renderFolders(){
   html += '<div class="folder-chip '+(curFolder==='__none__'?'active':'')+'" onclick="selectFolder(\'__none__\')">';
   html += '<span class="folder-icon">📂</span>';
   html += '<span class="folder-name">No Folder</span>';
-  html += '<span class="folder-count">'+companies.filter(function(c){return !c.folderId;}).length+'</span>';
+  html += '<span class="folder-count">'+companies.filter(function(c){return !c.folderId && !c.folder;}).length+'</span>';
   html += '</div>';
   
   folders.forEach(function(f){
-    var count = companies.filter(function(c){ return c.folderId === f.id; }).length;
+    var count = companies.filter(function(c){ return (c.folderId === f.id) || (c.folder === f.id); }).length;
     html += '<div class="folder-chip '+(curFolder===f.id?'active':'')+'" onclick="selectFolder(\''+f.id+'\')"';
     html += ' ondragover="folderDragOver(event)" ondragleave="folderDragLeave(event)" ondrop="folderDrop(event, \''+f.id+'\')">';
     html += '<span class="folder-icon">'+esc(f.emoji || '📁')+'</span>';
@@ -774,7 +794,10 @@ function folderDrop(e, folderId){
   
   var companyId = e.dataTransfer.getData('companyId');
   if(companyId){
-    fsSet(companyId, { folderId: folderId })
+    fsSet(companyId, { 
+      folder: folderId,      // Keep old field
+      folderId: folderId     // New field
+    })
       .then(function(){ toast('Moved to folder'); })
       .catch(function(err){ toast('Error: ' + err.message, true); });
   }
@@ -795,7 +818,10 @@ function openMoveModal(id){
 function confirmMove(){
   var folderId = document.getElementById('moveFolderSelect').value;
   if(moveTargetId){
-    fsSet(moveTargetId, { folderId: folderId || null })
+    fsSet(moveTargetId, { 
+      folder: folderId || null,      // Keep old field
+      folderId: folderId || null     // New field
+    })
       .then(function(){ 
         closeM('mMove'); 
         toast('Company moved'); 
@@ -896,11 +922,12 @@ function renderDash(){
   var q=document.getElementById('si').value.toLowerCase();
 
   var cos=companies.filter(function(c){
-    // Folder filter
+    // Folder filter (backward compatible with both 'folder' and 'folderId')
+    var companyFolder = c.folderId || c.folder;
     if(curFolder === '__none__'){
-      if(c.folderId) return false;
+      if(companyFolder) return false;
     } else if(curFolder !== '__all__'){
-      if(c.folderId !== curFolder) return false;
+      if(companyFolder !== curFolder) return false;
     }
     // Search
     if(q&&!c.name.toLowerCase().includes(q)) return false;
@@ -921,8 +948,9 @@ function renderDash(){
       var p=pct(c),done=(c.items||[]).filter(function(i){return i.status==='done';}).length,tot=(c.items||[]).length;
       var fc=p>=70?'':p>=30?'w':'l';
       var folderTag='';
-      if(c.folderId){
-        var f=folders.find(function(x){return x.id===c.folderId;});
+      var companyFolder = c.folderId || c.folder;
+      if(companyFolder){
+        var f=folders.find(function(x){return x.id===companyFolder;});
         if(f) folderTag='<div class="cfolder-tag">'+f.emoji+' '+esc(f.name)+'</div>';
       }
       return '<div class="card" draggable="'+(isEditMode?'true':'false')+'" '
@@ -976,6 +1004,51 @@ function cardDragEnd(e, id){
   // cleanup
 }
 
+// ── ESAP FILE HANDLING ─────────────────────────────────
+function handleESAPUpload(event){
+  var file = event.target.files[0];
+  if(!file) return;
+  
+  // Validate file size (max 10MB)
+  if(file.size > 10 * 1024 * 1024){
+    toast('File too large. Maximum size is 10MB', true);
+    event.target.value = '';
+    return;
+  }
+  
+  // Convert to base64
+  var reader = new FileReader();
+  reader.onload = function(e){
+    pendingESAPFile = e.target.result;
+    pendingESAPFileName = file.name;
+    document.getElementById('esapFileName').textContent = file.name;
+    toast('File ready to upload');
+  };
+  reader.onerror = function(){
+    toast('Error reading file', true);
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeESAP(){
+  if(!checkEditMode()) return;
+  if(!confirm('Remove ESAP document?')) return;
+  
+  if(editingId){
+    fsSet(editingId, { esapFile: null, esapFileName: null })
+      .then(function(){ 
+        toast('ESAP removed'); 
+        document.getElementById('currentESAP').style.display = 'none';
+      })
+      .catch(function(e){ toast('Error: ' + e.message, true); });
+  } else {
+    pendingESAPFile = null;
+    pendingESAPFileName = '';
+    document.getElementById('esapFileName').textContent = 'No file selected';
+    document.getElementById('esapFile').value = '';
+  }
+}
+
 // ── ADD/EDIT COMPANY ───────────────────────────────────
 function openAddModal(){
   if(!checkEditMode()) return;
@@ -988,6 +1061,13 @@ function openAddModal(){
   document.getElementById('csd').value = '';
   document.getElementById('spocName').value = '';
   document.getElementById('spocEmail').value = '';
+  
+  // Reset ESAP file
+  pendingESAPFile = null;
+  pendingESAPFileName = '';
+  document.getElementById('esapFile').value = '';
+  document.getElementById('esapFileName').textContent = 'No file selected';
+  document.getElementById('currentESAP').style.display = 'none';
   
   renderSectorChips();
   renderTeamChips();
@@ -1033,6 +1113,8 @@ function saveCompany(){
   var sectorEl = document.querySelector('#sectorChips .chip-option.selected');
   var teamEl = document.querySelector('#teamChips .chip-option.selected');
   
+  var folderValue = curFolder === '__all__' || curFolder === '__none__' ? null : curFolder;
+  
   var data = {
     name: name,
     code: document.getElementById('cc').value.trim(),
@@ -1041,15 +1123,24 @@ function saveCompany(){
     startDate: document.getElementById('csd').value,
     spocName: document.getElementById('spocName').value.trim(),
     spocEmail: document.getElementById('spocEmail').value.trim(),
-    folderId: curFolder === '__all__' || curFolder === '__none__' ? null : curFolder,
+    folder: folderValue,      // Keep old field for backward compatibility
+    folderId: folderValue,    // New field
     createdAt: new Date().toISOString()
   };
+  
+  // Add ESAP file if uploaded
+  if(pendingESAPFile){
+    data.esapFile = pendingESAPFile;
+    data.esapFileName = pendingESAPFileName;
+  }
   
   if(editingId){
     fsSet(editingId, data)
       .then(function(){ 
         closeM('mAdd'); 
-        toast('Company updated'); 
+        toast('Company updated');
+        pendingESAPFile = null;
+        pendingESAPFileName = '';
       })
       .catch(function(e){ toast('Error: ' + e.message, true); });
   } else {
@@ -1057,7 +1148,9 @@ function saveCompany(){
     fsAdd(data)
       .then(function(){ 
         closeM('mAdd'); 
-        toast('Company added'); 
+        toast('Company added');
+        pendingESAPFile = null;
+        pendingESAPFileName = '';
       })
       .catch(function(e){ toast('Error: ' + e.message, true); });
   }
@@ -1079,6 +1172,20 @@ function showDetail(id){
   html += '<div><strong>SPOC:</strong> '+(c.spocName || 'N/A')+'</div>';
   html += '<div><strong>Email:</strong> '+(c.spocEmail || 'N/A')+'</div>';
   html += '</div>';
+  
+  // ESAP Document
+  if(c.esapFile){
+    html += '<div style="margin-bottom:20px;padding:12px;background:var(--accd);border:1px solid var(--acc);border-radius:14px">';
+    html += '<div style="display:flex;align-items:center;gap:12px">';
+    html += '<span style="font-size:2rem">📄</span>';
+    html += '<div style="flex:1">';
+    html += '<div style="font-weight:700;margin-bottom:4px">ESAP Document</div>';
+    html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">'+esc(c.esapFileName || 'Document.pdf')+'</div>';
+    html += '</div>';
+    html += '<a href="'+c.esapFile+'" download="'+esc(c.esapFileName || 'ESAP.pdf')+'" class="btn primary" style="text-decoration:none">📥 Download</a>';
+    html += '</div>';
+    html += '</div>';
+  }
   
   var progress = pct(c);
   html += '<div style="margin-bottom:20px">';
@@ -1230,6 +1337,22 @@ function editCompany(){
   document.getElementById('csd').value = c.startDate || '';
   document.getElementById('spocName').value = c.spocName || '';
   document.getElementById('spocEmail').value = c.spocEmail || '';
+  
+  // Reset pending file
+  pendingESAPFile = null;
+  pendingESAPFileName = '';
+  document.getElementById('esapFile').value = '';
+  document.getElementById('esapFileName').textContent = 'No file selected';
+  
+  // Show current ESAP if exists
+  if(c.esapFile){
+    document.getElementById('currentESAP').style.display = 'block';
+    document.getElementById('currentESAPName').textContent = c.esapFileName || 'Document';
+    document.getElementById('downloadESAP').href = c.esapFile;
+    document.getElementById('downloadESAP').download = c.esapFileName || 'ESAP.pdf';
+  } else {
+    document.getElementById('currentESAP').style.display = 'none';
+  }
   
   renderSectorChips();
   renderTeamChips();
