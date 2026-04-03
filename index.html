@@ -4,25 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sreenidhi Tracker</title>
-
-<!-- PWA Meta Tags -->
-<meta name="theme-color" content="#0b0e0d">
-<meta name="description" content="ESAP Implementation Tracker">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<!-- Chart.js for Analytics -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-<!-- SheetJS for Excel Export -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-<!-- jsPDF for PDF Export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-
 <style>
 /* ══ THEME TOKENS ══════════════════════════════════════ */
 :root {
@@ -133,13 +115,6 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .page-title{font-size:2rem;font-weight:800;letter-spacing:-.03em;line-height:1}
 .page-sub{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
 
-/* Action buttons */
-.action-btns{display:flex;gap:8px;flex-wrap:wrap}
-.action-btn{font-family:var(--font-mono);font-size:.7rem;padding:10px 18px;border-radius:16px;background:var(--acc);color:#000;font-weight:700;cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.05em}
-.action-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--accm)}
-.action-btn.secondary{background:var(--sur2);color:var(--txt);border:1px solid var(--bor)}
-.action-btn.secondary:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
-
 /* ══ STAT CARDS ════════════════════════════════════════ */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
 .sc{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:24px;position:relative;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
@@ -177,1154 +152,1386 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .folder-all{background:var(--sur2)}
 .no-folder-label{font-family:var(--font-mono);font-size:.65rem;color:var(--txtf);padding:6px 10px;border-radius:12px;background:var(--sur2);border:1px dashed var(--bor)}
 
-/* ══ BULK SELECTION ════════════════════════════════════ */
-.bulk-bar{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--sur);border:2px solid var(--acc);border-radius:24px;padding:16px 24px;display:none;align-items:center;gap:16px;box-shadow:var(--shadow);z-index:150;animation:slideUp .3s ease}
-.bulk-bar.on{display:flex}
-@keyframes slideUp{from{transform:translate(-50%, 100px);opacity:0}to{transform:translate(-50%, 0);opacity:1}}
-.bulk-count{font-family:var(--font-mono);font-size:.8rem;color:var(--acc);font-weight:700}
-.bulk-actions{display:flex;gap:8px}
-.bulk-btn{font-family:var(--font-mono);font-size:.7rem;padding:8px 16px;border-radius:12px;background:var(--sur2);border:1px solid var(--bor);color:var(--txt);cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.05em}
-.bulk-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
-.bulk-btn.danger:hover{border-color:var(--red);color:var(--red);background:var(--redd)}
-
 /* ══ CARDS GRID ════════════════════════════════════════ */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
-.card{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:20px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
-.card:hover{border-color:var(--accm);box-shadow:var(--card-hover-shadow);transform:translateY(-2px)}
-.card.selected{border-color:var(--acc);background:var(--accd)}
-.card-checkbox{position:absolute;top:12px;right:12px;width:20px;height:20px;border:2px solid var(--bor);border-radius:6px;background:var(--sur2);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;z-index:10}
-.card-checkbox:hover{border-color:var(--acc)}
-.card-checkbox.checked{background:var(--acc);border-color:var(--acc)}
-.card-checkbox.checked::after{content:'✓';color:#000;font-size:12px;font-weight:700}
-.card-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px}
-.card-name{font-size:1.1rem;font-weight:700;line-height:1.3;flex:1;padding-right:28px}
-.card-code{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);background:var(--sur2);padding:4px 10px;border-radius:12px;letter-spacing:.05em}
-.card-meta{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-.card-tag{font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);display:flex;align-items:center;gap:5px}
-.card-prog{margin-top:12px}
-.prog-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.prog-label{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em}
-.prog-num{font-family:var(--font-mono);font-size:.75rem;font-weight:700;color:var(--acc)}
-.prog-bar{height:8px;background:var(--sur2);border-radius:20px;overflow:hidden;position:relative}
-.prog-fill{height:100%;background:linear-gradient(90deg, #1E3A8A, #3B82F6);border-radius:20px;transition:width .5s ease}
-.card-foot{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
-.status-badge{font-family:var(--font-mono);font-size:.65rem;padding:5px 12px;border-radius:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.status-badge.warn{background:var(--warnd);color:var(--warn);border:1px solid var(--warn)}
-.status-badge.ok{background:var(--accd);color:var(--acc);border:1px solid var(--acc)}
-.status-badge.danger{background:var(--redd);color:var(--red);border:1px solid var(--red)}
-.empty-state{text-align:center;padding:4rem 2rem;color:var(--txtf)}
-.empty-icon{font-size:3rem;margin-bottom:1rem;opacity:.5}
-.empty-text{font-size:1rem;margin-bottom:.5rem}
-.empty-sub{font-family:var(--font-mono);font-size:.7rem}
+.card{background:var(--sur);border:2px solid var(--bor);border-radius:24px;padding:28px;cursor:pointer;transition:all .3s;position:relative;user-select:none;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.card:hover{border-color:var(--acc);transform:translateY(-4px);box-shadow:0 12px 32px rgba(59,130,246,0.15)}
+.card.dragging{opacity:.5;transform:scale(.97)}
+.card.drop-target{border-color:var(--acc);background:var(--accd)}
+.card-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.cname{font-size:1rem;font-weight:700}.cid{font-family:var(--font-mono);font-size:.6rem;color:var(--txtf);margin-top:2px}
+.cstart{font-family:var(--font-mono);font-size:.6rem;color:var(--txtm);margin-top:3px}
+.cfolder-tag{font-family:var(--font-mono);font-size:.58rem;padding:2px 7px;border-radius:10px;background:var(--accd);color:var(--acc);border:1px solid var(--accm);margin-top:4px;display:inline-flex;align-items:center;gap:3px}
+.chip{font-family:var(--font-mono);font-size:.6rem;padding:3px 8px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.chip-done{background:var(--accd);color:var(--acc)}.chip-prog{background:var(--warnd);color:var(--warn)}.chip-new{background:var(--sur2);color:var(--txtm)}
+.prog-wrap{margin:14px 0 10px}
+.prog-lbl{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-lbl span{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm)}.prog-lbl strong{font-family:var(--font-mono);font-size:.72rem;color:var(--acc)}
+.prog-bg{background:var(--sur2);border-radius:10px;height:6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#00b87c,#00e5a0);transition:width .6s}
+.prog-fill.w{background:linear-gradient(90deg,#d97706,#f59e0b)}.prog-fill.l{background:linear-gradient(90deg,#dc2626,#ef4444)}
+.cmeta{display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bor)}
+.mi{font-family:var(--font-mono);font-size:.66rem;color:var(--txtm)}.mi strong{color:var(--txt);font-size:.83rem;display:block;margin-bottom:1px}
+.cact{display:flex;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--bor);gap:6px}
+.move-btn{font-family:var(--font-mono);font-size:.63rem;padding:4px 9px;border-radius:12px;background:var(--sur2);color:var(--txtm);border:1px solid var(--bor);cursor:pointer;transition:all .2s}
+.move-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.del-card-btn{margin-left:auto;font-family:var(--font-mono);font-size:.63rem;padding:4px 10px;border-radius:12px;background:var(--redd);color:var(--red);border:1px solid rgba(239,68,68,.2);cursor:pointer;transition:all .2s}
+.del-card-btn:hover{background:rgba(239,68,68,.22)}
+
+/* ══ BUTTONS ═══════════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:20px;font-family:var(--font-sans);font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-pri{background:linear-gradient(135deg, #3B82F6, #60A5FA);color:#ffffff;box-shadow:0 2px 8px rgba(59,130,246,0.25)}.btn-pri:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(59,130,246,0.35)}
+.btn-gh{background:var(--sur2);color:var(--txtm);border:1px solid var(--bor)}.btn-gh:hover{border-color:var(--acc);color:var(--acc)}
+.btn-red{background:var(--redd);color:var(--red);border:1px solid rgba(239,68,68,.25)}.btn-red:hover{background:rgba(239,68,68,.22)}
+.btn-sm{padding:5px 12px;font-size:.72rem}
 
 /* ══ MODALS ════════════════════════════════════════════ */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:2rem;animation:fadeIn .2s}
-.modal.on{display:flex}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.m-box{background:var(--sur);border:2px solid var(--bor);border-radius:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow);animation:slideIn .3s ease}
-@keyframes slideIn{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-.m-hd{padding:24px;border-bottom:2px solid var(--bor);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--sur);z-index:10}
-.m-title{font-size:1.3rem;font-weight:800;letter-spacing:-.02em}
-.m-close{width:32px;height:32px;border-radius:16px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .2s}
-.m-close:hover{border-color:var(--red);color:var(--red)}
-.m-body{padding:24px}
-.m-foot{padding:20px 24px;border-top:2px solid var(--bor);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:var(--sur)}
-.fg{margin-bottom:20px}
-.fg:last-child{margin-bottom:0}
-.flabel{font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;display:block}
-.finput,.fselect,.ftextarea{width:100%;background:var(--sur2);border:2px solid var(--bor);border-radius:16px;padding:12px 16px;font-family:var(--font-sans);font-size:.9rem;color:var(--txt);transition:all .2s;outline:none}
-.finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--acc);background:var(--accd)}
-.ftextarea{resize:vertical;min-height:100px;font-family:var(--font-mono);line-height:1.6}
-.fselect{cursor:pointer}
-.btn{font-family:var(--font-mono);font-size:.75rem;padding:12px 24px;border-radius:16px;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
-.btn-primary{background:var(--acc);color:#000}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--accm)}
-.btn-secondary{background:var(--sur2);color:var(--txt);border:2px solid var(--bor)}
-.btn-secondary:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(239,68,68,0.3)}
+.ov-wrap{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:500}
+.ov-wrap.open{display:flex}
+.modal{background:var(--sur);border:1px solid var(--bor);border-radius:18px;padding:28px;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow)}
+.modal-title{font-size:1.1rem;font-weight:700;margin-bottom:20px}
+.fg{margin-bottom:16px}
+.flbl{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:block}
+.finp{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:20px;padding:10px 12px;font-family:var(--font-sans);font-size:.85rem;color:var(--txt);outline:none;transition:border-color .2s}
+.finp:focus{border-color:var(--acc)}
+.fhint{font-family:var(--font-mono);font-size:.63rem;color:var(--txtf);margin-top:5px;line-height:1.5}
+.fact{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.uzone{border:2px dashed var(--bor);border-radius:18px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-top:4px}
+.uzone:hover,.uzone.drag{border-color:var(--acc);background:var(--accd)}
+.uicon{font-size:2rem;margin-bottom:8px}.utxt{font-size:.85rem;color:var(--txtm)}.usub{font-family:var(--font-mono);font-size:.63rem;color:var(--txtf);margin-top:6px;line-height:1.7}
+#file-input{display:none}
+.info-box{background:var(--accd);border:1px solid var(--accm);border-radius:20px;padding:10px 14px;font-family:var(--font-mono);font-size:.65rem;color:var(--acc);line-height:1.6;margin-bottom:12px}
 
-/* Items List in Modal */
-.items-list{margin-top:20px}
-.item-row{background:var(--sur2);border:2px solid var(--bor);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;transition:all .2s}
-.item-row:hover{border-color:var(--accm)}
-.item-check{width:20px;height:20px;border:2px solid var(--bor);border-radius:6px;background:var(--sur);cursor:pointer;flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;margin-top:2px}
-.item-check:hover{border-color:var(--acc)}
-.item-check.done{background:var(--acc);border-color:var(--acc)}
-.item-check.done::after{content:'✓';color:#000;font-size:12px;font-weight:700}
-.item-content{flex:1}
-.item-text{font-size:.9rem;line-height:1.5;margin-bottom:6px}
-.item-text.done{text-decoration:line-through;opacity:.6}
-.item-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.item-priority,.item-due{font-family:var(--font-mono);font-size:.65rem;padding:3px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:.06em}
-.item-priority.high{background:var(--redd);color:var(--red);border:1px solid var(--red)}
-.item-priority.medium{background:var(--warnd);color:var(--warn);border:1px solid var(--warn)}
-.item-priority.low{background:var(--accd);color:var(--acc);border:1px solid var(--acc)}
-.item-due{background:var(--sur);border:1px solid var(--bor);color:var(--txtm)}
-.item-actions{display:flex;gap:6px;margin-left:auto}
-.item-action{font-size:.7rem;color:var(--txtf);cursor:pointer;padding:4px;transition:color .2s}
-.item-action:hover{color:var(--acc)}
-.item-action.del:hover{color:var(--red)}
+/* Move-to-folder modal */
+.folder-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.folder-pick-btn{display:flex;align-items:center;gap:7px;padding:10px 14px;border-radius:16px;background:var(--sur2);border:1px solid var(--bor);cursor:pointer;font-size:.83rem;font-weight:600;transition:all .2s}
+.folder-pick-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.folder-pick-btn.selected{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.folder-pick-btn.none-btn{color:var(--txtm)}
 
-/* Email Chips */
-.email-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.email-chip{display:inline-flex;align-items:center;gap:8px;background:var(--accd);border:1px solid var(--acc);color:var(--acc);font-family:var(--font-mono);font-size:.75rem;padding:6px 12px;border-radius:12px}
-.email-chip-del{cursor:pointer;font-weight:700;opacity:.7;transition:opacity .2s}
-.email-chip-del:hover{opacity:1}
+/* ══ DETAIL VIEW ═══════════════════════════════════════ */
+.det-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:10px}
+.back-btn{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);cursor:pointer;border:none;background:none;transition:color .2s}
+.back-btn:hover{color:var(--acc)}
+.det-title{font-size:1.6rem;font-weight:800;letter-spacing:-.02em}.det-sub{font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-top:4px}
+.det-start{font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dsv{color:var(--acc);font-weight:500}
+.sed-btn{font-family:var(--font-mono);font-size:.6rem;color:var(--txtf);border:none;background:none;cursor:pointer;text-decoration:underline}
+.sed-btn:hover{color:var(--acc)}
+.dstats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.ds{background:var(--sur);border:1px solid var(--bor);border-radius:16px;padding:16px}
+.ds-lbl{font-family:var(--font-mono);font-size:.6rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.10em}
+.ds-val{font-size:1.5rem;font-weight:800;margin-top:6px}
+.gc{color:var(--acc)}.rc{color:var(--red)}
 
-/* Email Preview */
-.email-preview{background:var(--sur2);border:2px solid var(--bor);border-radius:16px;padding:16px;font-family:var(--font-mono);font-size:.8rem;line-height:1.8;white-space:pre-wrap;max-height:400px;overflow-y:auto;margin-bottom:16px}
+/* ══ TABLE ══════════════════════════════════════════════ */
+.tw{background:var(--sur);border:1px solid var(--bor);border-radius:20px;overflow:hidden;margin-top:1.5rem}
+.ttb{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bor);flex-wrap:wrap;gap:8px}
+.ttb-t{font-size:.85rem;font-weight:700}
+table{width:100%;border-collapse:collapse}
+thead th{padding:12px 16px;text-align:left;font-family:var(--font-mono);font-size:.62rem;color:var(--txtf);text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--bor);background:var(--sur2)}
+tbody tr{border-bottom:1px solid var(--bor)}tbody tr:last-child{border-bottom:none}
+tbody tr.done td{opacity:.55}
+tbody tr.ov td:nth-child(2){border-left:3px solid var(--red);padding-left:13px}
+tbody tr.ds-r td:nth-child(2){border-left:3px solid var(--warn);padding-left:13px}
+td{padding:12px 16px;font-size:.82rem;vertical-align:top}
+.tdn{color:var(--txtf);font-family:var(--font-mono);font-size:.68rem;vertical-align:middle;width:36px}
+.tda{max-width:320px}.tda p{color:var(--txt);line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.com-area{margin-top:8px}
+.com-disp{font-family:var(--font-mono);font-size:.66rem;color:var(--txtm);background:var(--sur2);border-radius:12px;padding:6px 8px;line-height:1.5;white-space:pre-wrap;cursor:pointer;border:1px solid transparent;transition:border-color .2s;word-break:break-word}
+.com-disp:hover{border-color:var(--borl)}.com-disp.emp{color:var(--txtf);font-style:italic}
+.com-inp{width:100%;font-family:var(--font-mono);font-size:.66rem;color:var(--txt);background:var(--sur2);border:1px solid var(--accm);border-radius:12px;padding:6px 8px;resize:vertical;min-height:52px;outline:none}
+.com-row{display:flex;gap:6px;margin-top:4px}
+.com-save{font-family:var(--font-mono);font-size:.62rem;padding:3px 10px;border-radius:10px;background:var(--acc);color:#0b0e0d;border:none;cursor:pointer;font-weight:600}
+.com-cancel{font-family:var(--font-mono);font-size:.62rem;padding:3px 10px;border-radius:10px;background:var(--sur2);color:var(--txtm);border:1px solid var(--bor);cursor:pointer}
+.tdl{font-family:var(--font-mono);font-size:.73rem;white-space:nowrap;width:160px;vertical-align:middle}
+.dl-ok{color:var(--txtm)}.dl-w{color:var(--warn)}.dl-ov{color:var(--red)}
+.dl-sub{font-size:.6rem;color:var(--txtf);margin-top:2px}
+.dbg{font-family:var(--font-mono);font-size:.6rem;padding:2px 6px;border-radius:10px;margin-top:3px;display:inline-block}
+.dbg-ok{background:rgba(122,144,136,.14);color:var(--txtm)}.dbg-w{background:var(--warnd);color:var(--warn)}.dbg-ov{background:var(--redd);color:var(--red)}
+.pill{font-family:var(--font-mono);font-size:.6rem;padding:4px 10px;border-radius:20px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.pill-p{background:var(--warnd);color:var(--warn)}.pill-d{background:var(--accd);color:var(--acc)}
+.tac{vertical-align:middle;width:150px}.abg{display:flex;gap:6px;flex-wrap:wrap}
+.empty-s{padding:60px 20px;text-align:center}
+.ei{font-size:2.5rem;margin-bottom:12px}.et{font-size:1rem;font-weight:700;margin-bottom:6px}.es{font-family:var(--font-mono);font-size:.7rem;color:var(--txtm)}
+.air td{background:var(--accd);padding:10px 16px}
+.ari{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:7px 10px;font-family:var(--font-sans);font-size:.8rem;color:var(--txt);outline:none;width:100%}
+.ari:focus{border-color:var(--acc)}
+.dl-toggle{display:flex;gap:8px;margin-bottom:6px}
+.dl-tab{font-family:var(--font-mono);font-size:.63rem;padding:4px 10px;border-radius:12px;cursor:pointer;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);transition:all .15s}
+.dl-tab.on{background:var(--accd);border-color:var(--acc);color:var(--acc)}
+.dl-prev{font-family:var(--font-mono);font-size:.6rem;color:var(--txtf);margin-top:4px}
+.confbox{background:var(--redd);border:1px solid rgba(239,68,68,.28);border-radius:18px;padding:20px;margin-bottom:16px}
+.confbox p{font-size:.85rem;line-height:1.6}.confbox strong{color:var(--red)}
 
-/* ══ ANALYTICS VIEW ════════════════════════════════════ */
-.analytics-filters{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:20px;margin-bottom:2rem}
-.filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.analytics-charts{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:2rem}
-.chart-card{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:24px}
-.chart-title{font-size:1rem;font-weight:700;margin-bottom:16px;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;font-family:var(--font-mono);font-size:.75rem}
-.chart-container{position:relative;height:300px}
-.analytics-table{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:24px;overflow-x:auto}
-.data-table{width:100%;border-collapse:collapse}
-.data-table th{font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--txtm);padding:12px;text-align:left;border-bottom:2px solid var(--bor)}
-.data-table td{padding:12px;border-bottom:1px solid var(--bor);font-size:.85rem}
-.data-table tr:hover{background:var(--sur2)}
-
-/* ══ TIMELINE VIEW ═════════════════════════════════════ */
-.timeline-container{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:24px;overflow-x:auto}
-.timeline-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.timeline-controls{display:flex;gap:8px}
-.timeline-grid{position:relative;min-height:400px}
-.timeline-row{display:flex;align-items:center;margin-bottom:16px;min-height:50px;position:relative}
-.timeline-label{width:150px;font-size:.85rem;font-weight:600;padding-right:12px;flex-shrink:0}
-.timeline-track{flex:1;position:relative;height:40px;background:var(--sur2);border-radius:8px;border:1px solid var(--bor)}
-.timeline-bar{position:absolute;height:100%;background:linear-gradient(90deg, #1E3A8A, #3B82F6);border-radius:8px;display:flex;align-items:center;padding:0 12px;color:#fff;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.timeline-bar:hover{transform:scaleY(1.1);z-index:10;box-shadow:var(--shadow)}
-.timeline-bar.done{background:var(--acc);color:#000}
-.timeline-bar.overdue{background:var(--red)}
-
-/* ══ ACTIVITY FEED ═════════════════════════════════════ */
-.activity-feed{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:24px;max-height:500px;overflow-y:auto}
-.activity-item{display:flex;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bor)}
-.activity-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.activity-icon{width:36px;height:36px;border-radius:18px;background:var(--accd);color:var(--acc);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.activity-content{flex:1}
-.activity-text{font-size:.85rem;line-height:1.5;margin-bottom:4px}
-.activity-time{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm)}
-
-/* ══ TOAST ═════════════════════════════════════════════ */
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--sur);border:2px solid var(--acc);border-radius:20px;padding:16px 24px;box-shadow:var(--shadow);z-index:600;display:none;animation:toastIn .3s ease}
-.toast.on{display:block}
-@keyframes toastIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
-.toast-text{font-family:var(--font-mono);font-size:.8rem;color:var(--acc)}
+/* ══ TOAST ══════════════════════════════════════════════ */
+.toasts{position:fixed;bottom:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--sur);border:1px solid var(--bor);border-radius:16px;padding:12px 18px;font-size:.8rem;color:var(--txt);box-shadow:var(--shadow);animation:sIn .3s ease,fOut .3s ease 2.7s forwards;max-width:360px}
+@keyframes sIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fOut{to{opacity:0;transform:translateX(100%)}}
 
 /* ══ RESPONSIVE ════════════════════════════════════════ */
 @media(max-width:768px){
-  .topbar{padding:0 1rem;height:60px}
-  .main{padding:1rem}
-  .stats-row{grid-template-columns:repeat(2,1fr)}
-  .analytics-charts{grid-template-columns:1fr}
+  .stats-row,.dstats{grid-template-columns:repeat(2,1fr)}
   .grid{grid-template-columns:1fr}
-  .timeline-label{width:100px;font-size:.75rem}
-  .m-box{max-width:100%;margin:1rem}
-  .bulk-bar{left:1rem;right:1rem;transform:none;flex-wrap:wrap}
+  .page-title{font-size:1.5rem}
 }
 </style>
 </head>
 <body>
 
-<!-- Boot Screen -->
-<div class="boot-screen" id="bootScreen">
-  <div class="boot-icon">📊</div>
-  <div class="boot-title">Sreenidhi Tracker</div>
-  <div class="boot-sub">LOADING ESAP DATA...</div>
-  <div class="boot-spinner"></div>
-  <div class="boot-err" id="bootErr"></div>
-</div>
-
-<!-- Topbar -->
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="brand">
-    <div class="brand-icon">📊</div>
-    <div>
-      <div class="brand-name">Sreenidhi Tracker</div>
-      <div class="brand-tag">ESAP IMPLEMENTATION</div>
-    </div>
+    <div class="brand-icon">&#127807;</div>
+    <div><div class="brand-name">Sreenidhi Tracker</div><div class="brand-tag">Environmental &amp; Social Action Plan</div></div>
   </div>
   <div class="topbar-right">
     <div class="sync-wrap">
-      <div class="sync-dot" id="syncDot"></div>
-      <div class="sync-label" id="syncLabel">OFFLINE</div>
+      <div class="sync-dot loading" id="sync-dot"></div>
+      <span class="sync-label" id="sync-label">Connecting...</span>
     </div>
-    <div class="theme-btn" onclick="toggleTheme()" title="Toggle Theme">🌙</div>
-    <div class="bell-wrap">
-      <div class="bell-btn" onclick="toggleNotif()">🔔</div>
-      <div class="bell-badge" id="bellBadge">0</div>
-      <div class="notif-dd" id="notifDD">
-        <div class="notif-hd">
-          <span>Notifications</span>
-          <button class="notif-clear" onclick="clearNotifs()">Clear All</button>
-        </div>
-        <div class="notif-list" id="notifList">
-          <div class="nempty">No notifications</div>
-        </div>
+    <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+    <div class="bell-wrap" id="bw">
+      <div class="bell-btn" onclick="toggleNotif()">&#128276;</div>
+      <div class="bell-badge" id="bb">0</div>
+      <div class="notif-dd" id="nd">
+        <div class="notif-hd"><span>Reminders</span><button class="notif-clear" onclick="clearNotifs()">Mark all read</button></div>
+        <div class="notif-list" id="nl"><div class="nempty">No pending reminders</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Main Content -->
-<div class="main">
-  
-  <!-- Dashboard View -->
-  <div class="view on" id="vdash">
+<!-- BOOT SCREEN -->
+<div class="boot-screen" id="boot-screen">
+  <div class="boot-icon">&#127807;</div>
+  <div class="boot-title">Sreenidhi Tracker</div>
+  <div class="boot-sub">Connecting to database...</div>
+  <div class="boot-spinner" id="boot-spinner"></div>
+  <div class="boot-err" id="boot-err">
+    Could not connect to Firebase.<br>
+    Please check your internet connection and try refreshing.<br><br>
+    <button class="btn btn-gh btn-sm" onclick="location.reload()">Retry</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="main" id="main-app" style="display:none">
+
+  <!-- NAV TABS -->
+  <div style="margin-bottom:2rem;border-bottom:1px solid var(--bor);padding:0 0 1rem 0">
+    <div style="display:flex;gap:8px">
+      <button class="nav-tab-btn active" data-view="dashboard" onclick="switchMainView('dashboard')" style="font-family:var(--font-mono);font-size:.75rem;padding:8px 20px;border-radius:20px;background:var(--acc);color:#0b0e0d;border:none;cursor:pointer;font-weight:600;transition:all .2s">Dashboard</button>
+      <button class="nav-tab-btn" data-view="analytics" onclick="switchMainView('analytics')" style="font-family:var(--font-mono);font-size:.75rem;padding:8px 20px;border-radius:20px;background:var(--sur2);color:var(--txtm);border:1px solid var(--bor);cursor:pointer;transition:all .2s">Analytics</button>
+    </div>
+  </div>
+
+
+  <!-- DASHBOARD VIEW -->
+  <div class="view on" id="vd">
     <div class="dash-hd">
-      <div>
-        <div class="page-title">Dashboard</div>
-        <div class="page-sub">OVERVIEW & PROGRESS</div>
-      </div>
-      <div class="action-btns">
-        <button class="action-btn" onclick="openAddCompany()">➕ ADD COMPANY</button>
-        <button class="action-btn secondary" onclick="exportData()">📥 EXPORT</button>
-        <button class="action-btn secondary" onclick="backupData()">💾 BACKUP</button>
+      <div><div class="page-title">Sreenidhi Tracker</div><div class="page-sub">Live — Tracking ESAP Implementation Across Portfolio</div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-gh" onclick="openM('mu')">&#8679; Upload ESAP</button>
+        <button class="btn btn-pri" onclick="openM('mac')">+ Add Company</button>
       </div>
     </div>
-    
+
     <!-- Stats -->
     <div class="stats-row">
-      <div class="sc">
-        <div class="sc-label">TOTAL COMPANIES</div>
-        <div class="sc-val" id="statTotal">0</div>
-        <div class="sc-desc">Across all funds</div>
-      </div>
-      <div class="sc">
-        <div class="sc-label">COMPLETION RATE</div>
-        <div class="sc-val" id="statComp">0%</div>
-        <div class="sc-desc">Overall progress</div>
-      </div>
-      <div class="sc">
-        <div class="sc-label">PENDING ITEMS</div>
-        <div class="sc-val" id="statPend">0</div>
-        <div class="sc-desc">Need attention</div>
-      </div>
-      <div class="sc">
-        <div class="sc-label">OVERDUE</div>
-        <div class="sc-val" id="statOver">0</div>
-        <div class="sc-desc">Past deadline</div>
-      </div>
+      <div class="sc"><div class="sc-label">Companies</div><div class="sc-val" id="s0">0</div><div class="sc-desc">Active portfolio</div></div>
+      <div class="sc"><div class="sc-label">Action Items</div><div class="sc-val" id="s1">0</div><div class="sc-desc">Across all ESAPs</div></div>
+      <div class="sc"><div class="sc-label">Completed</div><div class="sc-val" id="s2">0</div><div class="sc-desc">Items closed</div></div>
+      <div class="sc"><div class="sc-label">Avg. Progress</div><div class="sc-val" id="s3">0%</div><div class="sc-desc">Portfolio completion</div></div>
     </div>
-    
-    <!-- Filters -->
-    <div class="fil-row">
-      <button class="fbtn on" data-filter="all" onclick="setFilter('all')">ALL</button>
-      <button class="fbtn" data-filter="pending" onclick="setFilter('pending')">PENDING</button>
-      <button class="fbtn" data-filter="done" onclick="setFilter('done')">COMPLETED</button>
-      <button class="fbtn" data-filter="overdue" onclick="setFilter('overdue')">OVERDUE</button>
-      <div class="sbox">
-        <span>🔍</span>
-        <input type="text" id="searchInput" placeholder="Search companies..." oninput="applyFilters()">
-      </div>
-    </div>
-    
+
     <!-- Folders -->
     <div class="folders-section">
       <div class="folders-header">
-        <div class="folders-label">FOLDERS</div>
-        <button class="add-folder-btn" onclick="addFolder()">➕ Add Folder</button>
+        <span class="folders-label">📁 Folders</span>
+        <button class="add-folder-btn" onclick="openM('mfolder')">+ New Folder</button>
       </div>
-      <div class="folders-row" id="foldersRow"></div>
+      <div class="folders-row" id="folders-row">
+        <div class="folder-chip folder-all active" data-folder="__all__" onclick="setFolder('__all__',this)">
+          <span class="folder-icon">🗂️</span>
+          <span class="folder-name">All</span>
+          <span class="folder-count" id="fc-all">0</span>
+        </div>
+        <div class="folder-chip" data-folder="__none__" onclick="setFolder('__none__',this)"
+          ondragover="folderDragOver(event,this)" ondragleave="folderDragLeave(this)" ondrop="folderDrop(event,'__none__')">
+          <span class="folder-icon">📋</span>
+          <span class="folder-name">Unfiled</span>
+          <span class="folder-count" id="fc-none">0</span>
+        </div>
+      </div>
     </div>
-    
-    <!-- Activity Feed -->
-    <div class="activity-feed" style="margin-bottom:2rem">
-      <div class="chart-title">📋 RECENT ACTIVITY</div>
-      <div id="activityFeed"></div>
+
+    <!-- Filters + Search -->
+    <div class="fil-row">
+      <button class="fbtn on" data-f="all" onclick="setF(this,'all')">All</button>
+      <button class="fbtn" data-f="done" onclick="setF(this,'done')">Completed</button>
+      <button class="fbtn" data-f="prog" onclick="setF(this,'prog')">In Progress</button>
+      <button class="fbtn" data-f="new" onclick="setF(this,'new')">Not Started</button>
+      <div class="sbox"><span style="color:var(--txtf);font-size:14px">&#128269;</span><input type="text" placeholder="Search companies..." id="si" oninput="renderDash()"></div>
     </div>
-    
-    <!-- Companies Grid -->
-    <div class="grid" id="compGrid"></div>
-    <div class="empty-state" id="emptyState" style="display:none">
-      <div class="empty-icon">📭</div>
-      <div class="empty-text">No companies found</div>
-      <div class="empty-sub">Try adjusting your filters or add a new company</div>
-    </div>
+
+    <div class="grid" id="gr"></div>
+    <div class="empty-s" id="emp" style="display:none"><div class="ei">&#127807;</div><div class="et">No companies yet</div><div class="es">Add a company or upload an ESAP file to get started</div></div>
   </div>
+
   
-  <!-- Analytics View -->
-  <div class="view" id="vanalytics">
+  <!-- ANALYTICS VIEW -->
+  <div class="view" id="vanalytics" style="display:none">
     <div class="dash-hd">
-      <div>
-        <div class="page-title">Analytics</div>
-        <div class="page-sub">INSIGHTS & PERFORMANCE</div>
-      </div>
-      <div class="action-btns">
-        <button class="action-btn secondary" onclick="exportAnalytics()">📊 EXPORT REPORT</button>
+      <div><div class="page-title">Analytics Dashboard</div><div class="page-sub">Performance metrics and insights</div></div>
+    </div>
+
+    <div style="margin-bottom:2rem">
+      <select class="finp" id="analyticsSelect" onchange="renderAnalytics()" style="max-width:350px">
+        <option value="all">🌐 Entire Fund Analytics</option>
+      </select>
+    </div>
+
+    <div id="analyticsContent"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div class="view" id="vdet">
+    <div class="det-top">
+      <button class="back-btn" onclick="goBack()">&#8592; Back to Dashboard</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-red btn-sm" onclick="delCur()">&#128465; Delete</button>
+        <button class="btn btn-gh btn-sm" onclick="exportCSV()">&#8681; Export CSV</button>
+        <button class="btn btn-gh btn-sm" onclick="uploadForCur()">&#8679; Update ESAP</button>
+        <button class="btn btn-pri btn-sm" onclick="addRow()">+ Add Item</button>
       </div>
     </div>
-    
-    <!-- Filters -->
-    <div class="analytics-filters">
-      <div class="chart-title">🔍 FILTERS</div>
-      <div class="filter-grid">
+    <div>
+      <div class="det-title" id="dtn"></div>
+      <div class="det-sub" id="dts"></div>
+      <div class="det-start">&#128197; ESAP Start Date: <span class="dsv" id="dsv">Not set</span>
+        <button class="sed-btn" onclick="openStartEdit()">edit</button>
+        <span id="no-start-warn" style="color:var(--warn);font-size:.65rem;display:none">&#9888; Set a start date so deadlines calculate correctly</span>
+      </div>
+    </div>
+    <div class="dstats" style="margin-top:1.5rem">
+      <div class="ds"><div class="ds-lbl">Progress</div><div class="ds-val gc" id="dp0">0%</div></div>
+      <div class="ds"><div class="ds-lbl">Total</div><div class="ds-val" id="dp1">0</div></div>
+      <div class="ds"><div class="ds-lbl">Completed</div><div class="ds-val gc" id="dp2">0</div></div>
+      <div class="ds"><div class="ds-lbl">Overdue</div><div class="ds-val rc" id="dp3">0</div></div>
+    </div>
+    <!-- SPOC & EMAIL SECTION -->
+    <div style="background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:24px;margin:1.5rem 0">
+      <div style="font-size:1rem;font-weight:700;margin-bottom:16px">📧 Point of Contact & Nudge Settings</div>
+      
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:16px">
         <div class="fg">
-          <label class="flabel">Folder</label>
-          <select class="fselect" id="analyticsFolder" onchange="updateAnalytics()">
-            <option value="all">All Folders</option>
-          </select>
+          <label class="flbl">SPOC Name</label>
+          <input class="finp" id="spocName" placeholder="Enter contact name" onchange="updateSPOC()">
         </div>
         <div class="fg">
-          <label class="flabel">Sector</label>
-          <select class="fselect" id="analyticsSector" onchange="updateAnalytics()">
-            <option value="all">All Sectors</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label class="flabel">Investment Lead</label>
-          <select class="fselect" id="analyticsLead" onchange="updateAnalytics()">
-            <option value="all">All Leads</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label class="flabel">Companies</label>
-          <select class="fselect" id="analyticsCompanies" multiple style="height:60px" onchange="updateAnalytics()">
-          </select>
+          <label class="flbl">SPOC Email</label>
+          <input class="finp" id="spocEmail" type="email" placeholder="contact@company.com" onchange="updateSPOC()">
         </div>
       </div>
+
+      <div class="fg">
+        <label class="flbl">Additional Email Recipients</label>
+        <div id="emailChips" style="display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--sur2);border:1px solid var(--bor);border-radius:20px;min-height:50px">
+          <span style="color:var(--txtf);font-size:.8rem">No additional emails</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <input class="finp" id="newEmail" type="email" placeholder="Add email address..." style="flex:1">
+        <button class="btn btn-gh btn-sm" onclick="addEmail()">+ Add</button>
+      </div>
+
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--bor);display:flex;align-items:center;gap:12px">
+        <button class="btn btn-pri" onclick="openNudgeModal()" style="background:var(--warn)">📧 Send Nudge</button>
+        <span style="font-family:var(--font-mono);font-size:.7rem;color:var(--txtf)">Request implementation status update</span>
+      </div>
     </div>
+
+    <div class="tw">
+      <div class="ttb">
+        <div class="ttb-t">ESAP Action Items</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="fbtn btn-sm on" data-df="all" onclick="setDF(this,'all')">All</button>
+          <button class="fbtn btn-sm" data-df="pend" onclick="setDF(this,'pend')">Pending</button>
+          <button class="fbtn btn-sm" data-df="done" onclick="setDF(this,'done')">Completed</button>
+          <button class="fbtn btn-sm" data-df="ov" onclick="setDF(this,'ov')">Overdue</button>
+        </div>
+      </div>
+      <table><thead><tr><th>#</th><th>Action Item &amp; Comments</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="tb"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="tc"></div>
+
+<!-- MODALS -->
+
+<!-- Add Company -->
+<div class="ov-wrap" id="mac">
+  <div class="modal">
+    <div class="modal-title">Add New Company</div>
+    <div class="fg"><label class="flbl">Company Name *</label><input class="finp" id="cn" placeholder="e.g. iDO Devices Pvt. Ltd." type="text"></div>
+    <div class="fg"><label class="flbl">Company ID / Code</label><input class="finp" id="cc" placeholder="Auto-generated if blank" type="text"></div>
+    <div class="fg"><label class="flbl">Sector</label><input class="finp" id="cs" placeholder="e.g. Manufacturing, Renewable Energy..." type="text"></div>
+    <div class="fg"><label class="flbl">ESAP Implementation Start Date</label><input class="finp" id="csd" type="date"><div class="fhint">Day 0 — all "number of days" deadlines are counted from this date.</div></div>
+    <div class="fg"><label class="flbl">Folder (optional)</label>
+      <select class="finp" id="cfl"><option value="">— No folder —</option></select>
+    </div>
+    <div class="fact"><button class="btn btn-gh" onclick="closeM('mac')">Cancel</button><button class="btn btn-pri" onclick="addCo()">Add Company</button></div>
+  </div>
+</div>
+
+<!-- Upload ESAP -->
+<div class="ov-wrap" id="mu">
+  <div class="modal">
+    <div class="modal-title">Upload ESAP Excel / CSV</div>
+    <div class="fg"><label class="flbl">Company</label>
+      <select class="finp" id="ucs" onchange="toggleNew()"><option value="__new__">+ Create new company from file name</option></select>
+    </div>
+    <div id="new-sec">
+      <div class="fg"><label class="flbl">ESAP Start Date (new company)</label><input class="finp" id="usd" type="date"><div class="fhint">Day 0 for day-based deadlines</div></div>
+      <div class="info-box">&#128196; File name (without extension) becomes the Company Name.</div>
+    </div>
+    <div id="exist-sec" style="display:none"><div class="info-box" id="exist-info">&#128197; Using existing start date.</div></div>
+    <div class="uzone" id="uz" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="dropFile(event)">
+      <div class="uicon">&#128193;</div><div class="utxt">Click to browse or drag &amp; drop</div>
+      <div class="usub">Supported: .xlsx .xls .csv<br>Columns: <b>Actions</b> + <b>Timeline</b> (e.g. "120 days" or a date)<br>Status column auto-maps Completed / Pending</div>
+    </div>
+    <input type="file" id="file-input" accept=".xlsx,.xls,.csv" onchange="pickFile(event)">
+    <div id="uprev" style="margin-top:12px"></div>
+    <div class="fact"><button class="btn btn-gh" onclick="closeM('mu')">Cancel</button><button class="btn btn-pri" onclick="doImport()" id="ucb" disabled>Import Data</button></div>
+  </div>
+</div>
+
+<!-- Delete Company -->
+<div class="ov-wrap" id="mdel">
+  <div class="modal">
+    <div class="modal-title">Delete Company</div>
+    <div class="confbox"><p>You are about to permanently delete <strong id="deln">this company</strong> and all its ESAP data from the shared database. This cannot be undone.</p></div>
+    <div class="fact"><button class="btn btn-gh" onclick="closeM('mdel')">Cancel</button><button class="btn btn-red" onclick="execDel()">Yes, Delete</button></div>
+  </div>
+</div>
+
+<!-- Edit Start Date -->
+<div class="ov-wrap" id="msd">
+  <div class="modal">
+    <div class="modal-title">ESAP Implementation Start Date</div>
+    <div class="fg"><label class="flbl">Start Date</label><input class="finp" id="sdi" type="date">
+      <div class="fhint">Day 0 for this company. Changing this recalculates all day-based deadlines instantly for everyone.</div>
+    </div>
+    <div class="fact"><button class="btn btn-gh" onclick="closeM('msd')">Cancel</button><button class="btn btn-pri" onclick="saveSD()">Save</button></div>
+  </div>
+</div>
+
+<!-- Create Folder -->
+<div class="ov-wrap" id="mfolder">
+  <div class="modal" style="width:420px">
+    <div class="modal-title">Create New Folder</div>
+    <div class="fg"><label class="flbl">Folder Name *</label><input class="finp" id="folder-name-inp" placeholder="e.g. Portfolio A, Climate Risk..." type="text"></div>
+    <div class="fg"><label class="flbl">Emoji Icon</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px" id="emoji-picker">
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">📁</span>
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">🏭</span>
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">🌿</span>
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">⚡</span>
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">🌊</span>
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">🏗️</span>
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">💼</span>
+        <span class="emoji-opt" onclick="selectEmoji(this)" style="font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:12px;border:1px solid var(--bor);transition:all .2s">🌱</span>
+      </div>
+    </div>
+    <div class="fact"><button class="btn btn-gh" onclick="closeM('mfolder')">Cancel</button><button class="btn btn-pri" onclick="createFolder()">Create Folder</button></div>
+  </div>
+</div>
+
+<!-- Move to Folder -->
+<div class="ov-wrap" id="mmove">
+  <div class="modal" style="width:460px">
+    <div class="modal-title">Move to Folder</div>
+    <div style="font-size:.85rem;color:var(--txtm);margin-bottom:12px">Moving: <strong id="move-company-name" style="color:var(--txt)"></strong></div>
+    <div class="folder-grid" id="folder-pick-grid"></div>
+    <div class="fact"><button class="btn btn-gh" onclick="closeM('mmove')">Cancel</button></div>
+  </div>
+</div>
+
+
+<!-- NUDGE MODAL -->
+<div class="ov-wrap" id="mnudge">
+  <div class="modal" style="width:600px">
+    <div class="modal-title">Send Implementation Status Nudge</div>
     
-    <!-- Charts -->
-    <div class="analytics-charts">
-      <div class="chart-card">
-        <div class="chart-title">📈 COMPLETION BY FOLDER</div>
-        <div class="chart-container">
-          <canvas id="chartFolder"></canvas>
-        </div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">🎯 ITEMS BY SECTOR</div>
-        <div class="chart-container">
-          <canvas id="chartSector"></canvas>
-        </div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">👥 LEAD PERFORMANCE</div>
-        <div class="chart-container">
-          <canvas id="chartLead"></canvas>
-        </div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">📊 PROGRESS TREND</div>
-        <div class="chart-container">
-          <canvas id="chartTrend"></canvas>
-        </div>
-      </div>
+    <div class="fg">
+      <label class="flbl">Recipients</label>
+      <div id="nudgeRecipients" style="background:var(--sur2);border:1px solid var(--bor);border-radius:20px;padding:12px;font-family:var(--font-mono);font-size:.75rem"></div>
     </div>
-    
-    <!-- Data Table -->
-    <div class="analytics-table">
-      <div class="chart-title">📋 DETAILED BREAKDOWN</div>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Company</th>
-            <th>Folder</th>
-            <th>Sector</th>
-            <th>Lead</th>
-            <th>Total Items</th>
-            <th>Completed</th>
-            <th>Pending</th>
-            <th>Completion %</th>
-          </tr>
-        </thead>
-        <tbody id="analyticsTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-  
-  <!-- Timeline View -->
-  <div class="view" id="vtimeline">
-    <div class="dash-hd">
-      <div>
-        <div class="page-title">Timeline</div>
-        <div class="page-sub">ACTION ITEMS SCHEDULE</div>
-      </div>
-      <div class="action-btns">
-        <button class="action-btn secondary" onclick="exportTimeline()">📅 EXPORT TIMELINE</button>
-      </div>
-    </div>
-    
-    <div class="timeline-container">
-      <div class="timeline-header">
-        <div class="chart-title">📅 UPCOMING DEADLINES</div>
-        <div class="timeline-controls">
-          <select class="fselect" id="timelineFolder" onchange="updateTimeline()" style="padding:6px 12px;font-size:.75rem">
-            <option value="all">All Folders</option>
-          </select>
-          <select class="fselect" id="timelineCompany" onchange="updateTimeline()" style="padding:6px 12px;font-size:.75rem">
-            <option value="all">All Companies</option>
-          </select>
-        </div>
-      </div>
-      <div class="timeline-grid" id="timelineGrid"></div>
-    </div>
-  </div>
-  
-</div>
 
-<!-- Bulk Selection Bar -->
-<div class="bulk-bar" id="bulkBar">
-  <div class="bulk-count" id="bulkCount">0 selected</div>
-  <div class="bulk-actions">
-    <button class="bulk-btn" onclick="bulkMarkDone()">✓ Mark Done</button>
-    <button class="bulk-btn" onclick="bulkChangePriority()">⚡ Change Priority</button>
-    <button class="bulk-btn" onclick="bulkAssignLead()">👤 Assign Lead</button>
-    <button class="bulk-btn danger" onclick="bulkDelete()">🗑 Delete</button>
-    <button class="bulk-btn" onclick="clearBulkSelection()">✕ Clear</button>
-  </div>
-</div>
+    <div class="fg">
+      <label class="flbl">Email Preview</label>
+      <div id="emailPreview" style="background:var(--sur2);border:1px solid var(--bor);border-radius:20px;padding:16px;font-family:var(--font-mono);font-size:.75rem;line-height:1.8;white-space:pre-wrap;color:var(--txtm)"></div>
+    </div>
 
-<!-- Add Company Modal -->
-<div class="modal" id="madd">
-  <div class="m-box">
-    <div class="m-hd">
-      <div class="m-title">Add New Company</div>
-      <div class="m-close" onclick="closeM('madd')">✕</div>
+    <div class="fg">
+      <label class="flbl">Custom Message (Optional)</label>
+      <textarea class="finp" id="customNudgeMsg" placeholder="Add any additional notes..." rows="4"></textarea>
     </div>
-    <div class="m-body">
-      <div class="fg">
-        <label class="flabel">Company Name</label>
-        <input type="text" class="finput" id="addName" placeholder="e.g., TechCorp Inc.">
-      </div>
-      <div class="fg">
-        <label class="flabel">Company Code</label>
-        <input type="text" class="finput" id="addCode" placeholder="e.g., TC001">
-      </div>
-      <div class="fg">
-        <label class="flabel">Folder</label>
-        <select class="fselect" id="addFolder">
-          <option value="">No Folder</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label class="flabel">Sector</label>
-        <select class="fselect" id="addSector">
-          <option value="">Select Sector</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label class="flabel">Investment Lead</label>
-        <select class="fselect" id="addLead">
-          <option value="">Select Lead</option>
-        </select>
-      </div>
-    </div>
-    <div class="m-foot">
-      <button class="btn btn-secondary" onclick="closeM('madd')">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmAddCompany()">Add Company</button>
+
+    <div class="fact">
+      <button class="btn btn-gh" onclick="closeM('mnudge')">Cancel</button>
+      <button class="btn btn-pri" onclick="confirmSendNudge()">📧 Send Email</button>
     </div>
   </div>
 </div>
 
-<!-- Company Details Modal -->
-<div class="modal" id="mdet">
-  <div class="m-box" style="max-width:800px">
-    <div class="m-hd">
-      <div class="m-title" id="detTitle">Company Details</div>
-      <div class="m-close" onclick="closeM('mdet')">✕</div>
-    </div>
-    <div class="m-body">
-      
-      <!-- Company Info -->
-      <div class="fg">
-        <label class="flabel">Company Name</label>
-        <input type="text" class="finput" id="detName">
-      </div>
-      <div class="fg">
-        <label class="flabel">Company Code</label>
-        <input type="text" class="finput" id="detCode">
-      </div>
-      <div class="fg">
-        <label class="flabel">Folder</label>
-        <select class="fselect" id="detFolder">
-          <option value="">No Folder</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label class="flabel">Sector</label>
-        <select class="fselect" id="detSector">
-          <option value="">Select Sector</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label class="flabel">Investment Lead</label>
-        <select class="fselect" id="detLead">
-          <option value="">Select Lead</option>
-        </select>
-      </div>
-      
-      <!-- SPOC Info -->
-      <div class="fg">
-        <label class="flabel">SPOC Name</label>
-        <input type="text" class="finput" id="spocName" placeholder="Point of Contact Name">
-      </div>
-      <div class="fg">
-        <label class="flabel">SPOC Email</label>
-        <input type="email" class="finput" id="spocEmail" placeholder="spoc@company.com">
-      </div>
-      
-      <!-- Additional Emails -->
-      <div class="fg">
-        <label class="flabel">Additional Recipients</label>
-        <div style="display:flex;gap:8px;margin-bottom:10px">
-          <input type="email" class="finput" id="newEmail" placeholder="additional@company.com" style="flex:1">
-          <button class="btn btn-secondary" onclick="addEmail()">Add</button>
-        </div>
-        <div class="email-chips" id="emailChips"></div>
-      </div>
-      
-      <!-- Action Items -->
-      <div class="fg">
-        <label class="flabel">Action Items</label>
-        <div style="display:flex;gap:8px;margin-bottom:10px">
-          <input type="text" class="finput" id="newItemText" placeholder="Enter action item..." style="flex:1">
-          <button class="btn btn-secondary" onclick="addItem()">Add</button>
-        </div>
-        <div class="items-list" id="itemsList"></div>
-      </div>
-      
-      <button class="btn btn-secondary" style="width:100%" onclick="saveCompanyDetails()">💾 Save Changes</button>
-      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="openNudgeModal()">📧 Send Nudge Email</button>
-      <button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deleteCompany()">🗑 Delete Company</button>
-    </div>
-  </div>
-</div>
-
-<!-- Add Item Modal -->
-<div class="modal" id="mitem">
-  <div class="m-box">
-    <div class="m-hd">
-      <div class="m-title">Add Action Item</div>
-      <div class="m-close" onclick="closeM('mitem')">✕</div>
-    </div>
-    <div class="m-body">
-      <div class="fg">
-        <label class="flabel">Item Description</label>
-        <textarea class="ftextarea" id="itemText" placeholder="Describe the action item..."></textarea>
-      </div>
-      <div class="fg">
-        <label class="flabel">Priority</label>
-        <select class="fselect" id="itemPriority">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label class="flabel">Due Date</label>
-        <input type="date" class="finput" id="itemDue">
-      </div>
-    </div>
-    <div class="m-foot">
-      <button class="btn btn-secondary" onclick="closeM('mitem')">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmAddItem()">Add Item</button>
-    </div>
-  </div>
-</div>
-
-<!-- Nudge Email Modal -->
-<div class="modal" id="mnudge">
-  <div class="m-box" style="max-width:700px">
-    <div class="m-hd">
-      <div class="m-title">📧 Send Nudge Email</div>
-      <div class="m-close" onclick="closeM('mnudge')">✕</div>
-    </div>
-    <div class="m-body">
-      <div class="fg">
-        <label class="flabel">Recipients</label>
-        <div id="nudgeRecipients" style="background:var(--sur2);border-radius:12px;padding:12px;font-family:var(--font-mono);font-size:.8rem"></div>
-      </div>
-      <div class="fg">
-        <label class="flabel">Email Preview</label>
-        <div class="email-preview" id="emailPreview"></div>
-      </div>
-      <div class="fg">
-        <label class="flabel">Additional Message (Optional)</label>
-        <textarea class="ftextarea" id="customNudgeMsg" placeholder="Add any custom notes..."></textarea>
-      </div>
-    </div>
-    <div class="m-foot">
-      <button class="btn btn-secondary" onclick="closeM('mnudge')">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmSendNudge()">Send Email</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast Notification -->
-<div class="toast" id="toast">
-  <div class="toast-text" id="toastText"></div>
-</div>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<!-- Firebase SDKs -->
+<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-app-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
-// ══════════════════════════════════════════════════════════
-// FIREBASE CONFIG - YOUR CONFIGURATION
-// ══════════════════════════════════════════════════════════
-const firebaseConfig = {
-  apiKey: "AIzaSyB8J-qZ9g76-_GDqitqX5M5dVaogFMQMFs",
-  authDomain: "esap-9c987.firebaseapp.com",
-  databaseURL: "https://esap-9c987-default-rtdb.firebaseio.com",
-  projectId: "esap-9c987",
-  storageBucket: "esap-9c987.firebasestorage.app",
+// ═══════════════════════════════════════════════════════
+//  SREENIDHI ESAP TRACKER — Enhanced Edition
+//  + Folders, Move-to-Folder, Light/Dark mode, Better Fonts
+// ═══════════════════════════════════════════════════════
+
+var FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyB8J-qZ9g76-_GDqitqX5M5dVaogFMQMFs",
+  authDomain:        "esap-9c987.firebaseapp.com",
+  databaseURL:       "https://esap-9c987-default-rtdb.firebaseio.com",
+  projectId:         "esap-9c987",
+  storageBucket:     "esap-9c987.firebasestorage.app",
   messagingSenderId: "41120222356",
-  appId: "1:41120222356:web:cc7d174b4277dadb997881"
+  appId:             "1:41120222356:web:cc7d174b4277dadb997881"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-
-// ══════════════════════════════════════════════════════════
-// GLOBAL STATE
-// ══════════════════════════════════════════════════════════
+var db = null;
 var companies = [];
-var folders = [];
-var sectors = ['Healthcare', 'AI/SaaS', 'Finance', 'Consumer', 'Logistics', 'Other'];
-var investmentLeads = ['Ashish', 'Arpit', 'Sanjay', 'Karthik', 'Sajith'];
-var activityLog = [];
-var curId = null;
-var curFilter = 'all';
-var curFolder = 'all';
-var currentUser = null;
-var isAdmin = false;
-var selectedItems = new Set();
-var bulkMode = false;
+var folders = []; // [{id, name, emoji}]  — stored in localStorage
+var unsubscribe = null;
+var curF = 'all', curId = null, dF = 'all', delId = null;
+var curFolder = '__all__'; // currently selected folder chip
+var pendingUpload = null, pendingFileName = '';
+var notifications = [];
+var moveTargetId = null;
+var selectedEmoji = '📁';
 
-// Charts
-var chartFolder, chartSector, chartLead, chartTrend;
+// ── THEME ──────────────────────────────────────────────
+(function(){
+  var saved = localStorage.getItem('st_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  // icon set after DOM
+})();
 
-// ══════════════════════════════════════════════════════════
-// INITIALIZATION
-// ══════════════════════════════════════════════════════════
-window.onload = function(){
-  initAuth();
-  loadTheme();
-  initServiceWorker();
-};
-
-function initAuth(){
-  // Check for existing session
-  auth.onAuthStateChanged(function(user){
-    if(user){
-      currentUser = user;
-      // Admin email: sreenidhi@blume.vc
-      isAdmin = user.email === 'sreenidhi@blume.vc';
-      
-      if(!isAdmin){
-        // View-only mode
-        disableEditMode();
-        toast('You are in VIEW-ONLY mode');
-      }
-      
-      initApp();
-    } else {
-      // Sign in anonymously for view-only access
-      // Or redirect to login page
-      auth.signInAnonymously()
-        .then(function(){
-          initApp();
-        })
-        .catch(function(e){
-          showBootError('Authentication failed: ' + e.message);
-        });
-    }
-  });
+function toggleTheme(){
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  var next = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('st_theme', next);
+  document.getElementById('theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
 }
 
-function disableEditMode(){
-  // Hide all edit buttons
+window.addEventListener('DOMContentLoaded', function(){
+  var theme = document.documentElement.getAttribute('data-theme');
+  document.getElementById('theme-toggle').textContent = theme === 'dark' ? '🌙' : '☀️';
+});
+
+// ── FOLDERS (localStorage) ─────────────────────────────
+function loadFolders(){
+  try { folders = JSON.parse(localStorage.getItem('st_folders') || '[]'); } catch(e){ folders = []; }
+}
+function saveFolders(){
+  localStorage.setItem('st_folders', JSON.stringify(folders));
+}
+function createFolder(){
+  var name = document.getElementById('folder-name-inp').value.trim();
+  if(!name){ toast('Folder name required'); return; }
+  var id = 'f_' + Date.now().toString(36);
+  folders.push({ id: id, name: name, emoji: selectedEmoji });
+  saveFolders();
+  closeM('mfolder');
+  document.getElementById('folder-name-inp').value = '';
+  selectedEmoji = '📁';
+  document.querySelectorAll('.emoji-opt').forEach(function(e){ e.style.background=''; e.style.borderColor='var(--bor)'; });
+  renderFolders();
+  toast('Folder "' + name + '" created');
+}
+function deleteFolder(id){
+  // Remove folder from all companies
+  companies.forEach(function(co){
+    if(co.folderId === id){
+      db.collection('companies').doc(co.id).set({folderId: ''}, {merge:true}).catch(function(){});
+    }
+  });
+  folders = folders.filter(function(f){ return f.id !== id; });
+  saveFolders();
+  if(curFolder === id) curFolder = '__all__';
+  renderFolders();
+  renderDash();
+  toast('Folder deleted');
+}
+function setFolder(fid, el){
+  curFolder = fid;
+  document.querySelectorAll('.folder-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  renderDash();
+}
+function renderFolders(){
+  var row = document.getElementById('folders-row');
+  // Keep "All" and "Unfiled" chips
+  var allChip = '<div class="folder-chip folder-all'+(curFolder==='__all__'?' active':'')+'" data-folder="__all__" onclick="setFolder(\'__all__\',this)"><span class="folder-icon">🗂️</span><span class="folder-name">All</span><span class="folder-count" id="fc-all">0</span></div>';
+  var noneChip = '<div class="folder-chip'+(curFolder==='__none__'?' active':'')+'" data-folder="__none__" onclick="setFolder(\'__none__\',this)" ondragover="folderDragOver(event,this)" ondragleave="folderDragLeave(this)" ondrop="folderDrop(event,\'__none\')"><span class="folder-icon">📋</span><span class="folder-name">Unfiled</span><span class="folder-count" id="fc-none">0</span></div>';
+  var custom = folders.map(function(f){
+    return '<div class="folder-chip'+(curFolder===f.id?' active':'')+'" data-folder="'+f.id+'" onclick="setFolder(\''+f.id+'\',this)" ondragover="folderDragOver(event,this)" ondragleave="folderDragLeave(this)" ondrop="folderDrop(event,\''+f.id+'\')">'
+      +'<span class="folder-icon">'+f.emoji+'</span>'
+      +'<span class="folder-name">'+esc(f.name)+'</span>'
+      +'<span class="folder-count" id="fc-'+f.id+'">0</span>'
+      +'<button class="folder-del" onclick="event.stopPropagation();deleteFolder(\''+f.id+'\')" title="Delete folder">✕</button>'
+      +'</div>';
+  }).join('');
+  row.innerHTML = allChip + noneChip + custom;
+  updateFolderCounts();
+  // Populate folder select in Add Company modal
+  populateFolderSelect();
+}
+function updateFolderCounts(){
+  var all = companies.length;
+  var none = companies.filter(function(c){ return !c.folderId; }).length;
+  var allEl = document.getElementById('fc-all');
+  var noneEl = document.getElementById('fc-none');
+  if(allEl) allEl.textContent = all;
+  if(noneEl) noneEl.textContent = none;
+  folders.forEach(function(f){
+    var cnt = companies.filter(function(c){ return c.folderId === f.id; }).length;
+    var el = document.getElementById('fc-' + f.id);
+    if(el) el.textContent = cnt;
+  });
+}
+function populateFolderSelect(){
+  var sel = document.getElementById('cfl');
+  if(!sel) return;
+  sel.innerHTML = '<option value="">— No folder —</option>'
+    + folders.map(function(f){ return '<option value="'+f.id+'">'+f.emoji+' '+esc(f.name)+'</option>'; }).join('');
+}
+function selectEmoji(el){
+  document.querySelectorAll('.emoji-opt').forEach(function(e){
+    e.style.background = '';
+    e.style.borderColor = 'var(--bor)';
+  });
+  el.style.background = 'var(--accd)';
+  el.style.borderColor = 'var(--acc)';
+  selectedEmoji = el.textContent;
+}
+
+// ── DRAG & DROP (card → folder) ────────────────────────
+function cardDragStart(e, id){
+  e.dataTransfer.setData('text/plain', id);
   setTimeout(function(){
-    var editBtns = document.querySelectorAll('.action-btn:not(.secondary)');
-    editBtns.forEach(function(btn){
-      if(btn.textContent.includes('ADD') || btn.textContent.includes('Delete')){
-        btn.style.display = 'none';
-      }
-    });
-    
-    // Disable all inputs in modals
-    var inputs = document.querySelectorAll('.finput, .fselect, .ftextarea, .btn-primary, .btn-danger');
-    inputs.forEach(function(el){
-      el.disabled = true;
-      el.style.opacity = '0.5';
-      el.style.cursor = 'not-allowed';
-    });
-    
-    // Show view-only badge
-    var badge = document.createElement('div');
-    badge.textContent = '👁 VIEW ONLY';
-    badge.style.cssText = 'position:fixed;top:80px;right:2rem;background:var(--warn);color:#000;padding:8px 16px;border-radius:12px;font-family:var(--font-mono);font-size:.7rem;font-weight:700;z-index:200;';
-    document.body.appendChild(badge);
-  }, 1000);
+    var card = document.querySelector('[data-cardid="'+id+'"]');
+    if(card) card.classList.add('dragging');
+  }, 0);
+}
+function cardDragEnd(e, id){
+  var card = document.querySelector('[data-cardid="'+id+'"]');
+  if(card) card.classList.remove('dragging');
+}
+function folderDragOver(e, el){
+  e.preventDefault();
+  el.classList.add('drag-over');
+}
+function folderDragLeave(el){
+  el.classList.remove('drag-over');
+}
+function folderDrop(e, folderId){
+  e.preventDefault();
+  var chip = e.currentTarget || e.target.closest('.folder-chip');
+  if(chip) chip.classList.remove('drag-over');
+  var id = e.dataTransfer.getData('text/plain');
+  if(!id) return;
+  var targetFolder = folderId === '__none' ? '' : folderId;
+  db.collection('companies').doc(id).set({ folderId: targetFolder }, {merge:true})
+    .then(function(){
+      var f = targetFolder ? folders.find(function(x){ return x.id === targetFolder; }) : null;
+      toast('Moved to ' + (f ? f.emoji + ' ' + f.name : 'Unfiled'));
+    })
+    .catch(function(e){ toast('Error: ' + e.message); });
 }
 
-function initApp(){
-  syncStatus('loading');
-  loadData();
+// ── MOVE TO FOLDER (button) ────────────────────────────
+function openMoveModal(id){
+  moveTargetId = id;
+  var co = companies.find(function(x){ return x.id === id; });
+  document.getElementById('move-company-name').textContent = co ? co.name : '';
+  var grid = document.getElementById('folder-pick-grid');
+  var current = co ? (co.folderId || '') : '';
+  var noneBtn = '<div class="folder-pick-btn none-btn'+(current===''?' selected':'')+'" onclick="moveToFolder(\'\')"><span>📋</span> Unfiled</div>';
+  var folderBtns = folders.map(function(f){
+    return '<div class="folder-pick-btn'+(current===f.id?' selected':'')+'" onclick="moveToFolder(\''+f.id+'\')"><span>'+f.emoji+'</span> '+esc(f.name)+'</div>';
+  }).join('');
+  grid.innerHTML = noneBtn + folderBtns;
+  if(!folders.length && !noneBtn){
+    grid.innerHTML = '<div style="font-family:var(--font-mono);font-size:.73rem;color:var(--txtf)">No folders yet. Create one first.</div>';
+  }
+  openM('mmove');
+}
+function moveToFolder(folderId){
+  if(!moveTargetId) return;
+  db.collection('companies').doc(moveTargetId).set({ folderId: folderId }, {merge:true})
+    .then(function(){
+      closeM('mmove');
+      var f = folderId ? folders.find(function(x){ return x.id === folderId; }) : null;
+      toast('Moved to ' + (f ? f.emoji + ' ' + f.name : 'Unfiled'));
+    })
+    .catch(function(e){ toast('Error: ' + e.message); });
 }
 
-function loadData(){
-  // Load folders
-  db.collection('folders').onSnapshot(function(snapshot){
-    folders = [];
-    snapshot.forEach(function(doc){
-      folders.push({id: doc.id, name: doc.data().name});
+// ── BOOT ───────────────────────────────────────────────
+window.addEventListener('load', function(){
+  loadFolders();
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+    db.enablePersistence({synchronizeTabs:true}).catch(function(e){
+      console.warn('Persistence unavailable:', e.code);
     });
-    renderFolders();
-    populateFolderDropdowns();
-  }, function(err){
-    console.error('Folders error:', err);
-  });
-  
-  // Load companies
-  db.collection('companies').onSnapshot(function(snapshot){
+    startListener();
+  } catch(e) {
+    console.error('Init error:', e);
+    if(e.code === 'app/duplicate-app'){
+      db = firebase.firestore();
+      startListener();
+    } else {
+      showBootError(e);
+    }
+  }
+});
+
+function showBootError(e){
+  console.error(e);
+  document.getElementById('boot-spinner').style.display = 'none';
+  document.getElementById('boot-err').style.display = 'block';
+  setSyncStatus('err','Connection failed');
+}
+function showApp(){
+  document.getElementById('boot-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+}
+
+// ── FIRESTORE LISTENER ─────────────────────────────────
+function startListener(){
+  if(!db){ toast('Database not initialized'); return; }
+  setSyncStatus('loading','Connecting...');
+  unsubscribe = db.collection('companies').orderBy('createdAt','asc').onSnapshot(function(snap){
     companies = [];
-    snapshot.forEach(function(doc){
-      var c = doc.data();
-      c.id = doc.id;
-      companies.push(c);
+    snap.forEach(function(doc){
+      var d = doc.data(); d.id = doc.id; companies.push(d);
     });
-    
-    render();
-    updateStats();
-    hideBootScreen();
-    syncStatus('live');
-    checkNotifications();
+    showApp();
+    setSyncStatus('live', 'Live \u2022 ' + companies.length + (companies.length===1?' company':' companies'));
+    renderFolders();
+    renderDash();
+    refreshN();
+    if(curId && document.getElementById('vdet').classList.contains('on')){
+      var c = companies.find(function(x){return x.id===curId;});
+      if(c) renderT(); else goBack();
+    }
   }, function(err){
-    showBootError('Failed to load data: ' + err.message);
-    syncStatus('err');
+    console.error(err);
+    showApp();
+    setSyncStatus('err','Sync error — check connection');
+    toast('Sync error: ' + err.message);
   });
-  
-  // Load activity log
-  db.collection('activity').orderBy('timestamp', 'desc').limit(20).onSnapshot(function(snapshot){
-    activityLog = [];
-    snapshot.forEach(function(doc){
-      var a = doc.data();
-      a.id = doc.id;
-      activityLog.push(a);
+}
+function setSyncStatus(state, label){
+  var dot = document.getElementById('sync-dot');
+  var lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot' + (state==='live'?' live':state==='err'?' err':state==='loading'?' loading':'');
+  lbl.textContent = label;
+}
+
+// ── FIRESTORE HELPERS ──────────────────────────────────
+function fsAdd(data)            { return db.collection('companies').add(data); }
+function fsSet(id, data)        { return db.collection('companies').doc(id).set(data, {merge:true}); }
+function fsDel(id)              { return db.collection('companies').doc(id).delete(); }
+function updateItems(id, items) { return fsSet(id, {items: items}); }
+function getItems(id){
+  var c = companies.find(function(x){return x.id===id;});
+  return c ? (c.items||[]).map(function(i){return Object.assign({},i);}) : [];
+}
+
+// ── UTILS ──────────────────────────────────────────────
+function uid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function trunc(s,n){ return s&&s.length>n ? s.slice(0,n)+'...' : s; }
+function pct(c){
+  if(!c.items||!c.items.length) return 0;
+  return Math.round(c.items.filter(function(i){return i.status==='done';}).length / c.items.length * 100);
+}
+function addDays(iso, n){ var d=new Date(iso); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function resolveDeadline(item, co){
+  if(item.deadlineDays!=null && co && co.startDate) return addDays(co.startDate, item.deadlineDays);
+  if(item.deadlineDate) return item.deadlineDate;
+  return null;
+}
+function daysTo(iso){
+  if(!iso) return null;
+  var d=new Date(iso); if(isNaN(d)) return null;
+  var n=new Date(); n.setHours(0,0,0,0);
+  return Math.round((d-n)/86400000);
+}
+function fmt(iso){
+  if(!iso) return '--';
+  var d=new Date(iso); if(isNaN(d)) return iso;
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+function chipHtml(p){
+  if(p===100) return '<span class="chip chip-done">Complete</span>';
+  if(p>0)     return '<span class="chip chip-prog">In Progress</span>';
+  return '<span class="chip chip-new">Not Started</span>';
+}
+function fn2name(fn){ return fn.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}).trim(); }
+
+// ── NOTIFICATIONS ──────────────────────────────────────
+function refreshN(){
+  var rm={};notifications.forEach(function(n){rm[n.key]=n.read;});
+  var f=[];
+  companies.forEach(function(co){
+    (co.items||[]).forEach(function(item){
+      if(item.status==='done') return;
+      var rd=resolveDeadline(item,co),d=daysTo(rd);
+      if(d===null) return;
+      var k=co.id+':'+item.id;
+      if(d<=15&&d>=0) f.push({id:uid(),key:k,co:co.name,act:item.action,d:d,ov:false,read:rm[k]||false});
+      else if(d<0)    f.push({id:uid(),key:k+':ov',co:co.name,act:item.action,d:d,ov:true,read:rm[k+':ov']||false});
     });
-    renderActivity();
   });
-  
-  // Load custom sectors if any
-  db.collection('settings').doc('sectors').get().then(function(doc){
-    if(doc.exists){
-      sectors = doc.data().list || sectors;
-    }
-  });
-  
-  // Load custom leads if any
-  db.collection('settings').doc('leads').get().then(function(doc){
-    if(doc.exists){
-      investmentLeads = doc.data().list || investmentLeads;
-    }
-  });
+  notifications=f; renderN();
 }
-
-// ══════════════════════════════════════════════════════════
-// RENDERING
-// ══════════════════════════════════════════════════════════
-function render(){
-  applyFilters();
+function renderN(){
+  var u=notifications.filter(function(n){return !n.read;});
+  var b=document.getElementById('bb'); b.textContent=u.length; b.classList.toggle('on',u.length>0);
+  var l=document.getElementById('nl');
+  if(!notifications.length){l.innerHTML='<div class="nempty">No pending reminders</div>';return;}
+  l.innerHTML=notifications.map(function(n){
+    return '<div class="notif-item'+(n.read?' read':'')+'" onclick="readN(\''+n.id+'\')">'
+      +'<div class="ndot'+(n.ov?' ov':'')+'"></div>'
+      +'<div><div class="ntext"><b>'+esc(n.co)+'</b>: '+esc(trunc(n.act,55))+'</div>'
+      +'<div class="nmeta">'+(n.ov?'Overdue by '+Math.abs(n.d)+'d':'Due in '+n.d+'d')+'</div></div></div>';
+  }).join('');
 }
+function readN(id){var n=notifications.find(function(x){return x.id===id;});if(n){n.read=true;renderN();}}
+function clearNotifs(){notifications.forEach(function(n){n.read=true;});renderN();}
+function toggleNotif(){document.getElementById('nd').classList.toggle('open');}
 
-function applyFilters(){
-  var search = document.getElementById('searchInput').value.toLowerCase();
-  var filtered = companies.filter(function(c){
-    // Filter by status
-    if(curFilter === 'pending'){
-      var pend = (c.items||[]).filter(function(i){ return i.status !== 'done'; }).length;
-      if(pend === 0) return false;
-    } else if(curFilter === 'done'){
-      var total = (c.items||[]).length;
-      var done = (c.items||[]).filter(function(i){ return i.status === 'done'; }).length;
-      if(total === 0 || done < total) return false;
-    } else if(curFilter === 'overdue'){
-      var hasOverdue = (c.items||[]).some(function(i){
-        return i.status !== 'done' && i.dueDate && new Date(i.dueDate) < new Date();
-      });
-      if(!hasOverdue) return false;
+// ── DASHBOARD ──────────────────────────────────────────
+function setF(btn,f){curF=f;document.querySelectorAll('[data-f]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');renderDash();}
+
+function renderDash(){
+  var gr=document.getElementById('gr'),em=document.getElementById('emp');
+  var q=document.getElementById('si').value.toLowerCase();
+
+  var cos=companies.filter(function(c){
+    // Folder filter
+    if(curFolder === '__none__'){
+      if(c.folderId) return false;
+    } else if(curFolder !== '__all__'){
+      if(c.folderId !== curFolder) return false;
     }
-    
-    // Filter by folder
-    if(curFolder !== 'all' && c.folderId !== curFolder) return false;
-    
-    // Filter by search
-    if(search && !c.name.toLowerCase().includes(search) && !(c.code||'').toLowerCase().includes(search)){
-      return false;
-    }
-    
+    // Search
+    if(q&&!c.name.toLowerCase().includes(q)) return false;
+    // Progress filter
+    var p=pct(c);
+    if(curF==='done') return p===100;
+    if(curF==='prog') return p>0&&p<100;
+    if(curF==='new')  return p===0;
     return true;
   });
-  
-  renderCompanies(filtered);
+
+  if(!cos.length){gr.innerHTML='';em.style.display='block';}
+  else{
+    em.style.display='none';
+    gr.innerHTML=cos.map(function(c){
+      var p=pct(c),done=(c.items||[]).filter(function(i){return i.status==='done';}).length,tot=(c.items||[]).length;
+      var fc=p>=70?'':p>=30?'w':'l';
+      var folderTag='';
+      if(c.folderId){
+        var f=folders.find(function(x){return x.id===c.folderId;});
+        if(f) folderTag='<div class="cfolder-tag">'+f.emoji+' '+esc(f.name)+'</div>';
+      }
+      return '<div class="card" data-cardid="'+c.id+'" draggable="true" '
+        +'ondragstart="cardDragStart(event,\''+c.id+'\')" ondragend="cardDragEnd(event,\''+c.id+'\')" '
+        +'onclick="showDet(\''+c.id+'\')">'
+        +'<div class="card-hd"><div>'
+        +'<div class="cname">'+esc(c.name)+'</div>'
+        +'<div class="cid">'+esc(c.code||c.id)+(c.sector?' &middot; '+esc(c.sector):'')+'</div>'
+        +(c.startDate?'<div class="cstart">&#128197; Start: '+fmt(c.startDate)+'</div>':'<div class="cstart" style="color:var(--warn)">&#9888; No start date set</div>')
+        +folderTag
+        +'</div>'+chipHtml(p)+'</div>'
+        +'<div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>'+p+'%</strong></div>'
+        +'<div class="prog-bg"><div class="prog-fill '+fc+'" style="width:'+p+'%"></div></div></div>'
+        +'<div class="cmeta"><div class="mi"><strong>'+tot+'</strong>Total</div><div class="mi"><strong>'+done+'</strong>Done</div><div class="mi"><strong>'+(tot-done)+'</strong>Pending</div></div>'
+        +'<div class="cact">'
+        +'<button class="move-btn" onclick="event.stopPropagation();openMoveModal(\''+c.id+'\')">📁 Move</button>'
+        +'<button class="del-card-btn" onclick="event.stopPropagation();askDel(\''+c.id+'\')">&#128465; Delete</button>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  var all=companies.flatMap(function(c){return c.items||[];});
+  var dn=all.filter(function(i){return i.status==='done';}).length;
+  var avg=companies.length?Math.round(companies.map(pct).reduce(function(a,b){return a+b;},0)/companies.length):0;
+  document.getElementById('s0').textContent=companies.length;
+  document.getElementById('s1').textContent=all.length;
+  document.getElementById('s2').textContent=dn;
+  document.getElementById('s3').textContent=avg+'%';
+  updateFolderCounts();
 }
 
-function renderCompanies(comps){
-  var grid = document.getElementById('compGrid');
-  var empty = document.getElementById('emptyState');
-  
-  if(comps.length === 0){
-    grid.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
-  
-  empty.style.display = 'none';
-  grid.innerHTML = comps.map(function(c){
-    var total = (c.items||[]).length;
-    var done = (c.items||[]).filter(function(i){ return i.status === 'done'; }).length;
-    var pct = total > 0 ? Math.round((done/total)*100) : 0;
-    
-    var overdue = (c.items||[]).filter(function(i){
-      return i.status !== 'done' && i.dueDate && new Date(i.dueDate) < new Date();
-    }).length;
-    
-    var folder = folders.find(function(f){ return f.id === c.folderId; });
-    var folderName = folder ? folder.name : 'No Folder';
-    
-    var status = '';
-    if(pct === 100) status = '<div class="status-badge ok">COMPLETED</div>';
-    else if(overdue > 0) status = '<div class="status-badge danger">'+overdue+' OVERDUE</div>';
-    else if(pct > 0) status = '<div class="status-badge warn">IN PROGRESS</div>';
-    
-    var isSelected = selectedItems.has(c.id);
-    
-    return '<div class="card '+(isSelected?'selected':'')+'" onclick="showDet(\''+c.id+'\')" data-id="'+c.id+'">'
-      + '<div class="card-checkbox '+(isSelected?'checked':'')+'" onclick="event.stopPropagation();toggleCardSelection(\''+c.id+'\')"></div>'
-      + '<div class="card-hd">'
-        + '<div class="card-name">'+esc(c.name)+'</div>'
-      + '</div>'
-      + '<div class="card-meta">'
-        + '<div class="card-tag">📁 '+esc(folderName)+'</div>'
-        + (c.code ? '<div class="card-code">'+esc(c.code)+'</div>' : '')
-        + (c.sector ? '<div class="card-tag">🏢 '+esc(c.sector)+'</div>' : '')
-        + (c.investmentLead ? '<div class="card-tag">👤 '+esc(c.investmentLead)+'</div>' : '')
-      + '</div>'
-      + '<div class="card-prog">'
-        + '<div class="prog-hd">'
-          + '<div class="prog-label">PROGRESS</div>'
-          + '<div class="prog-num">'+done+'/'+total+'</div>'
-        + '</div>'
-        + '<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div>'
-      + '</div>'
-      + '<div class="card-foot">'+status+'</div>'
-    + '</div>';
-  }).join('');
+// ── ADD COMPANY ────────────────────────────────────────
+function addCo(){
+  var name=document.getElementById('cn').value.trim();
+  if(!name){toast('Company name is required');return;}
+  var code=document.getElementById('cc').value.trim()||('CO-'+uid().slice(0,6).toUpperCase());
+  var sector=document.getElementById('cs').value.trim(),sd=document.getElementById('csd').value||'';
+  var folderId=document.getElementById('cfl').value||'';
+  fsAdd({name:name,code:code,sector:sector,startDate:sd,folderId:folderId,items:[],createdAt:new Date().toISOString()})
+    .then(function(){closeM('mac');['cn','cc','cs','csd'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('cfl').value='';toast(name+' added');})
+    .catch(function(e){toast('Error: '+e.message);});
 }
 
-function renderFolders(){
-  var row = document.getElementById('foldersRow');
-  if(folders.length === 0){
-    row.innerHTML = '<div class="no-folder-label">No folders yet</div>';
-    return;
-  }
+// ── DELETE ─────────────────────────────────────────────
+function askDel(id){delId=id;var c=companies.find(function(x){return x.id===id;});document.getElementById('deln').textContent=c?c.name:'this company';openM('mdel');}
+function delCur(){askDel(curId);}
+function execDel(){
+  var c=companies.find(function(x){return x.id===delId;});var nm=c?c.name:'';
+  fsDel(delId).then(function(){delId=null;closeM('mdel');if(curId&&curId===nm)goBack();toast(nm+' deleted');}).catch(function(e){toast('Error: '+e.message);});
+}
+
+// ── DETAIL ─────────────────────────────────────────────
+function showDet(id){
+  // First, ensure we're coming from a clean state
+  document.getElementById('vanalytics').style.display = 'none';
+  document.getElementById('vd').style.display = 'none';
+  document.getElementById('vd').classList.remove('on');
   
-  var allCount = companies.length;
-  var allActive = curFolder === 'all' ? 'active' : '';
+  // Set current ID
+  curId=id;
+  dF='all';
   
-  var html = '<div class="folder-chip folder-all '+allActive+'" onclick="setFolder(\'all\')">'
-    + '<span class="folder-icon">📂</span>'
-    + '<span class="folder-name">All Companies</span>'
-    + '<span class="folder-count">'+allCount+'</span>'
-  + '</div>';
+  // Reset filters
+  document.querySelectorAll('[data-df]').forEach(function(b){b.classList.remove('on');});
+  var allBtn = document.querySelector('[data-df="all"]');
+  if(allBtn) allBtn.classList.add('on');
   
-  folders.forEach(function(f){
-    var count = companies.filter(function(c){ return c.folderId === f.id; }).length;
-    var active = curFolder === f.id ? 'active' : '';
-    html += '<div class="folder-chip '+active+'" onclick="setFolder(\''+f.id+'\')" draggable="false">'
-      + '<span class="folder-icon">📁</span>'
-      + '<span class="folder-name">'+esc(f.name)+'</span>'
-      + '<span class="folder-count">'+count+'</span>'
-      + '<button class="folder-del" onclick="event.stopPropagation();deleteFolder(\''+f.id+'\')">✕</button>'
-    + '</div>';
+  // Get company data
+  var c=companies.find(function(x){return x.id===id;});
+  if(!c)return;
+  
+  // Update detail view content
+  document.getElementById('dtn').textContent=c.name;
+  document.getElementById('dts').textContent=(c.code||c.id)+(c.sector?' · '+c.sector:'');
+  document.getElementById('dsv').textContent=c.startDate?fmt(c.startDate):'Not set';
+  document.getElementById('no-start-warn').style.display=c.startDate?'none':'inline';
+  
+  // Show detail view
+  document.getElementById('vdet').style.display = 'block';
+  document.getElementById('vdet').classList.add('on');
+  
+  // Render table and SPOC data
+  renderT();
+  
+  // Load SPOC data
+  var spocNameEl = document.getElementById('spocName');
+  var spocEmailEl = document.getElementById('spocEmail');
+  if(spocNameEl) spocNameEl.value = c.spocName || '';
+  if(spocEmailEl) spocEmailEl.value = c.spocEmail || '';
+  renderEmailChips();
+}
+
+function goBack(){
+  // Hide detail and analytics views
+  document.getElementById('vdet').classList.remove('on');
+  document.getElementById('vdet').style.display = 'none';
+  document.getElementById('vanalytics').style.display = 'none';
+  
+  // Show dashboard
+  var dashView = document.getElementById('vd');
+  dashView.classList.add('on');
+  dashView.style.display = 'block';
+  
+  // Clear current company
+  curId = null;
+  
+  // Reset navigation tabs to Dashboard
+  document.querySelectorAll('.nav-tab-btn').forEach(function(btn){
+    var isActive = btn.dataset.view === 'dashboard';
+    btn.classList.toggle('active', isActive);
+    btn.style.background = isActive ? 'var(--acc)' : 'var(--sur2)';
+    btn.style.color = isActive ? '#0b0e0d' : 'var(--txtm)';
+    btn.style.borderColor = isActive ? 'var(--acc)' : 'var(--bor)';
   });
   
-  row.innerHTML = html;
+  // Re-render dashboard to ensure it's interactive
+  renderDash();
+}
+function setDF(btn,f){dF=f;document.querySelectorAll('[data-df]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');renderT();}
+
+// ── START DATE ─────────────────────────────────────────
+function openStartEdit(){var c=companies.find(function(x){return x.id===curId;});document.getElementById('sdi').value=c?c.startDate||'':'';openM('msd');}
+function saveSD(){
+  var sd=document.getElementById('sdi').value||'';
+  fsSet(curId,{startDate:sd}).then(function(){
+    document.getElementById('dsv').textContent=sd?fmt(sd):'Not set';
+    document.getElementById('no-start-warn').style.display=sd?'none':'inline';
+    closeM('msd');toast('Start date saved');
+  }).catch(function(e){toast('Error: '+e.message);});
 }
 
-function renderActivity(){
-  var feed = document.getElementById('activityFeed');
-  if(activityLog.length === 0){
-    feed.innerHTML = '<div class="nempty">No recent activity</div>';
-    return;
-  }
-  
-  feed.innerHTML = activityLog.slice(0,10).map(function(a){
-    var icon = '📝';
-    if(a.action === 'add') icon = '➕';
-    if(a.action === 'delete') icon = '🗑';
-    if(a.action === 'complete') icon = '✅';
-    if(a.action === 'nudge') icon = '📧';
-    
-    return '<div class="activity-item">'
-      + '<div class="activity-icon">'+icon+'</div>'
-      + '<div class="activity-content">'
-        + '<div class="activity-text">'+esc(a.text)+'</div>'
-        + '<div class="activity-time">'+timeAgo(a.timestamp)+'</div>'
-      + '</div>'
-    + '</div>';
+// ── RENDER TABLE ───────────────────────────────────────
+function renderT(){
+  var c=companies.find(function(x){return x.id===curId;});if(!c)return;
+  var items=c.items||[];
+  var fil=items.filter(function(item){
+    var rd=resolveDeadline(item,c),d=daysTo(rd);
+    if(dF==='pend') return item.status!=='done';
+    if(dF==='done') return item.status==='done';
+    if(dF==='ov')   return item.status!=='done'&&d!==null&&d<0;
+    return true;
+  });
+  var tot=items.length,dn=items.filter(function(i){return i.status==='done';}).length;
+  var p=tot?Math.round(dn/tot*100):0;
+  var ov=items.filter(function(i){var rd=resolveDeadline(i,c);var d=daysTo(rd);return i.status!=='done'&&d!==null&&d<0;}).length;
+  document.getElementById('dp0').textContent=p+'%';document.getElementById('dp1').textContent=tot;
+  document.getElementById('dp2').textContent=dn;document.getElementById('dp3').textContent=ov;
+  var tb=document.getElementById('tb');
+  if(!fil.length){tb.innerHTML='<tr><td colspan="5"><div class="empty-s"><div class="ei">&#128203;</div><div class="et">No items</div><div class="es">Try a different filter or add action items</div></div></td></tr>';return;}
+  tb.innerHTML=fil.map(function(item,idx){
+    var rd=resolveDeadline(item,c),d=daysTo(rd);
+    var rc=item.status==='done'?'done':'';
+    if(item.status!=='done'){if(d!==null&&d<0)rc+=' ov';else if(d!==null&&d<=15)rc+=' ds-r';}
+    var dlc=item.status==='done'?'dl-ok':d===null?'dl-ok':d<0?'dl-ov':d<=15?'dl-w':'dl-ok';
+    var bc=d===null?'':d<0?'dbg-ov':d<=15?'dbg-w':'';
+    var bt=d===null?'':d<0?(Math.abs(d)+'d overdue'):d===0?'Due today!':d<=15?(d+'d left'):'';
+    var dlCell='';
+    if(item.deadlineDays!=null){
+      dlCell='<div class="'+dlc+'">'+(rd?fmt(rd):'Set start date first')+'</div>'
+        +'<div class="dl-sub">Day '+item.deadlineDays+' from start</div>';
+    } else if(item.deadlineDate){
+      dlCell='<div class="'+dlc+'">'+fmt(item.deadlineDate)+'</div>';
+    } else {
+      dlCell='<div class="dl-ok">--</div>'
+        +'<div class="dl-sub" style="cursor:pointer;color:var(--acc)" onclick="inlineEditDays(\''+item.id+'\')">+ set deadline</div>';
+    }
+    if(bt) dlCell+='<span class="dbg'+(bc?' '+bc:'')+'">'+bt+'</span>';
+    var iid=item.id,com=item.comment||'';
+    var ch='<div class="com-area">'
+      +'<div class="com-disp'+(com?'':' emp')+'" id="cd-'+iid+'" onclick="editCom(\''+iid+'\')">'+(com?esc(com):'+ Add comment...')+'</div>'
+      +'<div id="ce-'+iid+'" style="display:none">'
+      +'<textarea class="com-inp" id="ct-'+iid+'" rows="2">'+esc(com)+'</textarea>'
+      +'<div class="com-row"><button class="com-save" onclick="saveCom(\''+iid+'\')">Save</button>'
+      +'<button class="com-cancel" onclick="cancelCom(\''+iid+'\')">Cancel</button></div></div></div>';
+    var ab=item.status!=='done'
+      ?'<button class="btn btn-gh btn-sm" onclick="markDone(\''+iid+'\')">&#10003; Mark Done</button>'
+      :'<button class="btn btn-red btn-sm" onclick="markPend(\''+iid+'\')">&#8617; Reopen</button>';
+    return '<tr class="'+rc+'"><td class="tdn">'+(idx+1)+'</td>'
+      +'<td class="tda"><p>'+esc(item.action)+'</p>'+ch+'</td>'
+      +'<td class="tdl">'+dlCell+'</td>'
+      +'<td><span class="pill '+(item.status==='done'?'pill-d':'pill-p')+'">'+(item.status==='done'?'Done':'Pending')+'</span></td>'
+      +'<td class="tac"><div class="abg">'+ab+'</div></td></tr>';
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════════
-// COMPANY ACTIONS
-// ══════════════════════════════════════════════════════════
-function openAddCompany(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  populateFolderDropdowns();
-  populateSectorDropdowns();
-  populateLeadDropdowns();
-  openM('madd');
+// ── ITEM ACTIONS ───────────────────────────────────────
+function inlineEditDays(iid){
+  var n=prompt('Number of days from ESAP start date (e.g. 120):');
+  if(!n)return;
+  var days=parseInt(n,10);if(isNaN(days)||days<=0){toast('Enter a valid positive number');return;}
+  var items=getItems(curId);
+  var item=items.find(function(i){return i.id===iid;});
+  if(item){item.deadlineDays=days;updateItems(curId,items).then(function(){toast('Deadline set: Day '+days);}).catch(function(e){toast('Error: '+e.message);});}
+}
+function markDone(id){
+  var items=getItems(curId);
+  var item=items.find(function(i){return i.id===id;});
+  if(item){item.status='done';item.doneAt=new Date().toISOString();}
+  updateItems(curId,items).then(function(){toast('Marked as complete');}).catch(function(e){toast('Error: '+e.message);});
+}
+function markPend(id){
+  var items=getItems(curId);
+  var item=items.find(function(i){return i.id===id;});
+  if(item){item.status='pending';delete item.doneAt;}
+  updateItems(curId,items).then(function(){toast('Marked as incomplete');}).catch(function(e){toast('Error: '+e.message);});
+}
+function editCom(id){document.getElementById('cd-'+id).style.display='none';document.getElementById('ce-'+id).style.display='block';document.getElementById('ct-'+id).focus();}
+function cancelCom(id){document.getElementById('ce-'+id).style.display='none';document.getElementById('cd-'+id).style.display='block';}
+function saveCom(id){
+  var items=getItems(curId);
+  var item=items.find(function(i){return i.id===id;});
+  var val=document.getElementById('ct-'+id).value.trim();
+  if(item)item.comment=val;
+  updateItems(curId,items).then(function(){
+    var disp=document.getElementById('cd-'+id);
+    if(disp){disp.textContent=val||'+ Add comment...';disp.className='com-disp'+(val?'':' emp');}
+    document.getElementById('ce-'+id).style.display='none';if(disp)disp.style.display='block';
+    toast('Comment saved');
+  }).catch(function(e){toast('Error: '+e.message);});
 }
 
-function confirmAddCompany(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  
-  var name = document.getElementById('addName').value.trim();
-  var code = document.getElementById('addCode').value.trim();
-  var folder = document.getElementById('addFolder').value;
-  var sector = document.getElementById('addSector').value;
-  var lead = document.getElementById('addLead').value;
-  
-  if(!name){ toast('Company name required'); return; }
-  
-  var newComp = {
-    name: name,
-    code: code,
-    folderId: folder || null,
-    sector: sector || null,
-    investmentLead: lead || null,
-    items: [],
-    spocName: '',
-    spocEmail: '',
-    additionalEmails: [],
-    createdAt: Date.now()
+// ── ADD ITEM ROW ───────────────────────────────────────
+function addRow(){
+  var ex=document.getElementById('air');if(ex){ex.remove();return;}
+  var tb=document.getElementById('tb');
+  var tr=document.createElement('tr');tr.id='air';tr.className='air';
+  tr.innerHTML='<td></td>'
+    +'<td><textarea class="ari" id="ai-a" placeholder="Action item description..." rows="2" style="resize:vertical"></textarea></td>'
+    +'<td><div class="dl-toggle"><button class="dl-tab on" id="tab-days" onclick="switchDlTab(\'days\')">Days</button>'
+    +'<button class="dl-tab" id="tab-date" onclick="switchDlTab(\'date\')">Date</button></div>'
+    +'<div id="inp-days"><input class="ari" id="ai-days" type="number" min="1" max="3650" placeholder="e.g. 90" style="width:110px" oninput="updateDlPrev()"></div>'
+    +'<div id="inp-date" style="display:none"><input class="ari" id="ai-date" type="date" style="width:140px"></div>'
+    +'<div class="dl-prev" id="dl-prev"></div></td>'
+    +'<td><span class="pill pill-p">Pending</span></td>'
+    +'<td><div style="display:flex;gap:6px"><button class="btn btn-pri btn-sm" onclick="saveRow()">Save</button>'
+    +'<button class="btn btn-gh btn-sm" onclick="document.getElementById(\'air\').remove()">✕</button></div></td>';
+  tb.insertBefore(tr,tb.firstChild);document.getElementById('ai-a').focus();
+}
+function switchDlTab(t){
+  document.getElementById('inp-days').style.display=t==='days'?'block':'none';
+  document.getElementById('inp-date').style.display=t==='date'?'block':'none';
+  document.getElementById('tab-days').classList.toggle('on',t==='days');
+  document.getElementById('tab-date').classList.toggle('on',t==='date');updateDlPrev();
+}
+function updateDlPrev(){
+  var c=companies.find(function(x){return x.id===curId;});
+  var prev=document.getElementById('dl-prev');if(!prev)return;
+  var isDays=document.getElementById('tab-days').classList.contains('on');
+  if(isDays){var n=parseInt(document.getElementById('ai-days').value,10);
+    if(n>0&&c&&c.startDate)prev.textContent='= '+fmt(addDays(c.startDate,n));
+    else if(n>0)prev.textContent='Set start date to preview';
+    else prev.textContent='';
+  }else{prev.textContent='';}
+}
+function saveRow(){
+  var a=document.getElementById('ai-a').value.trim();if(!a){toast('Action description required');return;}
+  var isDays=document.getElementById('tab-days').classList.contains('on');
+  var newItem={id:uid(),action:a,status:'pending',comment:'',addedAt:new Date().toISOString()};
+  if(isDays){var n=parseInt(document.getElementById('ai-days').value,10);if(!n||n<=0){toast('Enter valid days');return;}newItem.deadlineDays=n;}
+  else{var dt=document.getElementById('ai-date').value;if(!dt){toast('Enter a date');return;}newItem.deadlineDate=dt;}
+  var items=getItems(curId);items.push(newItem);
+  updateItems(curId,items).then(function(){document.getElementById('air').remove();toast('Item added');}).catch(function(e){toast('Error: '+e.message);});
+}
+
+// ── UPLOAD ─────────────────────────────────────────────
+function openM(id){if(id==='mu'){populateSel();toggleNew();}if(id==='mac'){populateFolderSelect();}document.getElementById(id).classList.add('open');}
+function closeM(id){
+  document.getElementById(id).classList.remove('open');
+  if(id==='mu'){pendingUpload=null;pendingFileName='';document.getElementById('uprev').innerHTML='';document.getElementById('ucb').disabled=true;document.getElementById('file-input').value='';}
+}
+function populateSel(){
+  var sel=document.getElementById('ucs');
+  sel.innerHTML='<option value="__new__">+ Create new company from file name</option>'
+    +companies.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>';}).join('');
+}
+function toggleNew(){
+  var isNew=document.getElementById('ucs').value==='__new__';
+  document.getElementById('new-sec').style.display=isNew?'block':'none';
+  document.getElementById('exist-sec').style.display=isNew?'none':'block';
+  if(!isNew){var c=companies.find(function(x){return x.id===document.getElementById('ucs').value;});
+    var info=document.getElementById('exist-info');
+    if(c&&c.startDate)info.innerHTML='&#128197; Start date: <b>'+fmt(c.startDate)+'</b> — day-based deadlines counted from here.';
+    else info.innerHTML='&#9888; No start date set. Set one so day-based deadlines resolve correctly.';}
+}
+function uploadForCur(){openM('mu');setTimeout(function(){document.getElementById('ucs').value=curId;toggleNew();},50);}
+function dropFile(e){e.preventDefault();document.getElementById('uz').classList.remove('drag');var f=e.dataTransfer.files[0];if(f)procFile(f);}
+function pickFile(e){var f=e.target.files[0];if(f)procFile(f);}
+
+// ── TIMELINE / STATUS PARSERS ──────────────────────────
+function parseTimeline(raw){
+  if(raw==null||raw==='') return null;
+  if(typeof raw==='number'){
+    if(Number.isInteger(raw)&&raw>0&&raw<=3650) return {days:raw};
+    var d=new Date(Math.round((raw-25569)*86400000));
+    if(!isNaN(d)) return {date:d.toISOString().slice(0,10)};
+    return null;
+  }
+  var s=String(raw).trim().replace(/\s+/g,' ');
+  var m=s.match(/^(\d+)\s*days?$/i);
+  if(m){var n=parseInt(m[1],10);if(n>0&&n<=3650)return{days:n};}
+  if(/^\d+$/.test(s)){var n2=parseInt(s,10);if(n2>0&&n2<=3650)return{days:n2};}
+  var dm=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if(dm){var y=dm[3].length===2?'20'+dm[3]:dm[3];var dt=new Date(y+'-'+dm[2].padStart(2,'0')+'-'+dm[1].padStart(2,'0'));if(!isNaN(dt))return{date:dt.toISOString().slice(0,10)};}
+  var d2=new Date(s); if(!isNaN(d2)&&s.length>=8) return{date:d2.toISOString().slice(0,10)};
+  return null;
+}
+function mapStatus(raw){
+  if(!raw) return 'pending';
+  var s=String(raw).trim().toLowerCase();
+  if(s==='completed'||s==='done'||s==='complete'||s==='yes'||s==='closed'||s.startsWith('completed')) return 'done';
+  return 'pending';
+}
+function findColumns(headers){
+  var ac=-1,tc=-1,sc=-1;
+  headers.forEach(function(h,i){
+    var hl=(h||'').toString().toLowerCase().trim();
+    if(ac<0&&(hl.indexOf('action')!==-1||hl.indexOf('description')!==-1)) ac=i;
+    if(tc<0&&(hl.indexOf('timeline')!==-1||hl.indexOf('deadline')!==-1||hl.indexOf('days')!==-1)) tc=i;
+    if(sc<0&&(hl.indexOf('status')!==-1||hl.indexOf('completion')!==-1)) sc=i;
+  });
+  return{ac:ac,tc:tc,sc:sc};
+}
+
+function procFile(file){
+  var ext=file.name.split('.').pop().toLowerCase();
+  if(['xlsx','xls','csv'].indexOf(ext)===-1){toast('Upload .xlsx, .xls or .csv');return;}
+  pendingFileName=file.name;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=ev.target.result,rows=[];
+      if(ext==='csv'){
+        var text=new TextDecoder().decode(data);
+        var lines=text.split('\n').filter(function(l){return l.trim();});
+        if(!lines.length){toast('CSV is empty');return;}
+        var hdrs=lines[0].split(',').map(function(h){return h.replace(/"/g,'').trim();});
+        var cols=findColumns(hdrs),ac=cols.ac>=0?cols.ac:0,tc=cols.tc>=0?cols.tc:1,sc=cols.sc>=0?cols.sc:-1;
+        for(var i=1;i<lines.length;i++){
+          var parts=lines[i].split(',');
+          var a=(parts[ac]||'').replace(/^"|"$/g,'').trim();
+          if(!a||a.length<3||/^\d+$/.test(a))continue;
+          var tl=parseTimeline((parts[tc]||'').replace(/^"|"$/g,'').trim());
+          var sraw=sc>=0?(parts[sc]||'').replace(/^"|"$/g,'').trim():'';
+          var ni={action:a,status:mapStatus(sraw)};
+          if(tl){if(tl.days!=null)ni.deadlineDays=tl.days;else if(tl.date)ni.deadlineDate=tl.date;}
+          rows.push(ni);
+        }
+      }else{
+        var wb=XLSX.read(data,{type:'array'});
+        var ws=wb.Sheets[wb.SheetNames[0]];
+        var aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        var hdrIdx=-1;
+        for(var r=0;r<Math.min(aoa.length,10);r++){
+          var rs=aoa[r].join('|').toLowerCase();
+          if(rs.indexOf('action')!==-1&&(rs.indexOf('timeline')!==-1||rs.indexOf('deadline')!==-1)){hdrIdx=r;break;}
+        }
+        if(hdrIdx<0){for(var r2=0;r2<Math.min(aoa.length,10);r2++){if(aoa[r2].join('|').toLowerCase().indexOf('action')!==-1){hdrIdx=r2;break;}}}
+        if(hdrIdx<0){toast('Cannot find header row. Need columns: Actions, Timeline, Status');return;}
+        var hdrs2=aoa[hdrIdx].map(function(h){return String(h||'');});
+        var cols2=findColumns(hdrs2),ac2=cols2.ac>=0?cols2.ac:2,tc2=cols2.tc>=0?cols2.tc:5,sc2=cols2.sc>=0?cols2.sc:-1;
+        for(var r3=hdrIdx+1;r3<aoa.length;r3++){
+          var row=aoa[r3],a2=String(row[ac2]||'').trim();
+          if(!a2||a2.length<3||/^\d+$/.test(a2))continue;
+          if(['actions','action item','sr. no.','sr no'].indexOf(a2.toLowerCase())!==-1)continue;
+          var tl2=parseTimeline(row[tc2]);
+          var sraw2=sc2>=0?String(row[sc2]||'').trim():'';
+          var ni2={action:a2,status:mapStatus(sraw2)};
+          if(tl2){if(tl2.days!=null)ni2.deadlineDays=tl2.days;else if(tl2.date)ni2.deadlineDate=tl2.date;}
+          rows.push(ni2);
+        }
+      }
+      if(!rows.length){toast('No valid action items found');return;}
+      pendingUpload=rows;document.getElementById('ucb').disabled=false;
+      var selVal=document.getElementById('ucs').value;
+      var startDate=selVal==='__new__'?document.getElementById('usd').value||null:(function(){var ec=companies.find(function(x){return x.id===selVal;});return ec?ec.startDate:null;})();
+      var isNew=selVal==='__new__',guess=fn2name(file.name);
+      var dayC=rows.filter(function(r){return r.deadlineDays!=null;}).length;
+      var doneC=rows.filter(function(r){return r.status==='done';}).length;
+      var prev='<div style="background:var(--sur2);border:1px solid var(--bor);border-radius:20px;padding:12px 14px">'
+        +'<div style="font-family:var(--font-mono);font-size:.7rem;color:var(--acc);margin-bottom:6px">&#10003; '+rows.length+' items in <b>'+esc(file.name)+'</b></div>'
+        +'<div style="font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-bottom:6px">'+dayC+' day-based &middot; '+(rows.length-dayC)+' date-based &middot; '+doneC+' completed</div>'
+        +(isNew?'<div style="font-family:var(--font-mono);font-size:.65rem;color:var(--warn);margin-bottom:6px">Company: &quot;'+esc(guess)+'&quot;</div>':'')
+        +rows.slice(0,5).map(function(r){
+          var dlStr=r.deadlineDays!=null?('Day '+r.deadlineDays+(startDate?' = '+fmt(addDays(startDate,r.deadlineDays)):'')):(r.deadlineDate?fmt(r.deadlineDate):'No deadline');
+          return '<div style="font-size:.75rem;color:var(--txtm);border-bottom:1px solid var(--bor);padding:5px 0;display:flex;justify-content:space-between;gap:8px">'
+            +'<span style="flex:1">'+esc(trunc(r.action,50))+'</span>'
+            +'<span style="color:var(--txtf);white-space:nowrap;font-family:var(--font-mono);font-size:.65rem">'+dlStr+'</span>'
+            +(r.status==='done'?'<span style="color:var(--acc);font-size:.6rem;font-family:var(--font-mono)">DONE</span>':'')+'</div>';
+        }).join('')+(rows.length>5?'<div style="font-size:.7rem;color:var(--txtf);margin-top:4px">...and '+(rows.length-5)+' more</div>':'')+'</div>';
+      document.getElementById('uprev').innerHTML=prev;
+      toast(rows.length+' items ready to import');
+    }catch(err){console.error(err);toast('Parse error: '+err.message);}
   };
-  
-  db.collection('companies').add(newComp)
-    .then(function(){
-      logActivity('add', 'Added company: ' + name);
-      closeM('madd');
-      toast('Company added successfully');
-      document.getElementById('addName').value = '';
-      document.getElementById('addCode').value = '';
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
+  reader.readAsArrayBuffer(file);
+}
+
+function doImport(){
+  var selVal=document.getElementById('ucs').value;
+  if(!pendingUpload||!pendingUpload.length){toast('No data');return;}
+  function makeItem(r){
+    var ni={id:uid(),action:r.action,status:r.status||'pending',comment:'',addedAt:new Date().toISOString()};
+    if(r.status==='done')ni.doneAt=new Date().toISOString();
+    if(r.deadlineDays!=null)ni.deadlineDays=r.deadlineDays;
+    else if(r.deadlineDate)ni.deadlineDate=r.deadlineDate;
+    return ni;
+  }
+  if(selVal==='__new__'){
+    var name=fn2name(pendingFileName),sd=document.getElementById('usd').value||'';
+    var items=pendingUpload.map(makeItem);
+    fsAdd({name:name,code:'CO-'+uid().slice(0,6).toUpperCase(),sector:'',startDate:sd,folderId:'',items:items,createdAt:new Date().toISOString()})
+      .then(function(){closeM('mu');toast(items.length+' items imported — "'+name+'" created');})
+      .catch(function(e){toast('Error: '+e.message);});
+  }else{
+    var tgt=companies.find(function(x){return x.id===selVal;});if(!tgt){toast('Company not found');return;}
+    var exist=new Set((tgt.items||[]).map(function(i){return i.action.toLowerCase();}));
+    var newItems=(tgt.items||[]).slice();var added=0,dupes=0;
+    pendingUpload.forEach(function(r){
+      if(exist.has(r.action.toLowerCase())){dupes++;return;}
+      newItems.push(makeItem(r));added++;
     });
+    updateItems(selVal,newItems).then(function(){closeM('mu');toast(added+' imported'+(dupes?' ('+dupes+' dupes skipped)':''));}).catch(function(e){toast('Error: '+e.message);});
+  }
 }
 
-function showDet(id){
-  curId = id;
-  var c = companies.find(function(x){ return x.id === id; });
-  if(!c) return;
-  
-  document.getElementById('detTitle').textContent = c.name;
-  document.getElementById('detName').value = c.name || '';
-  document.getElementById('detCode').value = c.code || '';
-  document.getElementById('detFolder').value = c.folderId || '';
-  document.getElementById('detSector').value = c.sector || '';
-  document.getElementById('detLead').value = c.investmentLead || '';
-  document.getElementById('spocName').value = c.spocName || '';
-  document.getElementById('spocEmail').value = c.spocEmail || '';
-  
-  populateFolderDropdowns();
-  populateSectorDropdowns();
-  populateLeadDropdowns();
-  renderEmailChips();
-  renderItems();
-  openM('mdet');
+// ── EXPORT ─────────────────────────────────────────────
+function exportCSV(){
+  var c=companies.find(function(x){return x.id===curId;});
+  if(!c||!c.items||!c.items.length){toast('No items to export');return;}
+  var rows=[['#','Action Item','Days from Start','Resolved Deadline','Status','Completed At','Comment']];
+  c.items.forEach(function(item,i){
+    var rd=resolveDeadline(item,c);
+    rows.push([i+1,item.action,item.deadlineDays!=null?item.deadlineDays:'',rd?fmt(rd):(item.deadlineDate?fmt(item.deadlineDate):''),item.status,item.doneAt||'',item.comment||'']);
+  });
+  var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var blob=new Blob([csv],{type:'text/csv'});var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=c.name.replace(/\s+/g,'_')+'_ESAP_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();URL.revokeObjectURL(url);toast('CSV exported');
 }
 
-function saveCompanyDetails(){
-  if(!isAdmin){ toast('View-only mode'); return; }
+// ── TOAST ──────────────────────────────────────────────
+function toast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.getElementById('tc').appendChild(t);setTimeout(function(){t.remove();},3200);}
+
+// ── EVENTS ─────────────────────────────────────────────
+document.addEventListener('click',function(e){
+  var bw=document.getElementById('bw'),nd=document.getElementById('nd');
+  if(nd.classList.contains('open')&&!bw.contains(e.target))nd.classList.remove('open');
+});
+document.querySelectorAll('.ov-wrap').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open');});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.ov-wrap.open').forEach(function(m){m.classList.remove('open');});document.getElementById('nd').classList.remove('open');}});
+
+
+// ═══════════════════════════════════════════════════════
+//  ENHANCED FEATURES: Analytics, SPOC, Email Nudges
+// ═══════════════════════════════════════════════════════
+
+// ── NAVIGATION ─────────────────────────────────────────
+function switchMainView(view){
+  document.querySelectorAll('.nav-tab-btn').forEach(function(btn){
+    var isActive = btn.dataset.view === view;
+    btn.classList.toggle('active', isActive);
+    btn.style.background = isActive ? 'var(--acc)' : 'var(--sur2)';
+    btn.style.color = isActive ? '#0b0e0d' : 'var(--txtm)';
+    btn.style.borderColor = isActive ? 'var(--acc)' : 'var(--bor)';
+  });
+  
+  document.getElementById('vd').style.display = view === 'dashboard' ? 'block' : 'none';
+  document.getElementById('vanalytics').style.display = view === 'analytics' ? 'block' : 'none';
+  document.getElementById('vdet').style.display = 'none';
+  
+  if(view === 'analytics'){
+    populateAnalyticsSelect();
+    renderAnalytics();
+  }
+}
+
+// ── ANALYTICS ──────────────────────────────────────────
+function populateAnalyticsSelect(){
+  var sel = document.getElementById('analyticsSelect');
+  if(!sel) return;
+  sel.innerHTML = '<option value="all">🌐 Entire Fund Analytics</option>' +
+    companies.map(function(c){ 
+      return '<option value="'+c.id+'">'+esc(c.name)+' ('+esc(c.code||'N/A')+')</option>'; 
+    }).join('');
+}
+
+function renderAnalytics(){
+  var sel = document.getElementById('analyticsSelect');
+  var container = document.getElementById('analyticsContent');
+  if(!sel || !container) return;
+  
+  var selectedId = sel.value;
+  
+  if(selectedId === 'all'){
+    // Fund-wide analytics
+    var totalCompanies = companies.length;
+    var totalItems = companies.reduce(function(sum, c){ return sum + (c.items||[]).length; }, 0);
+    var completedItems = companies.reduce(function(sum, c){
+      return sum + (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
+    }, 0);
+    var avgProgress = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+    
+    container.innerHTML = '<div class="stats-row">'
+      +'<div class="sc"><div class="sc-label">Total Companies</div><div class="sc-val">'+totalCompanies+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Total Items</div><div class="sc-val">'+totalItems+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Completed</div><div class="sc-val">'+completedItems+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Avg Progress</div><div class="sc-val">'+avgProgress+'%</div></div>'
+      +'</div>'
+      +'<div class="tw" style="margin-top:2rem"><div class="ttb"><div class="ttb-t">Company Performance Breakdown</div></div>'
+      +'<table><thead><tr><th>Company</th><th>Total</th><th>Done</th><th>Pending</th><th>Progress</th></tr></thead><tbody>'
+      +companies.map(function(c){
+        var total = (c.items||[]).length;
+        var done = (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
+        var pending = total - done;
+        var prog = total > 0 ? Math.round((done/total)*100) : 0;
+        return '<tr style="cursor:pointer" onclick="showDetFromAnalytics(\''+c.id+'\')">'
+          +'<td><strong>'+esc(c.name)+'</strong><br><span style="font-size:.7rem;color:var(--txtf)">'+esc(c.code||'N/A')+'</span></td>'
+          +'<td>'+total+'</td><td>'+done+'</td><td>'+pending+'</td><td><strong>'+prog+'%</strong></td></tr>';
+      }).join('')
+      +'</tbody></table></div>';
+      
+  } else {
+    // Company-specific analytics
+    var company = companies.find(function(c){ return c.id === selectedId; });
+    if(!company){ 
+      container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--txtf)">Company not found</div>'; 
+      return; 
+    }
+    
+    var total = (company.items||[]).length;
+    var done = (company.items||[]).filter(function(i){ return i.status==='done'; }).length;
+    var pending = total - done;
+    var progress = total > 0 ? Math.round((done/total)*100) : 0;
+    
+    container.innerHTML = '<div class="stats-row">'
+      +'<div class="sc"><div class="sc-label">Total Items</div><div class="sc-val">'+total+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Completed</div><div class="sc-val">'+done+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Pending</div><div class="sc-val">'+pending+'</div></div>'
+      +'<div class="sc"><div class="sc-label">Progress</div><div class="sc-val">'+progress+'%</div></div>'
+      +'</div>'
+      +'<div style="background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:24px;margin-top:2rem">'
+      +'<div style="font-size:1rem;font-weight:700;margin-bottom:16px">Company Information</div>'
+      +'<div style="display:grid;gap:12px">'
+      +'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">Code</span><strong>'+esc(company.code||'N/A')+'</strong></div>'
+      +'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">Sector</span><strong>'+esc(company.sector||'N/A')+'</strong></div>'
+      +'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">Start Date</span><strong>'+(company.startDate?fmt(company.startDate):'Not set')+'</strong></div>'
+      +(company.spocName?'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bor)"><span style="color:var(--txtm)">SPOC</span><strong>'+esc(company.spocName)+'</strong></div>':'')
+      +(company.spocEmail?'<div style="display:flex;justify-content:space-between;padding:10px 0"><span style="color:var(--txtm)">SPOC Email</span><strong style="font-size:.85rem">'+esc(company.spocEmail)+'</strong></div>':'')
+      +'</div></div>';
+  }
+}
+
+function showDetFromAnalytics(id){
+  switchMainView('dashboard');
+  setTimeout(function(){ showDet(id); }, 100);
+}
+
+// ── SPOC & EMAIL ───────────────────────────────────────
+function updateSPOC(){
   if(!curId) return;
-  
-  var name = document.getElementById('detName').value.trim();
-  var code = document.getElementById('detCode').value.trim();
-  var folder = document.getElementById('detFolder').value;
-  var sector = document.getElementById('detSector').value;
-  var lead = document.getElementById('detLead').value;
   var spocName = document.getElementById('spocName').value.trim();
   var spocEmail = document.getElementById('spocEmail').value.trim();
-  
-  if(!name){ toast('Company name required'); return; }
-  
-  db.collection('companies').doc(curId).update({
-    name: name,
-    code: code,
-    folderId: folder || null,
-    sector: sector || null,
-    investmentLead: lead || null,
-    spocName: spocName,
-    spocEmail: spocEmail
-  })
-  .then(function(){
-    logActivity('update', 'Updated company: ' + name);
-    toast('Company details saved');
-  })
-  .catch(function(e){
-    toast('Error: ' + e.message);
-  });
+  fsSet(curId, {spocName: spocName, spocEmail: spocEmail})
+    .then(function(){ toast('SPOC information updated'); })
+    .catch(function(e){ toast('Error: ' + e.message); });
 }
 
-function deleteCompany(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(!curId) return;
-  if(!confirm('Delete this company? This cannot be undone.')) return;
-  
-  var c = companies.find(function(x){ return x.id === curId; });
-  
-  db.collection('companies').doc(curId).delete()
-    .then(function(){
-      logActivity('delete', 'Deleted company: ' + (c ? c.name : 'Unknown'));
-      closeM('mdet');
-      toast('Company deleted');
-      curId = null;
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-// ══════════════════════════════════════════════════════════
-// ITEMS MANAGEMENT
-// ══════════════════════════════════════════════════════════
-function addItem(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(!curId) return;
-  
-  var text = document.getElementById('newItemText').value.trim();
-  if(!text){ toast('Enter item description'); return; }
-  
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  
-  var items = c.items || [];
-  items.push({
-    id: 'item_' + Date.now(),
-    text: text,
-    status: 'pending',
-    priority: 'medium',
-    dueDate: null,
-    createdAt: Date.now()
-  });
-  
-  db.collection('companies').doc(curId).update({items: items})
-    .then(function(){
-      document.getElementById('newItemText').value = '';
-      logActivity('add', 'Added action item to ' + c.name);
-      toast('Item added');
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-function renderItems(){
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  
-  var list = document.getElementById('itemsList');
-  var items = c.items || [];
-  
-  if(items.length === 0){
-    list.innerHTML = '<div style="text-align:center;color:var(--txtf);padding:2rem;font-family:var(--font-mono);font-size:.8rem">No action items yet</div>';
-    return;
-  }
-  
-  list.innerHTML = items.map(function(item){
-    var isDone = item.status === 'done';
-    var isOverdue = !isDone && item.dueDate && new Date(item.dueDate) < new Date();
-    
-    var priorityClass = item.priority || 'low';
-    var dueText = item.dueDate ? formatDate(item.dueDate) : '';
-    
-    return '<div class="item-row">'
-      + '<div class="item-check '+(isDone?'done':'')+'" onclick="toggleItem(\''+item.id+'\')"></div>'
-      + '<div class="item-content">'
-        + '<div class="item-text '+(isDone?'done':'')+'">'+esc(item.text)+'</div>'
-        + '<div class="item-meta">'
-          + '<div class="item-priority '+priorityClass+'">'+priorityClass.toUpperCase()+'</div>'
-          + (dueText ? '<div class="item-due '+(isOverdue?'danger':'')+'">📅 '+dueText+'</div>' : '')
-        + '</div>'
-      + '</div>'
-      + '<div class="item-actions">'
-        + '<span class="item-action" onclick="editItem(\''+item.id+'\')">✏️</span>'
-        + '<span class="item-action del" onclick="deleteItem(\''+item.id+'\')">🗑</span>'
-      + '</div>'
-    + '</div>';
-  }).join('');
-}
-
-function toggleItem(itemId){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(!curId) return;
-  
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  
-  var items = c.items || [];
-  var item = items.find(function(i){ return i.id === itemId; });
-  if(!item) return;
-  
-  item.status = item.status === 'done' ? 'pending' : 'done';
-  
-  db.collection('companies').doc(curId).update({items: items})
-    .then(function(){
-      logActivity('complete', (item.status === 'done' ? 'Completed' : 'Reopened') + ' item in ' + c.name);
-      toast(item.status === 'done' ? 'Item marked as done' : 'Item reopened');
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-function deleteItem(itemId){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(!curId) return;
-  if(!confirm('Delete this item?')) return;
-  
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  
-  var items = (c.items || []).filter(function(i){ return i.id !== itemId; });
-  
-  db.collection('companies').doc(curId).update({items: items})
-    .then(function(){
-      logActivity('delete', 'Deleted item from ' + c.name);
-      toast('Item deleted');
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-function editItem(itemId){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  // TODO: Implement item editing modal
-  toast('Edit item feature coming soon');
-}
-
-// ══════════════════════════════════════════════════════════
-// EMAIL MANAGEMENT
-// ══════════════════════════════════════════════════════════
 function addEmail(){
-  if(!isAdmin){ toast('View-only mode'); return; }
   if(!curId) return;
-  
   var emailInput = document.getElementById('newEmail');
   if(!emailInput) return;
   
@@ -1339,33 +1546,27 @@ function addEmail(){
   if(emails.indexOf(email) !== -1){ toast('Email already added'); return; }
   
   emails.push(email);
-  db.collection('companies').doc(curId).update({additionalEmails: emails})
+  fsSet(curId, {additionalEmails: emails})
     .then(function(){
       emailInput.value = '';
       renderEmailChips();
       toast('Email added');
     })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
+    .catch(function(e){ toast('Error: ' + e.message); });
 }
 
 function removeEmail(email){
-  if(!isAdmin){ toast('View-only mode'); return; }
   if(!curId) return;
-  
   var c = companies.find(function(x){ return x.id === curId; });
   if(!c) return;
   
   var emails = (c.additionalEmails || []).filter(function(e){ return e !== email; });
-  db.collection('companies').doc(curId).update({additionalEmails: emails})
+  fsSet(curId, {additionalEmails: emails})
     .then(function(){
       renderEmailChips();
       toast('Email removed');
     })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
+    .catch(function(e){ toast('Error: ' + e.message); });
 }
 
 function renderEmailChips(){
@@ -1382,9 +1583,9 @@ function renderEmailChips(){
   }
   
   container.innerHTML = emails.map(function(email){
-    return '<div class="email-chip">'
+    return '<div style="display:inline-flex;align-items:center;gap:8px;background:var(--accd);border:1px solid var(--acc);color:var(--acc);font-family:var(--font-mono);font-size:.75rem;padding:6px 12px;border-radius:12px">'
       +'<span>'+esc(email)+'</span>'
-      +'<span class="email-chip-del" onclick="removeEmail(\''+esc(email).replace(/'/g,"\\'")+'\')">×</span>'
+      +'<span onclick="removeEmail(\''+esc(email).replace(/'/g,"\\'")+'\' )" style="cursor:pointer;font-weight:700;opacity:.7;transition:opacity .2s">×</span>'
       +'</div>';
   }).join('');
 }
@@ -1407,21 +1608,6 @@ function openNudgeModal(){
   var completed = (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
   var pending = total - completed;
   
-  // Get pending items list
-  var pendingItems = (c.items||[]).filter(function(i){ return i.status !== 'done'; });
-  var pendingItemsText = '';
-  
-  if(pendingItems.length > 0){
-    pendingItemsText = '\n\nPending Action Items:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-    pendingItems.forEach(function(item, idx){
-      var priority = (item.priority || 'medium').toUpperCase();
-      var dueDate = item.dueDate ? ' - Due: ' + formatDate(item.dueDate) : '';
-      var isOverdue = item.dueDate && new Date(item.dueDate) < new Date() ? ' [OVERDUE]' : '';
-      pendingItemsText += (idx+1) + '. [Priority: ' + priority + '] ' + item.text + dueDate + isOverdue + '\n';
-    });
-    pendingItemsText += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-  }
-  
   var emailBody = 'Dear ' + (c.spocName || 'Team') + ',\n\n'
     + 'I hope this message finds you well.\n\n'
     + 'I\'m reaching out to request a status update on the ESAP implementation progress for ' + c.name + ' (' + (c.code || 'N/A') + ').\n\n'
@@ -1430,9 +1616,8 @@ function openNudgeModal(){
     + '• Total Action Items: ' + total + '\n'
     + '• Completed: ' + completed + '\n'
     + '• Pending: ' + pending + '\n'
-    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
-    + pendingItemsText
-    + '\nCould you please provide an update on the pending items at your earliest convenience? If there are any blockers or challenges, I\'d be happy to discuss them.\n\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n'
+    + 'Could you please provide an update on the pending items at your earliest convenience? If there are any blockers or challenges, I\'d be happy to discuss them.\n\n'
     + 'Best regards';
   
   var recipientsEl = document.getElementById('nudgeRecipients');
@@ -1473,897 +1658,25 @@ function confirmSendNudge(){
   
   window.location.href = mailto;
   closeM('mnudge');
-  
-  logActivity('nudge', 'Sent nudge email for ' + c.name);
   toast('Opening email client with ' + recipients.length + ' recipient(s)...');
 }
 
-// ══════════════════════════════════════════════════════════
-// FOLDERS
-// ══════════════════════════════════════════════════════════
-function addFolder(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  var name = prompt('Enter folder name:');
-  if(!name) return;
+// Enhance the existing showDet function to load SPOC data
+var _originalShowDet = showDet;
+showDet = function(id){
+  _originalShowDet(id);
   
-  db.collection('folders').add({name: name})
-    .then(function(){
-      logActivity('add', 'Created folder: ' + name);
-      toast('Folder added');
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-function deleteFolder(id){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(!confirm('Delete this folder? Companies will not be deleted.')) return;
-  
-  var folder = folders.find(function(f){ return f.id === id; });
-  
-  db.collection('folders').doc(id).delete()
-    .then(function(){
-      logActivity('delete', 'Deleted folder: ' + (folder ? folder.name : 'Unknown'));
-      toast('Folder deleted');
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-function setFolder(id){
-  curFolder = id;
-  renderFolders();
-  applyFilters();
-}
-
-// ══════════════════════════════════════════════════════════
-// FILTERS
-// ══════════════════════════════════════════════════════════
-function setFilter(f){
-  curFilter = f;
-  document.querySelectorAll('.fbtn').forEach(function(btn){
-    btn.classList.remove('on');
-  });
-  document.querySelector('.fbtn[data-filter="'+f+'"]').classList.add('on');
-  applyFilters();
-}
-
-// ══════════════════════════════════════════════════════════
-// BULK SELECTION
-// ══════════════════════════════════════════════════════════
-function toggleCardSelection(id){
-  if(selectedItems.has(id)){
-    selectedItems.delete(id);
-  } else {
-    selectedItems.add(id);
+  // Load SPOC data
+  var c = companies.find(function(x){ return x.id === id; });
+  if(c){
+    var spocNameEl = document.getElementById('spocName');
+    var spocEmailEl = document.getElementById('spocEmail');
+    if(spocNameEl) spocNameEl.value = c.spocName || '';
+    if(spocEmailEl) spocEmailEl.value = c.spocEmail || '';
+    renderEmailChips();
   }
-  
-  updateBulkBar();
-  applyFilters();
-}
+};
 
-function clearBulkSelection(){
-  selectedItems.clear();
-  updateBulkBar();
-  applyFilters();
-}
-
-function updateBulkBar(){
-  var bar = document.getElementById('bulkBar');
-  var count = document.getElementById('bulkCount');
-  
-  if(selectedItems.size > 0){
-    bar.classList.add('on');
-    count.textContent = selectedItems.size + ' selected';
-  } else {
-    bar.classList.remove('on');
-  }
-}
-
-function bulkMarkDone(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(selectedItems.size === 0) return;
-  if(!confirm('Mark all items as done for ' + selectedItems.size + ' companies?')) return;
-  
-  var promises = [];
-  selectedItems.forEach(function(id){
-    var c = companies.find(function(x){ return x.id === id; });
-    if(!c) return;
-    
-    var items = (c.items || []).map(function(item){
-      item.status = 'done';
-      return item;
-    });
-    
-    promises.push(db.collection('companies').doc(id).update({items: items}));
-  });
-  
-  Promise.all(promises)
-    .then(function(){
-      logActivity('bulk', 'Bulk marked ' + selectedItems.size + ' companies as done');
-      toast('All items marked as done');
-      clearBulkSelection();
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-function bulkChangePriority(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(selectedItems.size === 0) return;
-  
-  var priority = prompt('Enter priority (low/medium/high):');
-  if(!priority || !['low','medium','high'].includes(priority.toLowerCase())) return;
-  
-  // TODO: Implement bulk priority change
-  toast('Bulk priority change coming soon');
-}
-
-function bulkAssignLead(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(selectedItems.size === 0) return;
-  
-  var lead = prompt('Enter investment lead name:');
-  if(!lead) return;
-  
-  var promises = [];
-  selectedItems.forEach(function(id){
-    promises.push(db.collection('companies').doc(id).update({investmentLead: lead}));
-  });
-  
-  Promise.all(promises)
-    .then(function(){
-      logActivity('bulk', 'Bulk assigned lead "' + lead + '" to ' + selectedItems.size + ' companies');
-      toast('Investment lead assigned to ' + selectedItems.size + ' companies');
-      clearBulkSelection();
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-function bulkDelete(){
-  if(!isAdmin){ toast('View-only mode'); return; }
-  if(selectedItems.size === 0) return;
-  if(!confirm('Delete ' + selectedItems.size + ' companies? This cannot be undone.')) return;
-  
-  var promises = [];
-  selectedItems.forEach(function(id){
-    promises.push(db.collection('companies').doc(id).delete());
-  });
-  
-  Promise.all(promises)
-    .then(function(){
-      logActivity('bulk', 'Bulk deleted ' + selectedItems.size + ' companies');
-      toast(selectedItems.size + ' companies deleted');
-      clearBulkSelection();
-    })
-    .catch(function(e){
-      toast('Error: ' + e.message);
-    });
-}
-
-// ══════════════════════════════════════════════════════════
-// ANALYTICS
-// ══════════════════════════════════════════════════════════
-function showView(viewName){
-  document.querySelectorAll('.view').forEach(function(v){
-    v.classList.remove('on');
-  });
-  document.getElementById('v'+viewName).classList.add('on');
-  
-  if(viewName === 'analytics'){
-    populateAnalyticsFilters();
-    updateAnalytics();
-  } else if(viewName === 'timeline'){
-    populateTimelineFilters();
-    updateTimeline();
-  }
-}
-
-function populateAnalyticsFilters(){
-  // Folders
-  var folderSelect = document.getElementById('analyticsFolder');
-  folderSelect.innerHTML = '<option value="all">All Folders</option>' + 
-    folders.map(function(f){
-      return '<option value="'+f.id+'">'+esc(f.name)+'</option>';
-    }).join('');
-  
-  // Sectors
-  var sectorSelect = document.getElementById('analyticsSector');
-  var uniqueSectors = [...new Set(companies.map(function(c){ return c.sector; }).filter(Boolean))];
-  sectorSelect.innerHTML = '<option value="all">All Sectors</option>' +
-    uniqueSectors.map(function(s){
-      return '<option value="'+s+'">'+esc(s)+'</option>';
-    }).join('');
-  
-  // Leads
-  var leadSelect = document.getElementById('analyticsLead');
-  var uniqueLeads = [...new Set(companies.map(function(c){ return c.investmentLead; }).filter(Boolean))];
-  leadSelect.innerHTML = '<option value="all">All Leads</option>' +
-    uniqueLeads.map(function(l){
-      return '<option value="'+l+'">'+esc(l)+'</option>';
-    }).join('');
-  
-  // Companies
-  var compSelect = document.getElementById('analyticsCompanies');
-  compSelect.innerHTML = companies.map(function(c){
-    return '<option value="'+c.id+'">'+esc(c.name)+'</option>';
-  }).join('');
-}
-
-function updateAnalytics(){
-  var selectedFolder = document.getElementById('analyticsFolder').value;
-  var selectedSector = document.getElementById('analyticsSector').value;
-  var selectedLead = document.getElementById('analyticsLead').value;
-  var selectedCompanies = Array.from(document.getElementById('analyticsCompanies').selectedOptions).map(function(o){ return o.value; });
-  
-  var filtered = companies.filter(function(c){
-    if(selectedFolder !== 'all' && c.folderId !== selectedFolder) return false;
-    if(selectedSector !== 'all' && c.sector !== selectedSector) return false;
-    if(selectedLead !== 'all' && c.investmentLead !== selectedLead) return false;
-    if(selectedCompanies.length > 0 && !selectedCompanies.includes(c.id)) return false;
-    return true;
-  });
-  
-  updateCharts(filtered);
-  updateAnalyticsTable(filtered);
-}
-
-function updateCharts(filtered){
-  // Chart 1: Completion by Folder
-  var folderData = {};
-  filtered.forEach(function(c){
-    var folderName = 'No Folder';
-    if(c.folderId){
-      var folder = folders.find(function(f){ return f.id === c.folderId; });
-      if(folder) folderName = folder.name;
-    }
-    
-    if(!folderData[folderName]) folderData[folderName] = {total:0, done:0};
-    
-    var total = (c.items||[]).length;
-    var done = (c.items||[]).filter(function(i){ return i.status === 'done'; }).length;
-    folderData[folderName].total += total;
-    folderData[folderName].done += done;
-  });
-  
-  var folderLabels = Object.keys(folderData);
-  var folderValues = folderLabels.map(function(k){
-    return folderData[k].total > 0 ? Math.round((folderData[k].done / folderData[k].total) * 100) : 0;
-  });
-  
-  if(chartFolder) chartFolder.destroy();
-  var ctx1 = document.getElementById('chartFolder').getContext('2d');
-  chartFolder = new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: folderLabels,
-      datasets: [{
-        label: 'Completion %',
-        data: folderValues,
-        backgroundColor: 'rgba(59, 130, 246, 0.8)',
-        borderColor: 'rgba(59, 130, 246, 1)',
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true, max: 100 }
-      }
-    }
-  });
-  
-  // Chart 2: Items by Sector
-  var sectorData = {};
-  filtered.forEach(function(c){
-    var sector = c.sector || 'No Sector';
-    if(!sectorData[sector]) sectorData[sector] = {total:0, pending:0};
-    
-    var total = (c.items||[]).length;
-    var pending = (c.items||[]).filter(function(i){ return i.status !== 'done'; }).length;
-    sectorData[sector].total += total;
-    sectorData[sector].pending += pending;
-  });
-  
-  var sectorLabels = Object.keys(sectorData);
-  var sectorValues = sectorLabels.map(function(k){ return sectorData[k].pending; });
-  
-  if(chartSector) chartSector.destroy();
-  var ctx2 = document.getElementById('chartSector').getContext('2d');
-  chartSector = new Chart(ctx2, {
-    type: 'doughnut',
-    data: {
-      labels: sectorLabels,
-      datasets: [{
-        data: sectorValues,
-        backgroundColor: [
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(16, 185, 129, 0.8)',
-          'rgba(245, 158, 11, 0.8)',
-          'rgba(239, 68, 68, 0.8)',
-          'rgba(139, 92, 246, 0.8)',
-          'rgba(236, 72, 153, 0.8)'
-        ]
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
-  });
-  
-  // Chart 3: Lead Performance
-  var leadData = {};
-  filtered.forEach(function(c){
-    var lead = c.investmentLead || 'Unassigned';
-    if(!leadData[lead]) leadData[lead] = {companies:0, total:0, done:0};
-    
-    leadData[lead].companies++;
-    var total = (c.items||[]).length;
-    var done = (c.items||[]).filter(function(i){ return i.status === 'done'; }).length;
-    leadData[lead].total += total;
-    leadData[lead].done += done;
-  });
-  
-  var leadLabels = Object.keys(leadData);
-  var leadCompanies = leadLabels.map(function(k){ return leadData[k].companies; });
-  var leadCompletion = leadLabels.map(function(k){
-    return leadData[k].total > 0 ? Math.round((leadData[k].done / leadData[k].total) * 100) : 0;
-  });
-  
-  if(chartLead) chartLead.destroy();
-  var ctx3 = document.getElementById('chartLead').getContext('2d');
-  chartLead = new Chart(ctx3, {
-    type: 'bar',
-    data: {
-      labels: leadLabels,
-      datasets: [
-        {
-          label: 'Companies',
-          data: leadCompanies,
-          backgroundColor: 'rgba(59, 130, 246, 0.6)',
-          yAxisID: 'y'
-        },
-        {
-          label: 'Completion %',
-          data: leadCompletion,
-          backgroundColor: 'rgba(16, 185, 129, 0.6)',
-          yAxisID: 'y1'
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: { type: 'linear', position: 'left', beginAtZero: true },
-        y1: { type: 'linear', position: 'right', beginAtZero: true, max: 100, grid: { drawOnChartArea: false } }
-      }
-    }
-  });
-  
-  // Chart 4: Trend (mock data - would need historical tracking)
-  if(chartTrend) chartTrend.destroy();
-  var ctx4 = document.getElementById('chartTrend').getContext('2d');
-  chartTrend = new Chart(ctx4, {
-    type: 'line',
-    data: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      datasets: [{
-        label: 'Completion %',
-        data: [25, 45, 60, 75],
-        borderColor: 'rgba(59, 130, 246, 1)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        tension: 0.4,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true, max: 100 }
-      }
-    }
-  });
-}
-
-function updateAnalyticsTable(filtered){
-  var tbody = document.getElementById('analyticsTableBody');
-  
-  tbody.innerHTML = filtered.map(function(c){
-    var folderName = 'No Folder';
-    if(c.folderId){
-      var folder = folders.find(function(f){ return f.id === c.folderId; });
-      if(folder) folderName = folder.name;
-    }
-    
-    var total = (c.items||[]).length;
-    var done = (c.items||[]).filter(function(i){ return i.status === 'done'; }).length;
-    var pending = total - done;
-    var pct = total > 0 ? Math.round((done/total)*100) : 0;
-    
-    return '<tr>'
-      + '<td>'+esc(c.name)+'</td>'
-      + '<td>'+esc(folderName)+'</td>'
-      + '<td>'+esc(c.sector || '-')+'</td>'
-      + '<td>'+esc(c.investmentLead || '-')+'</td>'
-      + '<td>'+total+'</td>'
-      + '<td>'+done+'</td>'
-      + '<td>'+pending+'</td>'
-      + '<td><strong>'+pct+'%</strong></td>'
-    + '</tr>';
-  }).join('');
-}
-
-function exportAnalytics(){
-  toast('Generating analytics report...');
-  
-  // Generate Excel
-  var wb = XLSX.utils.book_new();
-  
-  // Summary sheet
-  var summaryData = [
-    ['Analytics Report', ''],
-    ['Generated', new Date().toLocaleString()],
-    [''],
-    ['Total Companies', companies.length],
-    ['Total Action Items', companies.reduce(function(sum,c){ return sum + (c.items||[]).length; }, 0)],
-    ['Completed Items', companies.reduce(function(sum,c){ return sum + (c.items||[]).filter(function(i){ return i.status==='done'; }).length; }, 0)],
-  ];
-  var ws1 = XLSX.utils.aoa_to_sheet(summaryData);
-  XLSX.utils.book_append_sheet(wb, ws1, 'Summary');
-  
-  // Company details
-  var companyData = [['Company', 'Code', 'Folder', 'Sector', 'Lead', 'Total Items', 'Completed', 'Pending', 'Completion %']];
-  companies.forEach(function(c){
-    var folderName = '';
-    if(c.folderId){
-      var f = folders.find(function(x){ return x.id === c.folderId; });
-      if(f) folderName = f.name;
-    }
-    
-    var total = (c.items||[]).length;
-    var done = (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
-    var pct = total > 0 ? Math.round((done/total)*100) : 0;
-    
-    companyData.push([
-      c.name,
-      c.code || '',
-      folderName,
-      c.sector || '',
-      c.investmentLead || '',
-      total,
-      done,
-      total - done,
-      pct + '%'
-    ]);
-  });
-  var ws2 = XLSX.utils.aoa_to_sheet(companyData);
-  XLSX.utils.book_append_sheet(wb, ws2, 'Companies');
-  
-  XLSX.writeFile(wb, 'Analytics_Report_' + Date.now() + '.xlsx');
-  toast('Analytics report downloaded');
-}
-
-// ══════════════════════════════════════════════════════════
-// TIMELINE
-// ══════════════════════════════════════════════════════════
-function populateTimelineFilters(){
-  var folderSelect = document.getElementById('timelineFolder');
-  folderSelect.innerHTML = '<option value="all">All Folders</option>' + 
-    folders.map(function(f){
-      return '<option value="'+f.id+'">'+esc(f.name)+'</option>';
-    }).join('');
-  
-  var compSelect = document.getElementById('timelineCompany');
-  compSelect.innerHTML = '<option value="all">All Companies</option>' +
-    companies.map(function(c){
-      return '<option value="'+c.id+'">'+esc(c.name)+'</option>';
-    }).join('');
-}
-
-function updateTimeline(){
-  var selectedFolder = document.getElementById('timelineFolder').value;
-  var selectedCompany = document.getElementById('timelineCompany').value;
-  
-  var filtered = companies.filter(function(c){
-    if(selectedFolder !== 'all' && c.folderId !== selectedFolder) return false;
-    if(selectedCompany !== 'all' && c.id !== selectedCompany) return false;
-    return true;
-  });
-  
-  var grid = document.getElementById('timelineGrid');
-  
-  // Collect all items with due dates
-  var allItems = [];
-  filtered.forEach(function(c){
-    (c.items || []).forEach(function(item){
-      if(item.dueDate){
-        allItems.push({
-          companyName: c.name,
-          itemText: item.text,
-          dueDate: item.dueDate,
-          status: item.status,
-          priority: item.priority
-        });
-      }
-    });
-  });
-  
-  // Sort by due date
-  allItems.sort(function(a,b){ return new Date(a.dueDate) - new Date(b.dueDate); });
-  
-  if(allItems.length === 0){
-    grid.innerHTML = '<div class="nempty">No items with due dates</div>';
-    return;
-  }
-  
-  // Calculate date range
-  var minDate = new Date(Math.min.apply(null, allItems.map(function(i){ return new Date(i.dueDate); })));
-  var maxDate = new Date(Math.max.apply(null, allItems.map(function(i){ return new Date(i.dueDate); })));
-  var dayRange = Math.ceil((maxDate - minDate) / (1000*60*60*24)) + 1;
-  
-  grid.innerHTML = allItems.map(function(item){
-    var itemDate = new Date(item.dueDate);
-    var dayOffset = Math.ceil((itemDate - minDate) / (1000*60*60*24));
-    var leftPct = (dayOffset / dayRange) * 100;
-    var widthPct = (1 / dayRange) * 100;
-    
-    var isDone = item.status === 'done';
-    var isOverdue = !isDone && itemDate < new Date();
-    
-    var barClass = isDone ? 'done' : (isOverdue ? 'overdue' : '');
-    
-    return '<div class="timeline-row">'
-      + '<div class="timeline-label">'+esc(item.companyName)+'</div>'
-      + '<div class="timeline-track">'
-        + '<div class="timeline-bar '+barClass+'" style="left:'+leftPct+'%;width:'+Math.max(widthPct, 10)+'%" title="'+esc(item.itemText)+'">'
-          + esc(item.itemText.substring(0, 30)) + (item.itemText.length > 30 ? '...' : '')
-        + '</div>'
-      + '</div>'
-    + '</div>';
-  }).join('');
-}
-
-function exportTimeline(){
-  toast('Timeline export coming soon');
-}
-
-// ══════════════════════════════════════════════════════════
-// EXPORT & BACKUP
-// ══════════════════════════════════════════════════════════
-function exportData(){
-  toast('Generating export...');
-  
-  var wb = XLSX.utils.book_new();
-  
-  // Companies sheet
-  var compData = [['Name', 'Code', 'Folder', 'Sector', 'Lead', 'SPOC Name', 'SPOC Email', 'Total Items', 'Completed', 'Pending']];
-  companies.forEach(function(c){
-    var folderName = '';
-    if(c.folderId){
-      var f = folders.find(function(x){ return x.id === c.folderId; });
-      if(f) folderName = f.name;
-    }
-    
-    var total = (c.items||[]).length;
-    var done = (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
-    
-    compData.push([
-      c.name,
-      c.code || '',
-      folderName,
-      c.sector || '',
-      c.investmentLead || '',
-      c.spocName || '',
-      c.spocEmail || '',
-      total,
-      done,
-      total - done
-    ]);
-  });
-  var ws1 = XLSX.utils.aoa_to_sheet(compData);
-  XLSX.utils.book_append_sheet(wb, ws1, 'Companies');
-  
-  // Action Items sheet
-  var itemsData = [['Company', 'Item', 'Status', 'Priority', 'Due Date']];
-  companies.forEach(function(c){
-    (c.items || []).forEach(function(item){
-      itemsData.push([
-        c.name,
-        item.text,
-        item.status,
-        item.priority || 'medium',
-        item.dueDate || ''
-      ]);
-    });
-  });
-  var ws2 = XLSX.utils.aoa_to_sheet(itemsData);
-  XLSX.utils.book_append_sheet(wb, ws2, 'Action Items');
-  
-  XLSX.writeFile(wb, 'ESAP_Export_' + Date.now() + '.xlsx');
-  toast('Data exported successfully');
-  logActivity('export', 'Exported all data to Excel');
-}
-
-function backupData(){
-  var backup = {
-    companies: companies,
-    folders: folders,
-    timestamp: Date.now(),
-    version: '2.0'
-  };
-  
-  var dataStr = JSON.stringify(backup, null, 2);
-  var blob = new Blob([dataStr], {type: 'application/json'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'Backup_' + Date.now() + '.json';
-  a.click();
-  
-  toast('Backup downloaded');
-  logActivity('backup', 'Created data backup');
-}
-
-// ══════════════════════════════════════════════════════════
-// STATS & NOTIFICATIONS
-// ══════════════════════════════════════════════════════════
-function updateStats(){
-  var total = companies.length;
-  var allItems = companies.reduce(function(sum,c){ return sum + (c.items||[]).length; }, 0);
-  var doneItems = companies.reduce(function(sum,c){ 
-    return sum + (c.items||[]).filter(function(i){ return i.status==='done'; }).length;
-  }, 0);
-  var pct = allItems > 0 ? Math.round((doneItems/allItems)*100) : 0;
-  var pending = allItems - doneItems;
-  
-  var overdue = 0;
-  companies.forEach(function(c){
-    (c.items||[]).forEach(function(i){
-      if(i.status !== 'done' && i.dueDate && new Date(i.dueDate) < new Date()){
-        overdue++;
-      }
-    });
-  });
-  
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statComp').textContent = pct + '%';
-  document.getElementById('statPend').textContent = pending;
-  document.getElementById('statOver').textContent = overdue;
-}
-
-function checkNotifications(){
-  var notifs = [];
-  
-  companies.forEach(function(c){
-    (c.items||[]).forEach(function(i){
-      if(i.status !== 'done' && i.dueDate){
-        var dueDate = new Date(i.dueDate);
-        var today = new Date();
-        var diffDays = Math.ceil((dueDate - today) / (1000*60*60*24));
-        
-        if(diffDays < 0){
-          notifs.push({
-            type: 'overdue',
-            text: c.name + ': ' + i.text,
-            meta: 'Overdue by ' + Math.abs(diffDays) + ' days',
-            companyId: c.id
-          });
-        } else if(diffDays <= 3){
-          notifs.push({
-            type: 'due',
-            text: c.name + ': ' + i.text,
-            meta: 'Due in ' + diffDays + ' days',
-            companyId: c.id
-          });
-        }
-      }
-    });
-  });
-  
-  var badge = document.getElementById('bellBadge');
-  if(notifs.length > 0){
-    badge.textContent = notifs.length;
-    badge.classList.add('on');
-  } else {
-    badge.classList.remove('on');
-  }
-  
-  renderNotifications(notifs);
-}
-
-function renderNotifications(notifs){
-  var list = document.getElementById('notifList');
-  
-  if(notifs.length === 0){
-    list.innerHTML = '<div class="nempty">No notifications</div>';
-    return;
-  }
-  
-  list.innerHTML = notifs.map(function(n){
-    return '<div class="notif-item" onclick="showDet(\''+n.companyId+'\')">'
-      + '<div class="ndot '+(n.type==='overdue'?'ov':'')+'"></div>'
-      + '<div>'
-        + '<div class="ntext">'+esc(n.text)+'</div>'
-        + '<div class="nmeta">'+esc(n.meta)+'</div>'
-      + '</div>'
-    + '</div>';
-  }).join('');
-}
-
-function clearNotifs(){
-  // Just close the dropdown for now
-  toggleNotif();
-}
-
-function toggleNotif(){
-  var dd = document.getElementById('notifDD');
-  dd.classList.toggle('open');
-}
-
-// ══════════════════════════════════════════════════════════
-// ACTIVITY LOG
-// ══════════════════════════════════════════════════════════
-function logActivity(action, text){
-  db.collection('activity').add({
-    action: action,
-    text: text,
-    timestamp: Date.now(),
-    user: currentUser ? currentUser.email : 'anonymous'
-  });
-}
-
-// ══════════════════════════════════════════════════════════
-// UTILITIES
-// ══════════════════════════════════════════════════════════
-function populateFolderDropdowns(){
-  var selects = [document.getElementById('addFolder'), document.getElementById('detFolder')];
-  selects.forEach(function(sel){
-    if(!sel) return;
-    var current = sel.value;
-    sel.innerHTML = '<option value="">No Folder</option>' + 
-      folders.map(function(f){
-        return '<option value="'+f.id+'">'+esc(f.name)+'</option>';
-      }).join('');
-    sel.value = current;
-  });
-}
-
-function populateSectorDropdowns(){
-  var selects = [document.getElementById('addSector'), document.getElementById('detSector')];
-  selects.forEach(function(sel){
-    if(!sel) return;
-    var current = sel.value;
-    sel.innerHTML = '<option value="">Select Sector</option>' +
-      sectors.map(function(s){
-        return '<option value="'+s+'">'+esc(s)+'</option>';
-      }).join('');
-    sel.value = current;
-  });
-}
-
-function populateLeadDropdowns(){
-  var selects = [document.getElementById('addLead'), document.getElementById('detLead')];
-  selects.forEach(function(sel){
-    if(!sel) return;
-    var current = sel.value;
-    sel.innerHTML = '<option value="">Select Lead</option>' +
-      investmentLeads.map(function(l){
-        return '<option value="'+l+'">'+esc(l)+'</option>';
-      }).join('');
-    sel.value = current;
-  });
-}
-
-function syncStatus(status){
-  var dot = document.getElementById('syncDot');
-  var label = document.getElementById('syncLabel');
-  dot.className = 'sync-dot ' + status;
-  if(status === 'live') label.textContent = 'LIVE';
-  else if(status === 'loading') label.textContent = 'SYNCING';
-  else if(status === 'err') label.textContent = 'ERROR';
-  else label.textContent = 'OFFLINE';
-}
-
-function hideBootScreen(){
-  setTimeout(function(){
-    document.getElementById('bootScreen').style.display = 'none';
-  }, 500);
-}
-
-function showBootError(msg){
-  document.getElementById('bootErr').textContent = msg;
-  document.getElementById('bootErr').style.display = 'block';
-  document.querySelector('.boot-spinner').style.display = 'none';
-}
-
-function openM(id){
-  document.getElementById('m'+id.replace('m','')).classList.add('on');
-}
-
-function closeM(id){
-  document.getElementById('m'+id.replace('m','')).classList.remove('on');
-}
-
-function toast(msg){
-  var t = document.getElementById('toast');
-  var txt = document.getElementById('toastText');
-  txt.textContent = msg;
-  t.classList.add('on');
-  setTimeout(function(){
-    t.classList.remove('on');
-  }, 3000);
-}
-
-function esc(str){
-  if(!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function formatDate(dateStr){
-  if(!dateStr) return '';
-  var d = new Date(dateStr);
-  return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-}
-
-function timeAgo(timestamp){
-  var now = Date.now();
-  var diff = now - timestamp;
-  var minutes = Math.floor(diff / 60000);
-  var hours = Math.floor(minutes / 60);
-  var days = Math.floor(hours / 24);
-  
-  if(days > 0) return days + 'd ago';
-  if(hours > 0) return hours + 'h ago';
-  if(minutes > 0) return minutes + 'm ago';
-  return 'just now';
-}
-
-function toggleTheme(){
-  var html = document.documentElement;
-  var current = html.getAttribute('data-theme');
-  var newTheme = current === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', newTheme);
-  localStorage.setItem('theme', newTheme);
-  
-  var btn = document.querySelector('.theme-btn');
-  btn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
-}
-
-function loadTheme(){
-  var saved = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
-  var btn = document.querySelector('.theme-btn');
-  if(btn) btn.textContent = saved === 'dark' ? '🌙' : '☀️';
-}
-
-// ══════════════════════════════════════════════════════════
-// SERVICE WORKER (PWA)
-// ══════════════════════════════════════════════════════════
-function initServiceWorker(){
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/sw.js')
-      .then(function(){ console.log('SW registered'); })
-      .catch(function(e){ console.log('SW failed:', e); });
-  }
-}
-
-// Click outside to close notifications
-document.addEventListener('click', function(e){
-  var bell = document.querySelector('.bell-wrap');
-  var dd = document.getElementById('notifDD');
-  if(!bell.contains(e.target) && dd.classList.contains('open')){
-    dd.classList.remove('open');
-  }
-});
 </script>
 </body>
 </html>
