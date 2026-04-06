@@ -492,7 +492,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       </div>
       
       <div class="form-row">
-        <label>Upload ESAP Document</label>
+        <label>Upload ESAP Document (.xlsx to auto-import actions)</label>
         <input type="file" id="esapFile" accept=".pdf,.doc,.docx,.xls,.xlsx" style="display:none" onchange="handleESAPUpload(event)">
         <div style="display:flex;gap:8px;align-items:center">
           <button type="button" class="btn secondary" onclick="document.getElementById('esapFile').click()">
@@ -507,6 +507,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
             <button type="button" onclick="removeESAP()" style="background:none;border:none;color:var(--acc);cursor:pointer;font-weight:700;font-size:1rem">×</button>
           </div>
         </div>
+        <div id="parseStatus" style="margin-top:8px;font-family:var(--font-mono);font-size:.75rem;color:var(--txtm);display:none"></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -597,9 +598,9 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 
 <script>
 // ═══════════════════════════════════════════════════════
-//  FUND ESAP TRACKER — CORRECTED VERSION
+//  FUND ESAP TRACKER — WITH FLEXIBLE EXCEL PARSER
 //  + Analytics, Folder Segregation, View-Only Access
-//  + Sorted Action Items by Deadline
+//  + Auto-imports action items from uploaded Excel files
 // ═══════════════════════════════════════════════════════
 
 // Firebase Configuration
@@ -629,6 +630,297 @@ var notifications = [];
 var isEditMode = false;
 var pendingESAPFile = null;
 var pendingESAPFileName = '';
+var parsedActions = []; // Store parsed actions from Excel
+
+// ══════════════════════════════════════════════════════════════
+// FLEXIBLE EXCEL PARSER
+// ══════════════════════════════════════════════════════════════
+
+function parseESAPExcel(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    
+    reader.onload = function(e) {
+      try {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, { type: 'array' });
+        
+        console.log('📊 Parsing Excel file:', file.name);
+        console.log('Sheets found:', workbook.SheetNames);
+        
+        var allActions = [];
+        var errors = [];
+        
+        // Try all sheets
+        workbook.SheetNames.forEach(function(sheetName) {
+          console.log('Processing sheet:', sheetName);
+          
+          try {
+            var worksheet = workbook.Sheets[sheetName];
+            var jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+              header: 1,
+              defval: null,
+              blankrows: false,
+              raw: false
+            });
+            
+            if (jsonData.length === 0) {
+              console.log('  ⚠️ Sheet is empty');
+              return;
+            }
+            
+            // Find header row
+            var headerRowIndex = findHeaderRow(jsonData);
+            if (headerRowIndex === -1) {
+              console.log('  ⚠️ No header row found');
+              return;
+            }
+            
+            console.log('  ✅ Header row found at index:', headerRowIndex);
+            
+            var headers = jsonData[headerRowIndex];
+            var columnMap = mapColumns(headers);
+            
+            console.log('  Column mapping:', columnMap);
+            
+            if (columnMap.action === -1) {
+              console.log('  ⚠️ No action column found');
+              return;
+            }
+            
+            // Parse data rows
+            var actionsFound = 0;
+            for (var i = headerRowIndex + 1; i < jsonData.length; i++) {
+              var row = jsonData[i];
+              if (!row || row.every(function(cell) { return !cell; })) continue;
+              
+              var actionText = columnMap.action !== -1 ? row[columnMap.action] : null;
+              if (!actionText || !actionText.toString().trim()) continue;
+              
+              var action = {
+                id: 'i_' + Date.now() + '_' + actionsFound,
+                action: cleanText(actionText),
+                title: cleanText(actionText).substring(0, 100),
+                status: mapStatus(columnMap.status !== -1 ? row[columnMap.status] : ''),
+                deadline: columnMap.timeline !== -1 ? cleanText(row[columnMap.timeline]) : '',
+                createdAt: new Date().toISOString()
+              };
+              
+              allActions.push(action);
+              actionsFound++;
+            }
+            
+            console.log('  ✅ Found', actionsFound, 'actions in sheet:', sheetName);
+            
+          } catch (err) {
+            console.error('  ❌ Error parsing sheet:', sheetName, err);
+            errors.push('Sheet "' + sheetName + '": ' + err.message);
+          }
+        });
+        
+        console.log('📊 Total actions parsed:', allActions.length);
+        
+        if (allActions.length === 0) {
+          reject(new Error('No action items found in Excel file. Make sure the file has columns for actions.'));
+        } else {
+          resolve({
+            actions: allActions,
+            count: allActions.length,
+            errors: errors
+          });
+        }
+        
+      } catch (err) {
+        console.error('❌ Excel parsing error:', err);
+        reject(new Error('Failed to parse Excel file: ' + err.message));
+      }
+    };
+    
+    reader.onerror = function() {
+      reject(new Error('Failed to read file'));
+    };
+    
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function findHeaderRow(data) {
+  var keywords = ['action', 's.no', 's. no', 'timeline', 'status', 'aspect', 'risk', 'deadline'];
+  
+  for (var i = 0; i < Math.min(15, data.length); i++) {
+    var row = data[i];
+    if (!row || row.length === 0) continue;
+    
+    var rowText = row.map(function(cell) {
+      return (cell || '').toString().toLowerCase();
+    }).join(' ');
+    
+    var matches = keywords.filter(function(k) {
+      return rowText.indexOf(k) !== -1;
+    }).length;
+    
+    if (matches >= 2) {
+      console.log('  Found header row at', i, 'with', matches, 'keyword matches');
+      return i;
+    }
+  }
+  
+  console.log('  No header row found, using row 0');
+  return 0;
+}
+
+function mapColumns(headers) {
+  var mapping = {
+    serialNo: -1,
+    action: -1,
+    timeline: -1,
+    status: -1
+  };
+  
+  headers.forEach(function(header, index) {
+    if (!header) return;
+    var h = header.toString().toLowerCase().trim();
+    
+    // Serial Number - very flexible
+    if ((h.indexOf('s.no') !== -1 || h.indexOf('s. no') !== -1 || h === '#' || 
+         h === 's.no.' || h === 'sno' || h === 'sr.no' || h === 'sr. no.') && 
+        mapping.serialNo === -1) {
+      mapping.serialNo = index;
+    }
+    
+    // Actions - flexible matching
+    if ((h === 'action' || h === 'actions' || h.indexOf('action item') !== -1 || 
+         h.indexOf('esap action') !== -1 || h.indexOf('activity') !== -1) && 
+        h.indexOf('interaction') === -1 && mapping.action === -1) {
+      mapping.action = index;
+    }
+    
+    // Timeline/Deadline
+    if ((h.indexOf('timeline') !== -1 || h.indexOf('deadline') !== -1 || 
+         h.indexOf('due') !== -1 || h.indexOf('completion') !== -1) && 
+        mapping.timeline === -1) {
+      mapping.timeline = index;
+    }
+    
+    // Status
+    if (h.indexOf('status') !== -1 && mapping.status === -1) {
+      mapping.status = index;
+    }
+  });
+  
+  return mapping;
+}
+
+function cleanText(value) {
+  if (value === null || value === undefined) return '';
+  return value.toString().trim().replace(/\s+/g, ' ');
+}
+
+function mapStatus(statusText) {
+  if (!statusText) return 'progress';
+  
+  var s = statusText.toString().toLowerCase();
+  if (s.indexOf('complet') !== -1 || s.indexOf('done') !== -1) return 'done';
+  if (s.indexOf('not') !== -1 || s.indexOf('pending') !== -1 || s === '') return 'progress';
+  return 'progress';
+}
+
+// ══════════════════════════════════════════════════════════════
+// FILE UPLOAD HANDLER (UPDATED)
+// ══════════════════════════════════════════════════════════════
+
+function handleESAPUpload(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  
+  // Validate file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    toast('File too large. Maximum size is 10MB', true);
+    event.target.value = '';
+    return;
+  }
+  
+  var isExcel = file.name.match(/\.(xlsx|xls)$/i);
+  
+  if (isExcel) {
+    // Parse Excel to extract actions
+    document.getElementById('parseStatus').style.display = 'block';
+    document.getElementById('parseStatus').textContent = '⏳ Parsing Excel file...';
+    document.getElementById('parseStatus').style.color = 'var(--warn)';
+    
+    parseESAPExcel(file)
+      .then(function(result) {
+        parsedActions = result.actions;
+        
+        document.getElementById('parseStatus').textContent = 
+          '✅ Found ' + result.count + ' action items in Excel file';
+        document.getElementById('parseStatus').style.color = 'var(--acc)';
+        
+        toast('Excel parsed: ' + result.count + ' actions found');
+        
+        // Also store file as base64 for download
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          pendingESAPFile = e.target.result;
+          pendingESAPFileName = file.name;
+          document.getElementById('esapFileName').textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+      })
+      .catch(function(err) {
+        console.error('Excel parsing error:', err);
+        document.getElementById('parseStatus').textContent = '❌ ' + err.message;
+        document.getElementById('parseStatus').style.color = 'var(--red)';
+        toast('Failed to parse Excel: ' + err.message, true);
+        
+        // Still allow upload as attachment
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          pendingESAPFile = e.target.result;
+          pendingESAPFileName = file.name;
+          document.getElementById('esapFileName').textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+      });
+  } else {
+    // Not Excel - just store as attachment
+    parsedActions = [];
+    document.getElementById('parseStatus').style.display = 'none';
+    
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      pendingESAPFile = e.target.result;
+      pendingESAPFileName = file.name;
+      document.getElementById('esapFileName').textContent = file.name;
+      toast('File ready to upload');
+    };
+    reader.onerror = function() {
+      toast('Error reading file', true);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function removeESAP() {
+  if (!checkEditMode()) return;
+  if (!confirm('Remove ESAP document?')) return;
+  
+  if (editingId) {
+    fsSet(editingId, { esapFile: null, esapFileName: null })
+      .then(function() {
+        toast('ESAP removed');
+        document.getElementById('currentESAP').style.display = 'none';
+      })
+      .catch(function(e) { toast('Error: ' + e.message, true); });
+  } else {
+    pendingESAPFile = null;
+    pendingESAPFileName = '';
+    parsedActions = [];
+    document.getElementById('esapFileName').textContent = 'No file selected';
+    document.getElementById('esapFile').value = '';
+    document.getElementById('parseStatus').style.display = 'none';
+  }
+}
 
 // ── INITIALIZATION ─────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function(){
@@ -795,8 +1087,8 @@ function folderDrop(e, folderId){
   var companyId = e.dataTransfer.getData('companyId');
   if(companyId){
     fsSet(companyId, { 
-      folder: folderId,      // Keep old field
-      folderId: folderId     // New field
+      folder: folderId,
+      folderId: folderId
     })
       .then(function(){ toast('Moved to folder'); })
       .catch(function(err){ toast('Error: ' + err.message, true); });
@@ -819,8 +1111,8 @@ function confirmMove(){
   var folderId = document.getElementById('moveFolderSelect').value;
   if(moveTargetId){
     fsSet(moveTargetId, { 
-      folder: folderId || null,      // Keep old field
-      folderId: folderId || null     // New field
+      folder: folderId || null,
+      folderId: folderId || null
     })
       .then(function(){ 
         closeM('mMove'); 
@@ -922,16 +1214,13 @@ function renderDash(){
   var q=document.getElementById('si').value.toLowerCase();
 
   var cos=companies.filter(function(c){
-    // Folder filter (backward compatible with both 'folder' and 'folderId')
     var companyFolder = c.folderId || c.folder;
     if(curFolder === '__none__'){
       if(companyFolder) return false;
     } else if(curFolder !== '__all__'){
       if(companyFolder !== curFolder) return false;
     }
-    // Search
     if(q&&!c.name.toLowerCase().includes(q)) return false;
-    // Progress filter
     var p=pct(c);
     if(curF==='done') return p===100;
     if(curF==='prog') return p>0&&p<100;
@@ -973,7 +1262,6 @@ function renderDash(){
     }).join('');
   }
 
-  // Analytics
   var all=companies.flatMap(function(c){return c.items||[];});
   var dn=all.filter(function(i){return i.status==='done';}).length;
   var avg=companies.length?Math.round(companies.map(pct).reduce(function(a,b){return a+b;},0)/companies.length):0;
@@ -994,60 +1282,12 @@ function chipHtml(p){
   return '<span class="chip chip-new">Not Started</span>';
 }
 
-// ── DRAG & DROP ────────────────────────────────────────
 function cardDragStart(e, id){
   if(!checkEditMode()) return;
   e.dataTransfer.setData('companyId', id);
 }
 
-function cardDragEnd(e, id){
-  // cleanup
-}
-
-// ── ESAP FILE HANDLING ─────────────────────────────────
-function handleESAPUpload(event){
-  var file = event.target.files[0];
-  if(!file) return;
-  
-  // Validate file size (max 10MB)
-  if(file.size > 10 * 1024 * 1024){
-    toast('File too large. Maximum size is 10MB', true);
-    event.target.value = '';
-    return;
-  }
-  
-  // Convert to base64
-  var reader = new FileReader();
-  reader.onload = function(e){
-    pendingESAPFile = e.target.result;
-    pendingESAPFileName = file.name;
-    document.getElementById('esapFileName').textContent = file.name;
-    toast('File ready to upload');
-  };
-  reader.onerror = function(){
-    toast('Error reading file', true);
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeESAP(){
-  if(!checkEditMode()) return;
-  if(!confirm('Remove ESAP document?')) return;
-  
-  if(editingId){
-    fsSet(editingId, { esapFile: null, esapFileName: null })
-      .then(function(){ 
-        toast('ESAP removed'); 
-        document.getElementById('currentESAP').style.display = 'none';
-      })
-      .catch(function(e){ toast('Error: ' + e.message, true); });
-  } else {
-    pendingESAPFile = null;
-    pendingESAPFileName = '';
-    document.getElementById('esapFileName').textContent = 'No file selected';
-    document.getElementById('esapFile').value = '';
-  }
-}
+function cardDragEnd(e, id){}
 
 // ── ADD/EDIT COMPANY ───────────────────────────────────
 function openAddModal(){
@@ -1062,12 +1302,13 @@ function openAddModal(){
   document.getElementById('spocName').value = '';
   document.getElementById('spocEmail').value = '';
   
-  // Reset ESAP file
   pendingESAPFile = null;
   pendingESAPFileName = '';
+  parsedActions = [];
   document.getElementById('esapFile').value = '';
   document.getElementById('esapFileName').textContent = 'No file selected';
   document.getElementById('currentESAP').style.display = 'none';
+  document.getElementById('parseStatus').style.display = 'none';
   
   renderSectorChips();
   renderTeamChips();
@@ -1123,34 +1364,44 @@ function saveCompany(){
     startDate: document.getElementById('csd').value,
     spocName: document.getElementById('spocName').value.trim(),
     spocEmail: document.getElementById('spocEmail').value.trim(),
-    folder: folderValue,      // Keep old field for backward compatibility
-    folderId: folderValue,    // New field
+    folder: folderValue,
+    folderId: folderValue,
     createdAt: new Date().toISOString()
   };
   
-  // Add ESAP file if uploaded
   if(pendingESAPFile){
     data.esapFile = pendingESAPFile;
     data.esapFileName = pendingESAPFileName;
+  }
+  
+  // Add parsed actions from Excel
+  if(parsedActions && parsedActions.length > 0){
+    data.items = editingId ? 
+      (companies.find(function(c){return c.id===editingId}) || {}).items || [] : 
+      [];
+    data.items = data.items.concat(parsedActions);
+  } else if(!editingId){
+    data.items = [];
   }
   
   if(editingId){
     fsSet(editingId, data)
       .then(function(){ 
         closeM('mAdd'); 
-        toast('Company updated');
+        toast('Company updated' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : ''));
         pendingESAPFile = null;
         pendingESAPFileName = '';
+        parsedActions = [];
       })
       .catch(function(e){ toast('Error: ' + e.message, true); });
   } else {
-    data.items = [];
     fsAdd(data)
       .then(function(){ 
         closeM('mAdd'); 
-        toast('Company added');
+        toast('Company added' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : ''));
         pendingESAPFile = null;
         pendingESAPFileName = '';
+        parsedActions = [];
       })
       .catch(function(e){ toast('Error: ' + e.message, true); });
   }
@@ -1173,7 +1424,6 @@ function showDetail(id){
   html += '<div><strong>Email:</strong> '+(c.spocEmail || 'N/A')+'</div>';
   html += '</div>';
   
-  // ESAP Document
   if(c.esapFile){
     html += '<div style="margin-bottom:20px;padding:12px;background:var(--accd);border:1px solid var(--acc);border-radius:14px">';
     html += '<div style="display:flex;align-items:center;gap:12px">';
@@ -1199,7 +1449,6 @@ function showDetail(id){
   document.getElementById('detailContent').innerHTML = html;
   renderItems();
   
-  // Button states
   document.getElementById('btnAddItem').disabled = !isEditMode;
   document.getElementById('btnEdit').disabled = !isEditMode;
   document.getElementById('btnDelete').disabled = !isEditMode;
@@ -1213,7 +1462,6 @@ function renderItems(){
   
   var items = c.items || [];
   
-  // SORT BY DEADLINE (earliest to latest)
   items = items.slice().sort(function(a, b){
     var aDate = resolveDeadline(a, c);
     var bDate = resolveDeadline(b, c);
@@ -1229,7 +1477,7 @@ function renderItems(){
   }
   
   var html = items.map(function(item){
-    var idx = c.items.indexOf(item); // Get original index for operations
+    var idx = c.items.indexOf(item);
     var statusCls = item.status === 'done' ? 'done' : 'progress';
     var deadline = resolveDeadline(item, c);
     var daysLeft = deadline ? daysTo(deadline) : null;
@@ -1338,13 +1586,13 @@ function editCompany(){
   document.getElementById('spocName').value = c.spocName || '';
   document.getElementById('spocEmail').value = c.spocEmail || '';
   
-  // Reset pending file
   pendingESAPFile = null;
   pendingESAPFileName = '';
+  parsedActions = [];
   document.getElementById('esapFile').value = '';
   document.getElementById('esapFileName').textContent = 'No file selected';
+  document.getElementById('parseStatus').style.display = 'none';
   
-  // Show current ESAP if exists
   if(c.esapFile){
     document.getElementById('currentESAP').style.display = 'block';
     document.getElementById('currentESAPName').textContent = c.esapFileName || 'Document';
@@ -1526,14 +1774,12 @@ function toast(msg, isError){
   }, 3000);
 }
 
-// Close modals on overlay click
 document.addEventListener('click', function(e){
   if(e.target.classList.contains('modal-overlay')){
     e.target.classList.remove('on');
   }
 });
 
-// Close notifications on outside click
 document.addEventListener('click', function(e){
   var bell = document.querySelector('.bell-wrap');
   var dd = document.getElementById('nd');
