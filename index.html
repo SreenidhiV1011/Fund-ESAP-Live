@@ -597,6 +597,154 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
+  // Add Nudge Email
+function addNudgeEmail() {
+  var input = document.getElementById('newNudgeEmail');
+  var email = input.value.trim();
+  
+  if (!email) {
+    toast('Enter an email address');
+    return;
+  }
+  
+  // Basic email validation
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('Invalid email address', true);
+    return;
+  }
+  
+  var c = companies.find(function(x){ return x.id === curId; });
+  if (!c) return;
+  
+  var emails = c.additionalNudgeEmails || [];
+  
+  if (emails.indexOf(email) !== -1) {
+    toast('Email already added');
+    return;
+  }
+  
+  emails.push(email);
+  
+  fsSet(curId, { additionalNudgeEmails: emails })
+    .then(function(){ 
+      input.value = '';
+      showDetail(curId); // Refresh
+      toast('Email added'); 
+    })
+    .catch(function(e){ toast('Error: ' + e.message, true); });
+}
+
+// Remove Nudge Email
+function removeNudgeEmail(idx) {
+  var c = companies.find(function(x){ return x.id === curId; });
+  if (!c) return;
+  
+  var emails = c.additionalNudgeEmails || [];
+  emails.splice(idx, 1);
+  
+  fsSet(curId, { additionalNudgeEmails: emails })
+    .then(function(){ 
+      showDetail(curId); // Refresh
+      toast('Email removed'); 
+    })
+    .catch(function(e){ toast('Error: ' + e.message, true); });
+}
+
+// Update SPOC Info (call this when SPOC fields change)
+function updateSpocInfo() {
+  var name = document.getElementById('nudgeSpocName').value.trim();
+  var email = document.getElementById('nudgeSpocEmail').value.trim();
+  
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('Invalid SPOC email address', true);
+    return;
+  }
+  
+  fsSet(curId, { 
+    spocName: name,
+    spocEmail: email
+  })
+    .then(function(){ 
+      toast('SPOC info updated'); 
+    })
+    .catch(function(e){ toast('Error: ' + e.message, true); });
+}
+
+// Send Nudge Email
+function sendNudge() {
+  var c = companies.find(function(x){ return x.id === curId; });
+  if (!c) return;
+  
+  var spocName = document.getElementById('nudgeSpocName').value.trim();
+  var spocEmail = document.getElementById('nudgeSpocEmail').value.trim();
+  var additionalEmails = c.additionalNudgeEmails || [];
+  
+  if (!spocEmail && additionalEmails.length === 0) {
+    toast('Add at least one email address', true);
+    return;
+  }
+  
+  // First update SPOC info
+  fsSet(curId, { 
+    spocName: spocName,
+    spocEmail: spocEmail
+  }).then(function(){
+    
+    // Prepare email data
+    var recipients = [];
+    if (spocEmail) recipients.push(spocEmail);
+    recipients = recipients.concat(additionalEmails);
+    
+    var progress = pct(c);
+    var items = c.items || [];
+    var completed = items.filter(function(i){ return i.status === 'done'; }).length;
+    var pending = items.length - completed;
+    var overdue = items.filter(function(i){
+      if(i.status === 'done') return false;
+      var deadline = resolveDeadline(i, c);
+      return deadline && daysTo(deadline) < 0;
+    }).length;
+    
+    // Build email body
+    var subject = 'ESAP Implementation Status Update Request - ' + c.name;
+    var body = 'Dear ' + (spocName || 'Team') + ',\n\n';
+    body += 'This is a gentle reminder to provide an update on the ESAP implementation progress for ' + c.name + '.\n\n';
+    body += 'Current Status:\n';
+    body += '• Overall Progress: ' + progress + '%\n';
+    body += '• Total Actions: ' + items.length + '\n';
+    body += '• Completed: ' + completed + '\n';
+    body += '• Pending: ' + pending + '\n';
+    if(overdue > 0) body += '• Overdue: ' + overdue + '\n';
+    body += '\nPlease update us on the latest status of pending action items.\n\n';
+    body += 'Best regards,\nESAP Tracking Team';
+    
+    // Create mailto link
+    var mailto = 'mailto:' + recipients.join(',') + 
+                 '?subject=' + encodeURIComponent(subject) + 
+                 '&body=' + encodeURIComponent(body);
+    
+    // Open email client
+    window.location.href = mailto;
+    
+    // Log nudge sent
+    var nudgeHistory = c.nudgeHistory || [];
+    nudgeHistory.push({
+      date: new Date().toISOString(),
+      recipients: recipients,
+      sentBy: 'User'
+    });
+    
+    fsSet(curId, { 
+      nudgeHistory: nudgeHistory,
+      lastNudgeSent: new Date().toISOString()
+    }).then(function(){
+      toast('📧 Nudge email opened in your email client');
+    });
+    
+  }).catch(function(e){ 
+    toast('Error: ' + e.message, true); 
+  });
+}
 // ═══════════════════════════════════════════════════════
 //  FUND ESAP TRACKER — WITH FLEXIBLE EXCEL PARSER
 //  + Analytics, Folder Segregation, View-Only Access
@@ -1445,7 +1593,59 @@ function showDetail(id){
   html += '</div>';
   html += '<div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div>';
   html += '</div>';
-  
+  // Add Nudge Section
+html += '<div style="margin-top:24px;padding:24px;background:var(--sur2);border:2px solid var(--bor);border-radius:20px">';
+html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">';
+html += '<span style="font-size:1.2rem">📧</span>';
+html += '<h3 style="font-size:1.1rem;font-weight:700">Point of Contact & Nudge Settings</h3>';
+html += '</div>';
+
+// SPOC Name and Email
+html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">';
+html += '<div>';
+html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC NAME</label>';
+html += '<input type="text" id="nudgeSpocName" value="'+(c.spocName||'')+'" placeholder="Enter contact name" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
+html += '</div>';
+html += '<div>';
+html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC EMAIL</label>';
+html += '<input type="email" id="nudgeSpocEmail" value="'+(c.spocEmail||'')+'" placeholder="contact@company.com" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
+html += '</div>';
+html += '</div>';
+
+// Additional Recipients
+html += '<div style="margin-bottom:16px">';
+html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">ADDITIONAL EMAIL RECIPIENTS</label>';
+html += '<div id="additionalEmails" style="padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;min-height:48px;margin-bottom:8px">';
+
+var additionalEmails = c.additionalNudgeEmails || [];
+if(additionalEmails.length === 0){
+  html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtf)">No additional emails</div>';
+} else {
+  additionalEmails.forEach(function(email, idx){
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+    html += '<span style="font-family:var(--font-mono);font-size:.75rem;flex:1">'+esc(email)+'</span>';
+    html += '<button onclick="removeNudgeEmail('+idx+')" style="background:var(--redd);border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:8px;font-size:.7rem;cursor:pointer">Remove</button>';
+    html += '</div>';
+  });
+}
+
+html += '</div>';
+
+// Add email input
+html += '<div style="display:flex;gap:8px">';
+html += '<input type="email" id="newNudgeEmail" placeholder="Add email address..." style="flex:1;padding:10px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.75rem">';
+html += '<button onclick="addNudgeEmail()" style="background:var(--accd);border:2px solid var(--acc);color:var(--acc);padding:10px 16px;border-radius:12px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;cursor:pointer;text-transform:uppercase">+ Add</button>';
+html += '</div>';
+html += '</div>';
+
+// Send Nudge Button
+html += '<button onclick="sendNudge()" style="width:100%;background:#ff8c00;border:2px solid #ff8c00;color:#fff;padding:14px;border-radius:14px;font-family:var(--font-mono);font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:all .2s">';
+html += '<span style="font-size:1.2rem">📧</span>';
+html += '<span>Send Nudge</span>';
+html += '</button>';
+html += '<div style="font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);text-align:center;margin-top:8px">Request implementation status update</div>';
+
+html += '</div>';
   document.getElementById('detailContent').innerHTML = html;
   renderItems();
   
