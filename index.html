@@ -1951,8 +1951,20 @@ function addDays(iso, n){
 }
 
 function resolveDeadline(item, co){
-  if(item.deadlineDays!=null && co && co.startDate) return addDays(co.startDate, item.deadlineDays);
+  // Check deadlineDays (old field name)
+  if(item.deadlineDays != null && co && co.startDate) 
+    return addDays(co.startDate, item.deadlineDays);
+  
+  // Check offsetDays (new field name from Excel parser)
+  if(item.offsetDays != null && co && co.startDate) 
+    return addDays(co.startDate, item.offsetDays);
+  
+  // Check deadlineDate (old field name)
   if(item.deadlineDate) return item.deadlineDate;
+  
+  // Check deadline (new field name from Excel parser)
+  if(item.deadline) return item.deadline;
+  
   return null;
 }
 
