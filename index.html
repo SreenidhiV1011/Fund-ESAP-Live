@@ -572,6 +572,37 @@ var pendingESAPFileName = '';
 var parsedActions = [];
 
 // ══════════════════════════════════════════════════════════════
+// TIMELINE PARSER HELPER
+// ══════════════════════════════════════════════════════════════
+function parseTimeline(timelineStr) {
+  if (!timelineStr || typeof timelineStr !== 'string') {
+    return null;
+  }
+  
+  var cleaned = timelineStr.trim().toLowerCase();
+  
+  // Match "XX days" format (like "120 days", "60 days")
+  var daysMatch = cleaned.match(/(\d+)\s*days?/);
+  if (daysMatch) {
+    return { type: 'offset', days: parseInt(daysMatch[1]) };
+  }
+  
+  // Match specific dates (YYYY-MM-DD)
+  var dateMatch = cleaned.match(/\d{4}-\d{2}-\d{2}/);
+  if (dateMatch) {
+    return { type: 'specific', date: dateMatch[0] };
+  }
+  
+  // Parse as just a number
+  var number = parseInt(cleaned);
+  if (!isNaN(number) && number > 0) {
+    return { type: 'offset', days: number };
+  }
+  
+  return null;
+}
+  
+// ══════════════════════════════════════════════════════════════
 // FLEXIBLE EXCEL PARSER
 // ══════════════════════════════════════════════════════════════
 
@@ -634,13 +665,25 @@ function parseESAPExcel(file) {
               if (!actionText || !actionText.toString().trim()) continue;
               
               var action = {
-                id: 'i_' + Date.now() + '_' + actionsFound,
-                action: cleanText(actionText),
-                title: cleanText(actionText).substring(0, 100),
-                status: mapStatus(columnMap.status !== -1 ? row[columnMap.status] : ''),
-                deadline: columnMap.timeline !== -1 ? cleanText(row[columnMap.timeline]) : '',
-                createdAt: new Date().toISOString()
-              };
+  id: 'i_' + Date.now() + '_' + actionsFound,
+  action: cleanText(actionText),
+  title: cleanText(actionText).substring(0, 100),
+  status: mapStatus(columnMap.status !== -1 ? row[columnMap.status] : ''),
+  createdAt: new Date().toISOString()
+};
+
+// Parse timeline
+var timelineStr = columnMap.timeline !== -1 ? cleanText(row[columnMap.timeline]) : '';
+var timelineInfo = parseTimeline(timelineStr);
+if (timelineInfo) {
+  if (timelineInfo.type === 'offset') {
+    action.offsetDays = timelineInfo.days;
+    console.log('  ✅ Offset:', action.action.substring(0, 50), '→', timelineInfo.days, 'days');
+  } else if (timelineInfo.type === 'specific') {
+    action.deadline = timelineInfo.date;
+    console.log('  ✅ Date:', action.action.substring(0, 50), '→', timelineInfo.date);
+  }
+}
               
               allActions.push(action);
               actionsFound++;
