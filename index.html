@@ -676,13 +676,34 @@ function parseESAPExcel(file) {
 var timelineStr = columnMap.timeline !== -1 ? cleanText(row[columnMap.timeline]) : '';
 var timelineInfo = parseTimeline(timelineStr);
 if (timelineInfo) {
-  if (timelineInfo.type === 'offset') {
-    action.offsetDays = timelineInfo.days;
-    console.log('  ✅ Offset:', action.action.substring(0, 50), '→', timelineInfo.days, 'days');
-  } else if (timelineInfo.type === 'specific') {
-    action.deadline = timelineInfo.date;
-    console.log('  ✅ Date:', action.action.substring(0, 50), '→', timelineInfo.date);
-  }
+ if (timelineInfo.type === 'offset') {
+  action.offsetDays = timelineInfo.days;
+
+  // 🔥 ADD THIS PART
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  var dueDate = new Date(today);
+  dueDate.setDate(today.getDate() + timelineInfo.days);
+
+  action.deadline = dueDate.toISOString().split('T')[0];
+
+  console.log(
+    '  ✅ Offset → Date:',
+    action.action.substring(0, 50),
+    '->',
+    action.deadline
+  );
+
+} else if (timelineInfo.type === 'specific') {
+  action.deadline = timelineInfo.date;
+
+  console.log(
+    '  ✅ Date:',
+    action.action.substring(0, 50),
+    '->',
+    timelineInfo.date
+  );
 }
               
               allActions.push(action);
