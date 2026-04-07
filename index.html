@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0055)file:///C:/Users/sreenidhi/Downloads/index_final_1.html -->
+<html lang="en" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fund ESAP Tracker v2</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="./Fund ESAP Tracker v2_files/css2" rel="stylesheet">
 <style>
 /* ══ THEME TOKENS ══════════════════════════════════════ */
 :root {
@@ -27,8 +27,6 @@
   --txt: #e6ece8;
   --txtm: #718c83;
   --txtf: #415950;
-  --folder-bg: #141c1a;
-  --folder-bor: #263330;
   --topbar-bg: rgba(11,14,13,0.94);
   --shadow: 0 20px 60px rgba(0,0,0,.55);
   --card-hover-shadow: 0 12px 40px rgba(0,0,0,.4);
@@ -49,8 +47,6 @@
   --txt: #0f1f1a;
   --txtm: #5a7870;
   --txtf: #8aa89e;
-  --folder-bg: #f8fbf9;
-  --folder-bor: #d4ddd9;
   --topbar-bg: rgba(244,247,245,0.94);
   --shadow: 0 12px 40px rgba(0,0,0,.10);
   --card-hover-shadow: 0 8px 28px rgba(0,0,0,.12);
@@ -112,7 +108,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .boot-err{font-family:var(--font-mono);font-size:.7rem;color:var(--red);text-align:center;max-width:360px;line-height:1.6;display:none}
 
 /* ══ MAIN LAYOUT ═══════════════════════════════════════ */
-.main{max-width:1320px;margin:0 auto;padding:2rem}
+.main{max-width:1320px;margin:0 auto;padding:2rem;position:relative}
+.main::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;background-image:url('data:image/png;base64,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e5sHCyCvYO5rHgL96G6/8q4/2ZF7bgcc3Li7kYZXDFR0bRkWtXZ7FdBtCxgujuAaL1Ra6tfpp7IZrqtlSw5OPyGlvezTTbzFvWgiIsxcEREAREQBERAEREBEW0vBjQOkvNmhJoyeKop2jnD3uaPxO8f0fN8HF8Nx2ryW5tp6fVlMwg1E+nKNvh3uPYP8gVYVfjGtYNGNDR3AaLdDPnGHD5/c5tnsyuVnGnpfsR9tTpqWy4DS2qgjEUDqlkYaOsgBziT3kkDU+KiRThtPx6tyCzwNt/C6enl6QRudw8YIIIBPLXq6/FRr9wOXf1OfnMP21LHsjw9X1M+bTN2e7Hprwd/Yx+GTvRJPpMU0KONl2I3e0Xea5XWFtNpCYo4uka9ziSCT70kAcv8AFSOs2RJSn0N2DCUKtSWgiIqDYEREAREQBERAEREBwniinjMU0TJWHra9oIP6iulDY7LBN00Nnt8cn47KZgd+0BegibAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREB//9k=');background-repeat:no-repeat;background-position:center;background-size:contain;opacity:0.03;pointer-events:none;z-index:0}
 .view{display:none}.view.on{display:block}
 
 /* ══ DASHBOARD HEADER ══════════════════════════════════ */
@@ -151,27 +148,6 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .filter-group select,.filter-group input{width:100%;padding:8px 12px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px;color:var(--txt);font-family:var(--font-mono);font-size:.73rem;transition:border-color .2s}
 .filter-group select:focus,.filter-group input:focus{outline:none;border-color:var(--accm)}
 
-/* ══ FOLDERS ═══════════════════════════════════════════ */
-.folders-section{margin-bottom:1.5rem}
-.folders-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
-.folders-label{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.10em}
-.add-folder-btn{font-family:var(--font-mono);font-size:.65rem;padding:4px 10px;border-radius:12px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
-.add-folder-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
-.folders-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.folder-chip{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;background:var(--folder-bg);border:1px solid var(--folder-bor);cursor:pointer;transition:all .2s;font-size:.8rem;font-weight:600;user-select:none}
-.folder-chip:hover{border-color:var(--accm);transform:translateY(-1px)}
-.folder-chip.active{border-color:var(--acc);background:var(--accd);color:var(--acc)}
-.folder-chip.drag-over{border-color:var(--acc);background:var(--accd);box-shadow:0 0 0 3px var(--accm)}
-.folder-icon{font-size:1rem}
-.folder-name{font-size:.82rem;font-weight:600}
-.folder-count{font-family:var(--font-mono);font-size:.62rem;color:var(--txtm);background:var(--sur2);border-radius:16px;padding:1px 7px;margin-left:2px}
-.folder-chip.active .folder-count{color:var(--acc);background:var(--accd)}
-.folder-del{opacity:0;font-size:.7rem;color:var(--txtf);margin-left:2px;border:none;background:none;cursor:pointer;line-height:1;padding:1px 3px;border-radius:3px;transition:opacity .15s,color .15s}
-.folder-chip:hover .folder-del{opacity:1}
-.folder-del:hover{color:var(--red)}
-.folder-all{background:var(--sur2)}
-.no-folder-label{font-family:var(--font-mono);font-size:.65rem;color:var(--txtf);padding:6px 10px;border-radius:12px;background:var(--sur2);border:1px dashed var(--bor)}
-
 /* ══ CARDS GRID ════════════════════════════════════════ */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
 .card{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:20px;transition:all .3s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.03)}
@@ -184,7 +160,6 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .chip-done{background:var(--accd);color:var(--acc);border:1px solid var(--acc)}
 .chip-prog{background:var(--warnd);color:var(--warn);border:1px solid var(--warn)}
 .chip-new{background:var(--sur2);color:var(--txtm);border:1px solid var(--bor)}
-.cfolder-tag{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-top:6px;padding:4px 8px;background:var(--folder-bg);border-radius:8px;display:inline-block}
 .prog-wrap{margin-bottom:14px}
 .prog-lbl{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:6px;font-family:var(--font-mono)}
 .prog-lbl span{color:var(--txtm);text-transform:uppercase;letter-spacing:.08em}
@@ -198,8 +173,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .mi strong{display:block;font-size:1.2rem;font-weight:800;color:var(--acc);margin-bottom:2px}
 .mi{font-family:var(--font-mono);font-size:.62rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em}
 .cact{display:flex;gap:8px;margin-top:12px}
-.move-btn,.del-card-btn{flex:1;font-family:var(--font-mono);font-size:.65rem;padding:6px;border-radius:10px;border:1px solid var(--bor);background:var(--sur2);color:var(--txtm);cursor:pointer;transition:all .2s;font-weight:600}
-.move-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.del-card-btn{flex:1;font-family:var(--font-mono);font-size:.65rem;padding:6px;border-radius:10px;border:1px solid var(--bor);background:var(--sur2);color:var(--txtm);cursor:pointer;transition:all .2s;font-weight:600}
 .del-card-btn:hover{border-color:var(--red);color:var(--red);background:var(--redd)}
 
 /* Empty State */
@@ -297,7 +271,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 <body>
 
 <!-- Boot Screen -->
-<div class="boot-screen" id="boot">
+<div class="boot-screen" id="boot" style="display: none;">
   <div class="boot-icon">📊</div>
   <div class="boot-title">Fund ESAP Tracker</div>
   <div class="boot-sub">Loading...</div>
@@ -316,35 +290,42 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   </div>
   
   <div class="topbar-right">
-    <div class="edit-badge" id="editBadge">
+    <div class="edit-badge view-only" id="editBadge">
       <span id="editMode">🔒 View Only</span>
     </div>
     
     <div class="sync-wrap">
-      <div class="sync-dot" id="sync-dot"></div>
-      <div class="sync-label" id="sync-label">Connecting...</div>
+      <div class="sync-dot live" id="sync-dot"></div>
+      <div class="sync-label" id="sync-label">Live • 12 companies</div>
     </div>
     
-    <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">🌙</div>
+    <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
     
     <div class="bell-wrap">
       <div class="bell-btn" onclick="toggleNotif()">🔔</div>
-      <div class="bell-badge" id="bb">0</div>
+      <div class="bell-badge on" id="bb">31</div>
       <div class="notif-dd" id="nd">
         <div class="notif-hd">
           <span>Notifications</span>
           <button class="notif-clear" onclick="clearNotifs()">Clear</button>
         </div>
-        <div class="notif-list" id="nl">
-          <div class="nempty">No notifications</div>
-        </div>
+        <div class="notif-list" id="nl"><div class="notif-item" onclick="readN(&#39;3ylpucheoiomno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Curious</b>: Incident Reporting &amp; Investigation Procedure</div><div class="nmeta">Overdue by 6d</div></div></div><div class="notif-item" onclick="readN(&#39;fuep8t5uabgmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall develop a Corporate Level E&amp;S Managem...</div><div class="nmeta">Overdue by 707d</div></div></div><div class="notif-item" onclick="readN(&#39;lzcc2l2v0kmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall prepare a corporate level EPR Plan fo...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;l6nsobzc1mlmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall develop a Privacy Policy for their we...</div><div class="nmeta">Overdue by 707d</div></div></div><div class="notif-item" onclick="readN(&#39;7b1nch3dpa2mno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall monitor its primary supply chain on a...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;omc78xb1zemno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall obtain the Principal Employer Registr...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;jmfb9ij241fmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall apply and obtain “Brand Owner” regist...</div><div class="nmeta">Overdue by 797d</div></div></div><div class="notif-item" onclick="readN(&#39;gv168cvfkdmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall document an overtime policy and shall...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;lr0tm94x9vmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall reconstitute the Internal Committee (...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;slbnnche4imno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall draft following Governance related po...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;dp0g3bi8mhmmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall develop a Corporate level overarching...</div><div class="nmeta">Overdue by 799d</div></div></div><div class="notif-item" onclick="readN(&#39;npfnj3199wmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall apply for and update its office addre...</div><div class="nmeta">Overdue by 829d</div></div></div><div class="notif-item" onclick="readN(&#39;oug55bvrburmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: IK shall update their HR policies with inclusion of pol...</div><div class="nmeta">Overdue by 799d</div></div></div><div class="notif-item" onclick="readN(&#39;yqg75lfchmmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall constitute IC as per the POSH Act 201...</div><div class="nmeta">Overdue by 859d</div></div></div><div class="notif-item" onclick="readN(&#39;b8mpgqzjtykmno99y47&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall draft the Code of Conduct including B...</div><div class="nmeta">Overdue by 799d</div></div></div><div class="notif-item" onclick="readN(&#39;al0obyhfhogmno99y47&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of accident/incident register (Form# 26) at the...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;pbuhf0yrknmmno99y47&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: The Facility intends to transition to Piped Natural Gas...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;4vff7quw0zymno99y47&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Presence of Schedule-H drugs in first-aid box and ansen...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;68fyu3p8p7smno99y47&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of attendance records and overtime register for...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;c25b390u9vsmno99y47&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of sample copies of salary slips of employees f...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;4gnkm75u10hmno99y47&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of periodic ambient air quality level monitorin...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;era74e1mxgcmno99y47&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of first-aid box in the warehouse.</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;5paa1pslohnmno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Ido</b>: Organisation Management
+Moving forward as company is p...</div><div class="nmeta">Overdue by 89d</div></div></div><div class="notif-item" onclick="readN(&#39;k9xew78kinmno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Organizational Capacity &amp; Competency
+The Company shall...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;vfisgkjla2mno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Data Information and Security
+As per Rule 5(9) of Info...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;wipf4voykdfmno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Human Resource Policies and Procedures 
+Company shall ...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;t58l1531ngfmno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Group Insurance 
+Company shall ensure health insurance...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;t3rwa3an1nrmno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Employees' State Insurance (ESI)
+Since the employee co...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;j4843bhggapmno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Board Meetings
+The Company shall hold a minimum of fou...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;v4rvfcrgjumno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Annual General Meeting
+The Company shall ensure to con...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;m9o4d58s8aemno99y48&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Corporate Governance Policies
+The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></div></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Main Content -->
-<div class="main" id="main-app" style="display:none">
+<div class="main" id="main-app" style="display: block;">
   <!-- Dashboard View -->
   <div class="view on" id="vdash">
     <!-- Header -->
@@ -355,7 +336,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       </div>
       
       <div class="actions-row">
-        <button class="action-btn primary" onclick="openAddModal()" id="btnAdd">
+        <button class="action-btn primary" onclick="openAddModal()" id="btnAdd" disabled="">
           <span>➕</span> Add Company
         </button>
         <button class="action-btn" onclick="exportData()">
@@ -371,32 +352,33 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
     <div class="stats-row">
       <div class="sc">
         <div class="sc-label">Total Companies</div>
-        <div class="sc-val" id="s0">0</div>
+        <div class="sc-val" id="s0">12</div>
         <div class="sc-desc">In portfolio</div>
       </div>
       <div class="sc">
         <div class="sc-label">Total Actions</div>
-        <div class="sc-val" id="s1">0</div>
+        <div class="sc-val" id="s1">263</div>
         <div class="sc-desc">Across all companies</div>
       </div>
       <div class="sc">
         <div class="sc-label">Completed</div>
-        <div class="sc-val" id="s2">0</div>
+        <div class="sc-val" id="s2">69</div>
         <div class="sc-desc">Actions done</div>
       </div>
       <div class="sc">
         <div class="sc-label">Avg Progress</div>
-        <div class="sc-val" id="s3">0%</div>
+        <div class="sc-val" id="s3">32%</div>
         <div class="sc-desc">Portfolio average</div>
       </div>
     </div>
     
     <!-- Filter Row -->
     <div class="fil-row">
-      <button class="fbtn on" data-f="all" onclick="setF(this,'all')">All</button>
-      <button class="fbtn" data-f="new" onclick="setF(this,'new')">Not Started</button>
-      <button class="fbtn" data-f="prog" onclick="setF(this,'prog')">In Progress</button>
-      <button class="fbtn" data-f="done" onclick="setF(this,'done')">Completed</button>
+      <button class="fbtn on" data-f="all" onclick="setF(this,&#39;all&#39;)">All</button>
+      <button class="fbtn" data-f="new" onclick="setF(this,&#39;new&#39;)">Not Started</button>
+      <button class="fbtn" data-f="prog" onclick="setF(this,&#39;prog&#39;)">In Progress</button>
+      <button class="fbtn" data-f="done" onclick="setF(this,&#39;done&#39;)">Completed</button>
+      <button class="fbtn" onclick="toggleAdvFilters()">📊 More Filters</button>
       
       <div class="sbox">
         <span>🔎</span>
@@ -404,38 +386,27 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       </div>
     </div>
     
-    <!-- Advanced Filters -->
+    <!-- Advanced Filters (Partner/Sector/Fund) -->
     <div class="advanced-filters" id="advFilters">
       <div class="filter-grid">
         <div class="filter-group">
-          <label>Sector</label>
-          <select id="filterSector" onchange="applyAdvFilters()">
-            <option value="">All Sectors</option>
-          </select>
+          <label>Partner</label>
+          <select id="filterPartner" onchange="applyAdvFilters()"><option value="">All Partners</option><option value="Sanjay">Sanjay</option><option value="Ashish">Ashish</option><option value="Karthik">Karthik</option><option value="Arpit">Arpit</option><option value="Sajith">Sajith</option></select>
         </div>
         <div class="filter-group">
-          <label>Team Member</label>
-          <select id="filterTeam" onchange="applyAdvFilters()">
-            <option value="">All Members</option>
-          </select>
+          <label>Sector</label>
+          <select id="filterSector" onchange="applyAdvFilters()"><option value="">All Sectors</option><option value="AI/SaaS">AI/SaaS</option><option value="Finance">Finance</option><option value="Manufacturing">Manufacturing</option></select>
+        </div>
+        <div class="filter-group">
+          <label>Fund</label>
+          <select id="filterFund" onchange="applyAdvFilters()"><option value="">All Funds</option></select>
         </div>
       </div>
-    </div>
-    
-    <!-- Folders -->
-    <div class="folders-section">
-      <div class="folders-header">
-        <div class="folders-label">📁 Folders</div>
-        <button class="add-folder-btn" onclick="openFolderModal()" id="btnAddFolder">
-          <span>+</span> Add Folder
-        </button>
-      </div>
-      <div class="folders-row" id="foldersRow"></div>
     </div>
     
     <!-- Grid -->
-    <div class="grid" id="gr"></div>
-    <div class="empty" id="emp">
+    <div class="grid" id="gr"><div class="card" onclick="showDetail(&#39;jRXc2AYTaH7HRt0ucXB6&#39;)"><div class="card-hd"><div><div class="cname">Curious</div><div class="cid">Sanjay • AI/SaaS</div><div class="cstart">📅 Start: 02 Mar 2026</div></div><span class="chip chip-new">Not Started</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>0%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:0%"></div></div></div><div class="cmeta"><div class="mi"><strong>22</strong>Total</div><div class="mi"><strong>0</strong>Done</div><div class="mi"><strong>22</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;DVwqr2xMKlCjgVwBnGjt&#39;)"><div class="card-hd"><div><div class="cname">Optimo</div><div class="cid">Ashish • Finance</div><div class="cstart">📅 Start: 01 Mar 2024</div></div><span class="chip chip-prog">In Progress</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>95%</strong></div><div class="prog-bg"><div class="prog-fill " style="width:95%"></div></div></div><div class="cmeta"><div class="mi"><strong>21</strong>Total</div><div class="mi"><strong>20</strong>Done</div><div class="mi"><strong>1</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;phfT8emyDBIxjFxONmYd&#39;)"><div class="card-hd"><div><div class="cname">Vecmocon</div><div class="cid">Manufacturing</div><div class="cstart">📅 Start: 16 Sept 2024</div></div><span class="chip chip-prog">In Progress</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>90%</strong></div><div class="prog-bg"><div class="prog-fill " style="width:90%"></div></div></div><div class="cmeta"><div class="mi"><strong>29</strong>Total</div><div class="mi"><strong>26</strong>Done</div><div class="mi"><strong>3</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;AxUnZm4cck61F6OdQwMR&#39;)"><div class="card-hd"><div><div class="cname">SuperK</div><div class="cid">Karthik</div><div class="cstart">📅 Start: 01 Jan 2024</div></div><span class="chip chip-new">Not Started</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>0%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:0%"></div></div></div><div class="cmeta"><div class="mi"><strong>9</strong>Total</div><div class="mi"><strong>0</strong>Done</div><div class="mi"><strong>9</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;wG4Ip8Q2gkMHlRGOiDhV&#39;)"><div class="card-hd"><div><div class="cname">Battery Smart</div><div class="cid">Arpit</div><div class="cstart">📅 Start: 11 Dec 2021</div></div><span class="chip chip-done">Complete</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>100%</strong></div><div class="prog-bg"><div class="prog-fill " style="width:100%"></div></div></div><div class="cmeta"><div class="mi"><strong>11</strong>Total</div><div class="mi"><strong>11</strong>Done</div><div class="mi"><strong>0</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;jHyWSNbJMGkbjzxV86aY&#39;)"><div class="card-hd"><div><div class="cname">Interview Kickstart</div><div class="cid">Karthik</div><div class="cstart">📅 Start: 01 Oct 2023</div></div><span class="chip chip-new">Not Started</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>0%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:0%"></div></div></div><div class="cmeta"><div class="mi"><strong>6</strong>Total</div><div class="mi"><strong>0</strong>Done</div><div class="mi"><strong>6</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;IIb9uyWoJ2Ct2KF6ptlN&#39;)"><div class="card-hd"><div><div class="cname">Mave Health</div><div class="cid">Arpit • AI/SaaS</div><div class="cstart">📅 Start: 06 Mar 2026</div></div><span class="chip chip-new">Not Started</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>0%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:0%"></div></div></div><div class="cmeta"><div class="mi"><strong>14</strong>Total</div><div class="mi"><strong>0</strong>Done</div><div class="mi"><strong>14</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;65jCzbb8ZkW8yngaqsrK&#39;)"><div class="card-hd"><div><div class="cname">Bidso</div><div class="cid">Sajith • Manufacturing</div><div class="cstart">📅 Start: 09 Mar 2026</div></div><span class="chip chip-new">Not Started</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>0%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:0%"></div></div></div><div class="cmeta"><div class="mi"><strong>86</strong>Total</div><div class="mi"><strong>0</strong>Done</div><div class="mi"><strong>86</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;16tCXNNBs6vyHntFfEgz&#39;)"><div class="card-hd"><div><div class="cname">PowerUp</div><div class="cid">Ashish • Finance</div><div class="cstart">📅 Start: 01 Mar 2026</div></div><span class="chip chip-new">Not Started</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>0%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:0%"></div></div></div><div class="cmeta"><div class="mi"><strong>19</strong>Total</div><div class="mi"><strong>0</strong>Done</div><div class="mi"><strong>19</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;VJlUpxb9QueJdY2nWDzK&#39;)"><div class="card-hd"><div><div class="cname">Epithera</div><div class="cid">Sajith</div><div class="cstart">📅 Start: 24 Mar 2026</div></div><span class="chip chip-new">Not Started</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>0%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:0%"></div></div></div><div class="cmeta"><div class="mi"><strong>24</strong>Total</div><div class="mi"><strong>0</strong>Done</div><div class="mi"><strong>24</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;YDedquNDXLoEl9VBKPos&#39;)"><div class="card-hd"><div><div class="cname">Ido</div><div class="cid">Arpit</div><div class="cstart">📅 Start: 10 Sept 2025</div></div><span class="chip chip-prog">In Progress</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>92%</strong></div><div class="prog-bg"><div class="prog-fill " style="width:92%"></div></div></div><div class="cmeta"><div class="mi"><strong>12</strong>Total</div><div class="mi"><strong>11</strong>Done</div><div class="mi"><strong>1</strong>Pending</div></div></div><div class="card" onclick="showDetail(&#39;WxGyBtlX06PPurmQDlVa&#39;)"><div class="card-hd"><div><div class="cname">Confido</div><div class="cid">Sanjay</div><div class="cstart">📅 Start: 16 Sept 2025</div></div><span class="chip chip-prog">In Progress</span></div><div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>10%</strong></div><div class="prog-bg"><div class="prog-fill l" style="width:10%"></div></div></div><div class="cmeta"><div class="mi"><strong>10</strong>Total</div><div class="mi"><strong>1</strong>Done</div><div class="mi"><strong>9</strong>Pending</div></div></div></div>
+    <div class="empty" id="emp" style="display: none;">
       <div class="empty-icon">📭</div>
       <div class="empty-msg">No companies found</div>
     </div>
@@ -447,18 +418,12 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   <div class="modal">
     <div class="modal-hd">
       <div class="modal-title" id="modalAddTitle">Add Company</div>
-      <div class="modal-close" onclick="closeM('mAdd')">×</div>
+      <div class="modal-close" onclick="closeM(&#39;mAdd&#39;)">×</div>
     </div>
     <div class="modal-body">
-      <div class="form-row inline">
-        <div>
-          <label>Company Name *</label>
-          <input type="text" id="cn" placeholder="e.g., Acme Corp">
-        </div>
-        <div>
-          <label>Company Code</label>
-          <input type="text" id="cc" placeholder="e.g., ACME">
-        </div>
+      <div class="form-row">
+        <label>Company Name *</label>
+        <input type="text" id="cn" placeholder="e.g., Acme Corp">
       </div>
       
       <div class="form-row">
@@ -471,8 +436,20 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       </div>
       
       <div class="form-row">
-        <label>Assigned Team Member</label>
+        <label>Assigned Team Member (Partner)</label>
         <div class="chip-grid" id="teamChips"></div>
+      </div>
+      
+      <div class="form-row">
+        <label>Fund</label>
+        <select id="fundSelect">
+          <option value="">Select Fund</option>
+          <option value="Fund I">Fund I</option>
+          <option value="Fund II">Fund II</option>
+          <option value="Fund III">Fund III</option>
+          <option value="Fund IV">Fund IV</option>
+          <option value="Fund V">Fund V</option>
+        </select>
       </div>
       
       <div class="form-row">
@@ -495,7 +472,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
         <label>Upload ESAP Document (.xlsx to auto-import actions)</label>
         <input type="file" id="esapFile" accept=".pdf,.doc,.docx,.xls,.xlsx" style="display:none" onchange="handleESAPUpload(event)">
         <div style="display:flex;gap:8px;align-items:center">
-          <button type="button" class="btn secondary" onclick="document.getElementById('esapFile').click()">
+          <button type="button" class="btn secondary" onclick="document.getElementById(&#39;esapFile&#39;).click()">
             📎 Choose File
           </button>
           <span id="esapFileName" style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">No file selected</span>
@@ -503,7 +480,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
         <div id="currentESAP" style="margin-top:8px;display:none">
           <div style="padding:8px 12px;background:var(--accd);border:1px solid var(--acc);border-radius:10px;display:inline-flex;align-items:center;gap:8px">
             <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--acc)">📄 <span id="currentESAPName"></span></span>
-            <a href="#" id="downloadESAP" target="_blank" style="color:var(--acc);font-size:.75rem">Download</a>
+            <a href="file:///C:/Users/sreenidhi/Downloads/index_final_1.html#" id="downloadESAP" target="_blank" style="color:var(--acc);font-size:.75rem">Download</a>
             <button type="button" onclick="removeESAP()" style="background:none;border:none;color:var(--acc);cursor:pointer;font-weight:700;font-size:1rem">×</button>
           </div>
         </div>
@@ -511,7 +488,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn secondary" onclick="closeM('mAdd')">Cancel</button>
+      <button class="btn secondary" onclick="closeM(&#39;mAdd&#39;)">Cancel</button>
       <button class="btn primary" onclick="saveCompany()" id="btnSave">Save Company</button>
     </div>
   </div>
@@ -522,7 +499,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   <div class="modal wide">
     <div class="modal-hd">
       <div class="modal-title" id="detailTitle">Company Details</div>
-      <div class="modal-close" onclick="closeM('mDetail')">×</div>
+      <div class="modal-close" onclick="closeM(&#39;mDetail&#39;)">×</div>
     </div>
     <div class="modal-body">
       <div id="detailContent"></div>
@@ -537,53 +514,9 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn secondary" onclick="closeM('mDetail')">Close</button>
+      <button class="btn secondary" onclick="closeM(&#39;mDetail&#39;)">Close</button>
       <button class="btn" onclick="editCompany()" id="btnEdit">Edit Company</button>
       <button class="btn danger" onclick="confirmDelete()" id="btnDelete">Delete</button>
-    </div>
-  </div>
-</div>
-
-<!-- Add Folder Modal -->
-<div class="modal-overlay" id="mFolder">
-  <div class="modal">
-    <div class="modal-hd">
-      <div class="modal-title">Create Folder</div>
-      <div class="modal-close" onclick="closeM('mFolder')">×</div>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <label>Folder Name *</label>
-        <input type="text" id="folderName" placeholder="e.g., Q1 Portfolio">
-      </div>
-      <div class="form-row">
-        <label>Emoji Icon</label>
-        <input type="text" id="folderEmoji" placeholder="📁" maxlength="2">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn secondary" onclick="closeM('mFolder')">Cancel</button>
-      <button class="btn primary" onclick="saveFolder()">Create Folder</button>
-    </div>
-  </div>
-</div>
-
-<!-- Move Modal -->
-<div class="modal-overlay" id="mMove">
-  <div class="modal">
-    <div class="modal-hd">
-      <div class="modal-title">Move to Folder</div>
-      <div class="modal-close" onclick="closeM('mMove')">×</div>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <label>Select Folder</label>
-        <select id="moveFolderSelect"></select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn secondary" onclick="closeM('mMove')">Cancel</button>
-      <button class="btn primary" onclick="confirmMove()">Move</button>
     </div>
   </div>
 </div>
@@ -592,163 +525,19 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 <div class="toast" id="toast"></div>
 
 <!-- Firebase & Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-app-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="./Fund ESAP Tracker v2_files/firebase-app-compat.js.download"></script>
+<script src="./Fund ESAP Tracker v2_files/firebase-firestore-compat.js.download"></script>
+<script src="./Fund ESAP Tracker v2_files/xlsx.full.min.js.download"></script>
 
 <script>
-  // Add Nudge Email
-function addNudgeEmail() {
-  var input = document.getElementById('newNudgeEmail');
-  var email = input.value.trim();
-  
-  if (!email) {
-    toast('Enter an email address');
-    return;
-  }
-  
-  // Basic email validation
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast('Invalid email address', true);
-    return;
-  }
-  
-  var c = companies.find(function(x){ return x.id === curId; });
-  if (!c) return;
-  
-  var emails = c.additionalNudgeEmails || [];
-  
-  if (emails.indexOf(email) !== -1) {
-    toast('Email already added');
-    return;
-  }
-  
-  emails.push(email);
-  
-  fsSet(curId, { additionalNudgeEmails: emails })
-    .then(function(){ 
-      input.value = '';
-      showDetail(curId); // Refresh
-      toast('Email added'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
-}
-
-// Remove Nudge Email
-function removeNudgeEmail(idx) {
-  var c = companies.find(function(x){ return x.id === curId; });
-  if (!c) return;
-  
-  var emails = c.additionalNudgeEmails || [];
-  emails.splice(idx, 1);
-  
-  fsSet(curId, { additionalNudgeEmails: emails })
-    .then(function(){ 
-      showDetail(curId); // Refresh
-      toast('Email removed'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
-}
-
-// Update SPOC Info (call this when SPOC fields change)
-function updateSpocInfo() {
-  var name = document.getElementById('nudgeSpocName').value.trim();
-  var email = document.getElementById('nudgeSpocEmail').value.trim();
-  
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast('Invalid SPOC email address', true);
-    return;
-  }
-  
-  fsSet(curId, { 
-    spocName: name,
-    spocEmail: email
-  })
-    .then(function(){ 
-      toast('SPOC info updated'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
-}
-
-// Send Nudge Email
-function sendNudge() {
-  var c = companies.find(function(x){ return x.id === curId; });
-  if (!c) return;
-  
-  var spocName = document.getElementById('nudgeSpocName').value.trim();
-  var spocEmail = document.getElementById('nudgeSpocEmail').value.trim();
-  var additionalEmails = c.additionalNudgeEmails || [];
-  
-  if (!spocEmail && additionalEmails.length === 0) {
-    toast('Add at least one email address', true);
-    return;
-  }
-  
-  // First update SPOC info
-  fsSet(curId, { 
-    spocName: spocName,
-    spocEmail: spocEmail
-  }).then(function(){
-    
-    // Prepare email data
-    var recipients = [];
-    if (spocEmail) recipients.push(spocEmail);
-    recipients = recipients.concat(additionalEmails);
-    
-    var progress = pct(c);
-    var items = c.items || [];
-    var completed = items.filter(function(i){ return i.status === 'done'; }).length;
-    var pending = items.length - completed;
-    var overdue = items.filter(function(i){
-      if(i.status === 'done') return false;
-      var deadline = resolveDeadline(i, c);
-      return deadline && daysTo(deadline) < 0;
-    }).length;
-    
-    // Build email body
-    var subject = 'ESAP Implementation Status Update Request - ' + c.name;
-    var body = 'Dear ' + (spocName || 'Team') + ',\n\n';
-    body += 'This is a gentle reminder to provide an update on the ESAP implementation progress for ' + c.name + '.\n\n';
-    body += 'Current Status:\n';
-    body += '• Overall Progress: ' + progress + '%\n';
-    body += '• Total Actions: ' + items.length + '\n';
-    body += '• Completed: ' + completed + '\n';
-    body += '• Pending: ' + pending + '\n';
-    if(overdue > 0) body += '• Overdue: ' + overdue + '\n';
-    body += '\nPlease update us on the latest status of pending action items.\n\n';
-    body += 'Best regards,\nESAP Tracking Team';
-    
-    // Create mailto link
-    var mailto = 'mailto:' + recipients.join(',') + 
-                 '?subject=' + encodeURIComponent(subject) + 
-                 '&body=' + encodeURIComponent(body);
-    
-    // Open email client
-    window.location.href = mailto;
-    
-    // Log nudge sent
-    var nudgeHistory = c.nudgeHistory || [];
-    nudgeHistory.push({
-      date: new Date().toISOString(),
-      recipients: recipients,
-      sentBy: 'User'
-    });
-    
-    fsSet(curId, { 
-      nudgeHistory: nudgeHistory,
-      lastNudgeSent: new Date().toISOString()
-    }).then(function(){
-      toast('📧 Nudge email opened in your email client');
-    });
-    
-  }).catch(function(e){ 
-    toast('Error: ' + e.message, true); 
-  });
-}
 // ═══════════════════════════════════════════════════════
-//  FUND ESAP TRACKER — WITH FLEXIBLE EXCEL PARSER
-//  + Analytics, Folder Segregation, View-Only Access
-//  + Auto-imports action items from uploaded Excel files
+//  FUND ESAP TRACKER — UPDATED VERSION
+//  ✅ Partner/Sector/Fund Filters (No Folders)
+//  ✅ Partner name on cards (not code)
+//  ✅ Nudge only in edit mode
+//  ✅ Action items in email
+//  ✅ Blume logo background
+//  ✅ Excel parser + all features retained
 // ═══════════════════════════════════════════════════════
 
 // Firebase Configuration
@@ -765,20 +554,22 @@ var FIREBASE_CONFIG = {
 // Global Variables
 var db = null;
 var companies = [];
-var folders = [];
 var sectors = ['Health Care', 'AI/SaaS', 'Finance', 'Consumer', 'Logistics', 'Other'];
 var teamMembers = ['Ashish', 'Arpit', 'Sanjay', 'Karthik', 'Sajith'];
 var unsubscribe = null;
 var curId = null;
-var curFolder = '__all__';
 var curF = 'all';
+var activeFilters = {
+  partner: '',
+  sector: '',
+  fund: ''
+};
 var editingId = null;
-var moveTargetId = null;
 var notifications = [];
 var isEditMode = false;
 var pendingESAPFile = null;
 var pendingESAPFileName = '';
-var parsedActions = []; // Store parsed actions from Excel
+var parsedActions = [];
 
 // ══════════════════════════════════════════════════════════════
 // FLEXIBLE EXCEL PARSER
@@ -799,7 +590,6 @@ function parseESAPExcel(file) {
         var allActions = [];
         var errors = [];
         
-        // Try all sheets
         workbook.SheetNames.forEach(function(sheetName) {
           console.log('Processing sheet:', sheetName);
           
@@ -817,7 +607,6 @@ function parseESAPExcel(file) {
               return;
             }
             
-            // Find header row
             var headerRowIndex = findHeaderRow(jsonData);
             if (headerRowIndex === -1) {
               console.log('  ⚠️ No header row found');
@@ -836,7 +625,6 @@ function parseESAPExcel(file) {
               return;
             }
             
-            // Parse data rows
             var actionsFound = 0;
             for (var i = headerRowIndex + 1; i < jsonData.length; i++) {
               var row = jsonData[i];
@@ -929,28 +717,24 @@ function mapColumns(headers) {
     if (!header) return;
     var h = header.toString().toLowerCase().trim();
     
-    // Serial Number - very flexible
     if ((h.indexOf('s.no') !== -1 || h.indexOf('s. no') !== -1 || h === '#' || 
          h === 's.no.' || h === 'sno' || h === 'sr.no' || h === 'sr. no.') && 
         mapping.serialNo === -1) {
       mapping.serialNo = index;
     }
     
-    // Actions - flexible matching
     if ((h === 'action' || h === 'actions' || h.indexOf('action item') !== -1 || 
          h.indexOf('esap action') !== -1 || h.indexOf('activity') !== -1) && 
         h.indexOf('interaction') === -1 && mapping.action === -1) {
       mapping.action = index;
     }
     
-    // Timeline/Deadline
     if ((h.indexOf('timeline') !== -1 || h.indexOf('deadline') !== -1 || 
          h.indexOf('due') !== -1 || h.indexOf('completion') !== -1) && 
         mapping.timeline === -1) {
       mapping.timeline = index;
     }
     
-    // Status
     if (h.indexOf('status') !== -1 && mapping.status === -1) {
       mapping.status = index;
     }
@@ -974,14 +758,13 @@ function mapStatus(statusText) {
 }
 
 // ══════════════════════════════════════════════════════════════
-// FILE UPLOAD HANDLER (UPDATED)
+// FILE UPLOAD HANDLER
 // ══════════════════════════════════════════════════════════════
 
 function handleESAPUpload(event) {
   var file = event.target.files[0];
   if (!file) return;
   
-  // Validate file size (max 10MB)
   if (file.size > 10 * 1024 * 1024) {
     toast('File too large. Maximum size is 10MB', true);
     event.target.value = '';
@@ -991,7 +774,6 @@ function handleESAPUpload(event) {
   var isExcel = file.name.match(/\.(xlsx|xls)$/i);
   
   if (isExcel) {
-    // Parse Excel to extract actions
     document.getElementById('parseStatus').style.display = 'block';
     document.getElementById('parseStatus').textContent = '⏳ Parsing Excel file...';
     document.getElementById('parseStatus').style.color = 'var(--warn)';
@@ -1006,7 +788,6 @@ function handleESAPUpload(event) {
         
         toast('Excel parsed: ' + result.count + ' actions found');
         
-        // Also store file as base64 for download
         var reader = new FileReader();
         reader.onload = function(e) {
           pendingESAPFile = e.target.result;
@@ -1021,7 +802,6 @@ function handleESAPUpload(event) {
         document.getElementById('parseStatus').style.color = 'var(--red)';
         toast('Failed to parse Excel: ' + err.message, true);
         
-        // Still allow upload as attachment
         var reader = new FileReader();
         reader.onload = function(e) {
           pendingESAPFile = e.target.result;
@@ -1031,7 +811,6 @@ function handleESAPUpload(event) {
         reader.readAsDataURL(file);
       });
   } else {
-    // Not Excel - just store as attachment
     parsedActions = [];
     document.getElementById('parseStatus').style.display = 'none';
     
@@ -1070,23 +849,158 @@ function removeESAP() {
   }
 }
 
+// ── NUDGE FUNCTIONS ────────────────────────────────────
+
+function addNudgeEmail() {
+  var input = document.getElementById('newNudgeEmail');
+  var email = input.value.trim();
+  
+  if (!email) {
+    toast('Enter an email address');
+    return;
+  }
+  
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('Invalid email address', true);
+    return;
+  }
+  
+  var c = companies.find(function(x){ return x.id === curId; });
+  if (!c) return;
+  
+  var emails = c.additionalNudgeEmails || [];
+  
+  if (emails.indexOf(email) !== -1) {
+    toast('Email already added');
+    return;
+  }
+  
+  emails.push(email);
+  
+  fsSet(curId, { additionalNudgeEmails: emails })
+    .then(function(){ 
+      input.value = '';
+      showDetail(curId);
+      toast('Email added'); 
+    })
+    .catch(function(e){ toast('Error: ' + e.message, true); });
+}
+
+function removeNudgeEmail(idx) {
+  var c = companies.find(function(x){ return x.id === curId; });
+  if (!c) return;
+  
+  var emails = c.additionalNudgeEmails || [];
+  emails.splice(idx, 1);
+  
+  fsSet(curId, { additionalNudgeEmails: emails })
+    .then(function(){ 
+      showDetail(curId);
+      toast('Email removed'); 
+    })
+    .catch(function(e){ toast('Error: ' + e.message, true); });
+}
+
+function sendNudge() {
+  var c = companies.find(function(x){ return x.id === curId; });
+  if (!c) return;
+  
+  var spocName = document.getElementById('nudgeSpocName').value.trim();
+  var spocEmail = document.getElementById('nudgeSpocEmail').value.trim();
+  var additionalEmails = c.additionalNudgeEmails || [];
+  
+  if (!spocEmail && additionalEmails.length === 0) {
+    toast('Add at least one email address', true);
+    return;
+  }
+  
+  fsSet(curId, { 
+    spocName: spocName,
+    spocEmail: spocEmail
+  }).then(function(){
+    
+    var recipients = [];
+    if (spocEmail) recipients.push(spocEmail);
+    recipients = recipients.concat(additionalEmails);
+    
+    var progress = pct(c);
+    var items = c.items || [];
+    var completed = items.filter(function(i){ return i.status === 'done'; }).length;
+    var pending = items.length - completed;
+    var overdue = items.filter(function(i){
+      if(i.status === 'done') return false;
+      var deadline = resolveDeadline(i, c);
+      return deadline && daysTo(deadline) < 0;
+    }).length;
+    
+    var subject = 'ESAP Implementation Status Update Request - ' + c.name;
+    var body = 'Dear ' + (spocName || 'Team') + ',\n\n';
+    body += 'This is a gentle reminder to provide an update on the ESAP implementation progress for ' + c.name + '.\n\n';
+    body += 'Current Status:\n';
+    body += '• Overall Progress: ' + progress + '%\n';
+    body += '• Total Actions: ' + items.length + '\n';
+    body += '• Completed: ' + completed + '\n';
+    body += '• Pending: ' + pending + '\n';
+    if(overdue > 0) body += '• Overdue: ' + overdue + '\n';
+    
+    // ADD ACTION ITEMS LIST TO EMAIL
+    body += '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    body += 'ACTION ITEMS LIST\n';
+    body += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+    
+    items.forEach(function(item, idx) {
+      var num = (idx + 1);
+      var action = item.action || item.title || 'Untitled';
+      var deadline = resolveDeadline(item, c);
+      var deadlineText = deadline ? (typeof deadline === 'string' ? deadline : fmt(deadline)) : 'Not set';
+      var status = item.status === 'done' ? '✓ Completed' : '⏳ Pending';
+      
+      body += num + '. ' + action + '\n';
+      body += '   Timeline: ' + deadlineText + '\n';
+      body += '   Status: ' + status + '\n\n';
+    });
+    
+    body += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+    body += 'Please update us on the latest status of pending action items.\n\n';
+    body += 'Best regards,\nESAP Tracking Team';
+    
+    var mailto = 'mailto:' + recipients.join(',') + 
+                 '?subject=' + encodeURIComponent(subject) + 
+                 '&body=' + encodeURIComponent(body);
+    
+    window.location.href = mailto;
+    
+    var nudgeHistory = c.nudgeHistory || [];
+    nudgeHistory.push({
+      date: new Date().toISOString(),
+      recipients: recipients,
+      sentBy: 'User'
+    });
+    
+    fsSet(curId, { 
+      nudgeHistory: nudgeHistory,
+      lastNudgeSent: new Date().toISOString()
+    }).then(function(){
+      toast('📧 Nudge email opened in your email client');
+    });
+    
+  }).catch(function(e){ 
+    toast('Error: ' + e.message, true); 
+  });
+}
+
 // ── INITIALIZATION ─────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function(){
-  // Check edit mode
   var params = new URLSearchParams(window.location.search);
   isEditMode = params.get('edit') === 'true';
   updateEditBadge();
   
-  // Set theme
   var saved = localStorage.getItem('st_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
   document.getElementById('theme-toggle').textContent = saved === 'dark' ? '🌙' : '☀️';
   
-  // Load folders and custom sectors
-  loadFolders();
   loadCustomSectors();
   
-  // Initialize Firebase
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.firestore();
@@ -1108,7 +1022,7 @@ window.addEventListener('DOMContentLoaded', function(){
 function updateEditBadge(){
   var badge = document.getElementById('editBadge');
   var modeText = document.getElementById('editMode');
-  var btnIds = ['btnAdd', 'btnAddFolder'];
+  var btnIds = ['btnAdd'];
   
   if(isEditMode){
     badge.classList.remove('view-only');
@@ -1145,129 +1059,43 @@ function toggleTheme(){
   document.getElementById('theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
 }
 
-// ── FOLDERS ────────────────────────────────────────────
-function loadFolders(){
-  try { folders = JSON.parse(localStorage.getItem('fund_folders') || '[]'); } catch(e){ folders = []; }
+// ── FILTERS ────────────────────────────────────────────
+
+function toggleAdvFilters(){
+  var el = document.getElementById('advFilters');
+  el.classList.toggle('on');
 }
 
-function saveFolders(){
-  localStorage.setItem('fund_folders', JSON.stringify(folders));
+function applyAdvFilters(){
+  activeFilters.partner = document.getElementById('filterPartner').value;
+  activeFilters.sector = document.getElementById('filterSector').value;
+  activeFilters.fund = document.getElementById('filterFund').value;
+  renderDash();
 }
 
-function renderFolders(){
-  var html = '<div class="folder-chip folder-all '+(curFolder==='__all__'?'active':'')+'" onclick="selectFolder(\'__all__\')">';
-  html += '<span class="folder-icon">📁</span>';
-  html += '<span class="folder-name">All Companies</span>';
-  html += '<span class="folder-count">'+companies.length+'</span>';
-  html += '</div>';
+function populateFilters(){
+  var partners = [];
+  var sectorsList = [];
+  var funds = [];
   
-  html += '<div class="folder-chip '+(curFolder==='__none__'?'active':'')+'" onclick="selectFolder(\'__none__\')">';
-  html += '<span class="folder-icon">📂</span>';
-  html += '<span class="folder-name">No Folder</span>';
-  html += '<span class="folder-count">'+companies.filter(function(c){return !c.folderId && !c.folder;}).length+'</span>';
-  html += '</div>';
-  
-  folders.forEach(function(f){
-    var count = companies.filter(function(c){ return (c.folderId === f.id) || (c.folder === f.id); }).length;
-    html += '<div class="folder-chip '+(curFolder===f.id?'active':'')+'" onclick="selectFolder(\''+f.id+'\')"';
-    html += ' ondragover="folderDragOver(event)" ondragleave="folderDragLeave(event)" ondrop="folderDrop(event, \''+f.id+'\')">';
-    html += '<span class="folder-icon">'+esc(f.emoji || '📁')+'</span>';
-    html += '<span class="folder-name">'+esc(f.name)+'</span>';
-    html += '<span class="folder-count">'+count+'</span>';
-    if(isEditMode){
-      html += '<button class="folder-del" onclick="deleteFolder(\''+f.id+'\');event.stopPropagation()">×</button>';
-    }
-    html += '</div>';
+  companies.forEach(function(c){
+    if(c.team && partners.indexOf(c.team) === -1) partners.push(c.team);
+    if(c.sector && sectorsList.indexOf(c.sector) === -1) sectorsList.push(c.sector);
+    if(c.fund && funds.indexOf(c.fund) === -1) funds.push(c.fund);
   });
   
-  document.getElementById('foldersRow').innerHTML = html;
-}
-
-function selectFolder(id){
-  curFolder = id;
-  renderDash();
-  renderFolders();
-}
-
-function openFolderModal(){
-  if(!checkEditMode()) return;
-  document.getElementById('folderName').value = '';
-  document.getElementById('folderEmoji').value = '📁';
-  openM('mFolder');
-}
-
-function saveFolder(){
-  var name = document.getElementById('folderName').value.trim();
-  var emoji = document.getElementById('folderEmoji').value.trim() || '📁';
-  if(!name){ toast('Enter folder name'); return; }
+  var partnerSelect = document.getElementById('filterPartner');
+  var sectorSelect = document.getElementById('filterSector');
+  var fundSelect = document.getElementById('filterFund');
   
-  folders.push({ id: 'f_'+Date.now(), name: name, emoji: emoji });
-  saveFolders();
-  renderFolders();
-  closeM('mFolder');
-  toast('Folder created');
-}
-
-function deleteFolder(id){
-  if(!confirm('Delete this folder? Companies will not be deleted.')) return;
-  folders = folders.filter(function(f){ return f.id !== id; });
-  saveFolders();
-  if(curFolder === id) curFolder = '__all__';
-  renderDash();
-  renderFolders();
-  toast('Folder deleted');
-}
-
-function folderDragOver(e){
-  e.preventDefault();
-  e.currentTarget.classList.add('drag-over');
-}
-
-function folderDragLeave(e){
-  e.currentTarget.classList.remove('drag-over');
-}
-
-function folderDrop(e, folderId){
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  if(!checkEditMode()) return;
+  partnerSelect.innerHTML = '<option value="">All Partners</option>' + 
+    partners.map(function(p){ return '<option value="'+esc(p)+'">'+esc(p)+'</option>'; }).join('');
   
-  var companyId = e.dataTransfer.getData('companyId');
-  if(companyId){
-    fsSet(companyId, { 
-      folder: folderId,
-      folderId: folderId
-    })
-      .then(function(){ toast('Moved to folder'); })
-      .catch(function(err){ toast('Error: ' + err.message, true); });
-  }
-}
-
-function openMoveModal(id){
-  if(!checkEditMode()) return;
-  moveTargetId = id;
-  var select = document.getElementById('moveFolderSelect');
-  var html = '<option value="">No Folder</option>';
-  folders.forEach(function(f){
-    html += '<option value="'+f.id+'">'+esc(f.emoji)+' '+esc(f.name)+'</option>';
-  });
-  select.innerHTML = html;
-  openM('mMove');
-}
-
-function confirmMove(){
-  var folderId = document.getElementById('moveFolderSelect').value;
-  if(moveTargetId){
-    fsSet(moveTargetId, { 
-      folder: folderId || null,
-      folderId: folderId || null
-    })
-      .then(function(){ 
-        closeM('mMove'); 
-        toast('Company moved'); 
-      })
-      .catch(function(e){ toast('Error: ' + e.message, true); });
-  }
+  sectorSelect.innerHTML = '<option value="">All Sectors</option>' + 
+    sectorsList.map(function(s){ return '<option value="'+esc(s)+'">'+esc(s)+'</option>'; }).join('');
+  
+  fundSelect.innerHTML = '<option value="">All Funds</option>' + 
+    funds.map(function(f){ return '<option value="'+esc(f)+'">'+esc(f)+'</option>'; }).join('');
 }
 
 // ── CUSTOM SECTORS ─────────────────────────────────────
@@ -1313,14 +1141,45 @@ function startListener(){
       });
       showApp();
       setSyncStatus('live', 'Live • ' + companies.length + (companies.length===1?' company':' companies'));
-      renderFolders();
       renderDash();
       refreshN();
+      
+      // Auto-backup to localStorage on every data change
+      try {
+        var quickBackup = {
+          timestamp: new Date().toISOString(),
+          companies: companies,
+          sectors: sectors
+        };
+        localStorage.setItem('esap_auto_backup', JSON.stringify(quickBackup));
+      } catch(e) {
+        console.error('Auto-backup failed:', e);
+      }
     },
     function(err){
       showApp();
       setSyncStatus('err','Sync error');
       toast('Sync error: ' + err.message, true);
+      
+      // Try to load from localStorage backup
+      try {
+        var autoBackup = localStorage.getItem('esap_auto_backup');
+        var fullBackup = localStorage.getItem('esap_full_backup');
+        var backupToUse = fullBackup || autoBackup;
+        
+        if (backupToUse && companies.length === 0) {
+          var backup = JSON.parse(backupToUse);
+          companies = backup.companies || [];
+          if (companies.length > 0) {
+            renderDash();
+            var timestamp = backup.timestamp ? new Date(backup.timestamp).toLocaleString() : 'Unknown';
+            toast('📦 Loaded from backup (' + timestamp + ')');
+            setSyncStatus('loading', 'Backup mode • ' + companies.length + ' companies');
+          }
+        }
+      } catch(e) {
+        console.error('Failed to load backup:', e);
+      }
     }
   );
 }
@@ -1362,12 +1221,11 @@ function renderDash(){
   var q=document.getElementById('si').value.toLowerCase();
 
   var cos=companies.filter(function(c){
-    var companyFolder = c.folderId || c.folder;
-    if(curFolder === '__none__'){
-      if(companyFolder) return false;
-    } else if(curFolder !== '__all__'){
-      if(companyFolder !== curFolder) return false;
-    }
+    // PARTNER/SECTOR/FUND FILTERS (NO FOLDERS)
+    if(activeFilters.partner && c.team !== activeFilters.partner) return false;
+    if(activeFilters.sector && c.sector !== activeFilters.sector) return false;
+    if(activeFilters.fund && c.fund !== activeFilters.fund) return false;
+    
     if(q&&!c.name.toLowerCase().includes(q)) return false;
     var p=pct(c);
     if(curF==='done') return p===100;
@@ -1384,26 +1242,22 @@ function renderDash(){
     gr.innerHTML=cos.map(function(c){
       var p=pct(c),done=(c.items||[]).filter(function(i){return i.status==='done';}).length,tot=(c.items||[]).length;
       var fc=p>=70?'':p>=30?'w':'l';
-      var folderTag='';
-      var companyFolder = c.folderId || c.folder;
-      if(companyFolder){
-        var f=folders.find(function(x){return x.id===companyFolder;});
-        if(f) folderTag='<div class="cfolder-tag">'+f.emoji+' '+esc(f.name)+'</div>';
-      }
-      return '<div class="card" draggable="'+(isEditMode?'true':'false')+'" '
-        +(isEditMode?'ondragstart="cardDragStart(event,\''+c.id+'\')" ondragend="cardDragEnd(event,\''+c.id+'\')" ':' ')
-        +'onclick="showDetail(\''+c.id+'\')">'
+      
+      // SHOW PARTNER NAME (NOT CODE)
+      var partnerSectorText = '';
+      if(c.team) partnerSectorText += esc(c.team);
+      if(c.sector) partnerSectorText += (c.team ? ' • ' : '') + esc(c.sector);
+      
+      return '<div class="card" onclick="showDetail(\''+c.id+'\')">'
         +'<div class="card-hd"><div>'
         +'<div class="cname">'+esc(c.name)+'</div>'
-        +'<div class="cid">'+esc(c.code||c.id)+(c.sector?' • '+esc(c.sector):'')+'</div>'
+        +'<div class="cid">'+partnerSectorText+'</div>'
         +(c.startDate?'<div class="cstart">📅 Start: '+fmt(c.startDate)+'</div>':'<div class="cstart" style="color:var(--warn)">⚠ No start date set</div>')
-        +folderTag
         +'</div>'+chipHtml(p)+'</div>'
         +'<div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>'+p+'%</strong></div>'
         +'<div class="prog-bg"><div class="prog-fill '+fc+'" style="width:'+p+'%"></div></div></div>'
         +'<div class="cmeta"><div class="mi"><strong>'+tot+'</strong>Total</div><div class="mi"><strong>'+done+'</strong>Done</div><div class="mi"><strong>'+(tot-done)+'</strong>Pending</div></div>'
         +(isEditMode?'<div class="cact">'
-        +'<button class="move-btn" onclick="event.stopPropagation();openMoveModal(\''+c.id+'\')">📁 Move</button>'
         +'<button class="del-card-btn" onclick="event.stopPropagation();askDel(\''+c.id+'\')">🗑 Delete</button>'
         +'</div>':'')
         +'</div>';
@@ -1417,6 +1271,9 @@ function renderDash(){
   document.getElementById('s1').textContent=all.length;
   document.getElementById('s2').textContent=dn;
   document.getElementById('s3').textContent=avg+'%';
+  
+  // Populate filter dropdowns
+  populateFilters();
 }
 
 function pct(c){
@@ -1430,13 +1287,6 @@ function chipHtml(p){
   return '<span class="chip chip-new">Not Started</span>';
 }
 
-function cardDragStart(e, id){
-  if(!checkEditMode()) return;
-  e.dataTransfer.setData('companyId', id);
-}
-
-function cardDragEnd(e, id){}
-
 // ── ADD/EDIT COMPANY ───────────────────────────────────
 function openAddModal(){
   if(!checkEditMode()) return;
@@ -1445,10 +1295,10 @@ function openAddModal(){
   document.getElementById('btnSave').textContent = 'Save Company';
   
   document.getElementById('cn').value = '';
-  document.getElementById('cc').value = '';
   document.getElementById('csd').value = '';
   document.getElementById('spocName').value = '';
   document.getElementById('spocEmail').value = '';
+  document.getElementById('fundSelect').value = '';
   
   pendingESAPFile = null;
   pendingESAPFileName = '';
@@ -1502,18 +1352,14 @@ function saveCompany(){
   var sectorEl = document.querySelector('#sectorChips .chip-option.selected');
   var teamEl = document.querySelector('#teamChips .chip-option.selected');
   
-  var folderValue = curFolder === '__all__' || curFolder === '__none__' ? null : curFolder;
-  
   var data = {
     name: name,
-    code: document.getElementById('cc').value.trim(),
     sector: sectorEl ? sectorEl.textContent.trim() : '',
     team: teamEl ? teamEl.textContent.trim() : '',
+    fund: document.getElementById('fundSelect').value,
     startDate: document.getElementById('csd').value,
     spocName: document.getElementById('spocName').value.trim(),
     spocEmail: document.getElementById('spocEmail').value.trim(),
-    folder: folderValue,
-    folderId: folderValue,
     createdAt: new Date().toISOString()
   };
   
@@ -1522,7 +1368,6 @@ function saveCompany(){
     data.esapFileName = pendingESAPFileName;
   }
   
-  // Add parsed actions from Excel
   if(parsedActions && parsedActions.length > 0){
     data.items = editingId ? 
       (companies.find(function(c){return c.id===editingId}) || {}).items || [] : 
@@ -1564,9 +1409,9 @@ function showDetail(id){
   document.getElementById('detailTitle').textContent = c.name;
   
   var html = '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px">';
-  html += '<div><strong>Code:</strong> '+(c.code || 'N/A')+'</div>';
+  html += '<div><strong>Partner:</strong> '+(c.team || 'Not assigned')+'</div>';
   html += '<div><strong>Sector:</strong> '+(c.sector || 'N/A')+'</div>';
-  html += '<div><strong>Team:</strong> '+(c.team || 'Unassigned')+'</div>';
+  html += '<div><strong>Fund:</strong> '+(c.fund || 'Not assigned')+'</div>';
   html += '<div><strong>Start Date:</strong> '+(c.startDate ? fmt(c.startDate) : 'Not set')+'</div>';
   html += '<div><strong>SPOC:</strong> '+(c.spocName || 'N/A')+'</div>';
   html += '<div><strong>Email:</strong> '+(c.spocEmail || 'N/A')+'</div>';
@@ -1593,59 +1438,59 @@ function showDetail(id){
   html += '</div>';
   html += '<div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div>';
   html += '</div>';
-  // Add Nudge Section
-html += '<div style="margin-top:24px;padding:24px;background:var(--sur2);border:2px solid var(--bor);border-radius:20px">';
-html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">';
-html += '<span style="font-size:1.2rem">📧</span>';
-html += '<h3 style="font-size:1.1rem;font-weight:700">Point of Contact & Nudge Settings</h3>';
-html += '</div>';
-
-// SPOC Name and Email
-html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">';
-html += '<div>';
-html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC NAME</label>';
-html += '<input type="text" id="nudgeSpocName" value="'+(c.spocName||'')+'" placeholder="Enter contact name" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
-html += '</div>';
-html += '<div>';
-html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC EMAIL</label>';
-html += '<input type="email" id="nudgeSpocEmail" value="'+(c.spocEmail||'')+'" placeholder="contact@company.com" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
-html += '</div>';
-html += '</div>';
-
-// Additional Recipients
-html += '<div style="margin-bottom:16px">';
-html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">ADDITIONAL EMAIL RECIPIENTS</label>';
-html += '<div id="additionalEmails" style="padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;min-height:48px;margin-bottom:8px">';
-
-var additionalEmails = c.additionalNudgeEmails || [];
-if(additionalEmails.length === 0){
-  html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtf)">No additional emails</div>';
-} else {
-  additionalEmails.forEach(function(email, idx){
-    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
-    html += '<span style="font-family:var(--font-mono);font-size:.75rem;flex:1">'+esc(email)+'</span>';
-    html += '<button onclick="removeNudgeEmail('+idx+')" style="background:var(--redd);border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:8px;font-size:.7rem;cursor:pointer">Remove</button>';
+  
+  // NUDGE SECTION - ONLY IN EDIT MODE
+  if(isEditMode) {
+    html += '<div style="margin-top:24px;padding:24px;background:var(--sur2);border:2px solid var(--bor);border-radius:20px">';
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">';
+    html += '<span style="font-size:1.2rem">📧</span>';
+    html += '<h3 style="font-size:1.1rem;font-weight:700">Point of Contact & Nudge Settings</h3>';
     html += '</div>';
-  });
-}
-
-html += '</div>';
-
-// Add email input
-html += '<div style="display:flex;gap:8px">';
-html += '<input type="email" id="newNudgeEmail" placeholder="Add email address..." style="flex:1;padding:10px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.75rem">';
-html += '<button onclick="addNudgeEmail()" style="background:var(--accd);border:2px solid var(--acc);color:var(--acc);padding:10px 16px;border-radius:12px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;cursor:pointer;text-transform:uppercase">+ Add</button>';
-html += '</div>';
-html += '</div>';
-
-// Send Nudge Button
-html += '<button onclick="sendNudge()" style="width:100%;background:#ff8c00;border:2px solid #ff8c00;color:#fff;padding:14px;border-radius:14px;font-family:var(--font-mono);font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:all .2s">';
-html += '<span style="font-size:1.2rem">📧</span>';
-html += '<span>Send Nudge</span>';
-html += '</button>';
-html += '<div style="font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);text-align:center;margin-top:8px">Request implementation status update</div>';
-
-html += '</div>';
+    
+    html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">';
+    html += '<div>';
+    html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC NAME</label>';
+    html += '<input type="text" id="nudgeSpocName" value="'+(c.spocName||'')+'" placeholder="Enter contact name" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
+    html += '</div>';
+    html += '<div>';
+    html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC EMAIL</label>';
+    html += '<input type="email" id="nudgeSpocEmail" value="'+(c.spocEmail||'')+'" placeholder="contact@company.com" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
+    html += '</div>';
+    html += '</div>';
+    
+    html += '<div style="margin-bottom:16px">';
+    html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">ADDITIONAL EMAIL RECIPIENTS</label>';
+    html += '<div id="additionalEmails" style="padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;min-height:48px;margin-bottom:8px">';
+    
+    var additionalEmails = c.additionalNudgeEmails || [];
+    if(additionalEmails.length === 0){
+      html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtf)">No additional emails</div>';
+    } else {
+      additionalEmails.forEach(function(email, idx){
+        html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+        html += '<span style="font-family:var(--font-mono);font-size:.75rem;flex:1">'+esc(email)+'</span>';
+        html += '<button onclick="removeNudgeEmail('+idx+')" style="background:var(--redd);border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:8px;font-size:.7rem;cursor:pointer">Remove</button>';
+        html += '</div>';
+      });
+    }
+    
+    html += '</div>';
+    
+    html += '<div style="display:flex;gap:8px">';
+    html += '<input type="email" id="newNudgeEmail" placeholder="Add email address..." style="flex:1;padding:10px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.75rem">';
+    html += '<button onclick="addNudgeEmail()" style="background:var(--accd);border:2px solid var(--acc);color:var(--acc);padding:10px 16px;border-radius:12px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;cursor:pointer;text-transform:uppercase">+ Add</button>';
+    html += '</div>';
+    html += '</div>';
+    
+    html += '<button onclick="sendNudge()" style="width:100%;background:#ff8c00;border:2px solid #ff8c00;color:#fff;padding:14px;border-radius:14px;font-family:var(--font-mono);font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:all .2s">';
+    html += '<span style="font-size:1.2rem">📧</span>';
+    html += '<span>Send Nudge</span>';
+    html += '</button>';
+    html += '<div style="font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);text-align:center;margin-top:8px">Request implementation status update</div>';
+    
+    html += '</div>';
+  }
+  
   document.getElementById('detailContent').innerHTML = html;
   renderItems();
   
@@ -1781,10 +1626,10 @@ function editCompany(){
   document.getElementById('btnSave').textContent = 'Update Company';
   
   document.getElementById('cn').value = c.name || '';
-  document.getElementById('cc').value = c.code || '';
   document.getElementById('csd').value = c.startDate || '';
   document.getElementById('spocName').value = c.spocName || '';
   document.getElementById('spocEmail').value = c.spocEmail || '';
+  document.getElementById('fundSelect').value = c.fund || '';
   
   pendingESAPFile = null;
   pendingESAPFileName = '';
@@ -1880,9 +1725,9 @@ function exportData(){
   var data = companies.map(function(c){
     return {
       Name: c.name,
-      Code: c.code,
+      Partner: c.team,
       Sector: c.sector,
-      Team: c.team,
+      Fund: c.fund,
       'Start Date': c.startDate,
       'SPOC Name': c.spocName,
       'SPOC Email': c.spocEmail,
@@ -1902,24 +1747,91 @@ function exportData(){
 }
 
 function backupData(){
-  var backup = {
-    companies: companies,
-    folders: folders,
-    sectors: sectors,
-    timestamp: new Date().toISOString()
+  // Create comprehensive backup with fund allocation
+  var fundAllocation = {};
+  var metadata = {
+    totalCompanies: companies.length,
+    fundsUsed: [],
+    partners: [],
+    sectors: []
   };
   
+  companies.forEach(function(c){
+    var fund = c.fund || 'Unassigned';
+    if (!fundAllocation[fund]) fundAllocation[fund] = [];
+    fundAllocation[fund].push({
+      id: c.id,
+      name: c.name,
+      partner: c.team || c.partner,
+      sector: c.sector,
+      startDate: c.startDate,
+      itemCount: (c.items || []).length,
+      completed: (c.items || []).filter(function(i){ return i.status === 'Done'; }).length
+    });
+  });
+  
+  // Collect metadata
+  metadata.fundsUsed = Object.keys(fundAllocation).filter(function(f){ return f !== 'Unassigned'; });
+  metadata.partners = [...new Set(companies.map(function(c){ return c.team || c.partner; }).filter(Boolean))];
+  metadata.sectors = [...new Set(companies.map(function(c){ return c.sector; }).filter(Boolean))];
+  
+  var backup = {
+    timestamp: new Date().toISOString(),
+    version: '3.0',
+    companies: companies,
+    fundAllocation: fundAllocation,
+    sectors: sectors,
+    metadata: metadata
+  };
+  
+  // Save to localStorage for auto-recovery
+  try {
+    localStorage.setItem('esap_full_backup', JSON.stringify(backup));
+    localStorage.setItem('esap_backup_timestamp', backup.timestamp);
+  } catch(e) {
+    console.error('LocalStorage backup failed:', e);
+  }
+  
+  // Download JSON file
   var json = JSON.stringify(backup, null, 2);
   var blob = new Blob([json], {type: 'application/json'});
   var url = URL.createObjectURL(blob);
   
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'fund-esap-backup-' + new Date().toISOString().split('T')[0] + '.json';
+  a.download = 'ESAP_Backup_' + new Date().toISOString().split('T')[0] + '_' + Date.now() + '.json';
   a.click();
+  URL.revokeObjectURL(url);
   
-  toast('Backup downloaded');
+  // Show summary
+  var summary = '✅ Backup created!\n\n';
+  summary += 'Total Companies: ' + companies.length + '\n';
+  summary += 'Funds:\n';
+  Object.keys(fundAllocation).sort().forEach(function(fund){
+    summary += '  • ' + fund + ': ' + fundAllocation[fund].length + ' companies\n';
+  });
+  
+  toast(summary.split('\n')[0]); // Just show first line in toast
+  console.log(summary); // Full summary in console
+  console.log('Full backup:', backup);
 }
+
+// Auto-backup every 5 minutes
+setInterval(function(){
+  if (companies.length > 0) {
+    try {
+      var backup = {
+        timestamp: new Date().toISOString(),
+        companies: companies,
+        sectors: sectors
+      };
+      localStorage.setItem('esap_auto_backup', JSON.stringify(backup));
+      console.log('✅ Auto-backup saved:', new Date().toLocaleTimeString());
+    } catch(e) {
+      console.error('Auto-backup failed:', e);
+    }
+  }
+}, 5 * 60 * 1000);
 
 // ── MODALS ─────────────────────────────────────────────
 function openM(id){
@@ -1989,5 +1901,6 @@ document.addEventListener('click', function(e){
 });
 
 </script>
-</body>
-</html>
+
+
+</body></html>
