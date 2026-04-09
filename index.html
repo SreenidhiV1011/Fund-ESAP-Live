@@ -2,90 +2,254 @@
 <html lang="en" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fund ESAP Tracker - GitHub Pages</title>
+<title>Fund ESAP Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* ══ THEME TOKENS ══════════════════════════════════════ */
 :root {
   --font-mono: 'JetBrains Mono', monospace;
   --font-sans: 'Bricolage Grotesque', sans-serif;
+  --sidebar-w: 220px;
 }
 [data-theme="dark"] {
-  --bg: #c4d4d0;
-  --sur: #131817;
-  --sur2: #1a2120;
-  --bor: #263330;
-  --borl: #354744;
-  --acc: #00e5a0;
-  --accd: rgba(0,229,160,0.10);
-  --accm: rgba(0,229,160,0.35);
+  --bg: #0f1114;
+  --sur: #1a1d23;
+  --sur2: #22262e;
+  --bor: #2e333c;
+  --borl: #3a4150;
+  --acc: #3B82F6;
+  --accd: rgba(59,130,246,0.10);
+  --accm: rgba(59,130,246,0.35);
+  --acc2: #1E3A8A;
   --warn: #f59e0b;
   --warnd: rgba(245,158,11,0.12);
   --red: #ef4444;
   --redd: rgba(239,68,68,0.10);
-  --txt: #e6ece8;
-  --txtm: #718c83;
-  --txtf: #415950;
-  --topbar-bg: rgba(11,14,13,0.94);
+  --txt: #e8eaed;
+  --txtm: #8b95a5;
+  --txtf: #555e6e;
+  --sidebar-bg: #13151a;
+  --sidebar-hover: rgba(59,130,246,0.08);
+  --sidebar-active: rgba(59,130,246,0.15);
+  --sidebar-border: #1e2128;
+  --topbar-bg: #1a1d23;
   --shadow: 0 20px 60px rgba(0,0,0,.55);
   --card-hover-shadow: 0 12px 40px rgba(0,0,0,.4);
+  --watermark-opacity: 0.03;
 }
 [data-theme="light"] {
-  --bg: #dce6e3;
+  --bg: #f8f9fb;
   --sur: #ffffff;
-  --sur2: #eef2f0;
-  --bor: #d4ddd9;
-  --borl: #b8c9c3;
-  --acc: #00a876;
-  --accd: rgba(0,168,118,0.09);
-  --accm: rgba(0,168,118,0.30);
+  --sur2: #f1f3f6;
+  --bor: #e2e5ea;
+  --borl: #cdd2da;
+  --acc: #3B82F6;
+  --accd: rgba(59,130,246,0.07);
+  --accm: rgba(59,130,246,0.25);
+  --acc2: #1E3A8A;
   --warn: #d97706;
   --warnd: rgba(217,119,6,0.10);
   --red: #dc2626;
   --redd: rgba(220,38,38,0.08);
-  --txt: #0f1f1a;
-  --txtm: #5a7870;
-  --txtf: #8aa89e;
-  --topbar-bg: rgba(244,247,245,0.94);
-  --shadow: 0 12px 40px rgba(0,0,0,.10);
-  --card-hover-shadow: 0 8px 28px rgba(0,0,0,.12);
+  --txt: #111827;
+  --txtm: #6b7280;
+  --txtf: #9ca3af;
+  --sidebar-bg: #ffffff;
+  --sidebar-hover: rgba(59,130,246,0.05);
+  --sidebar-active: rgba(59,130,246,0.10);
+  --sidebar-border: #e5e7eb;
+  --topbar-bg: #ffffff;
+  --shadow: 0 12px 40px rgba(0,0,0,.08);
+  --card-hover-shadow: 0 8px 28px rgba(0,0,0,.10);
+  --watermark-opacity: 0.04;
 }
 
 /* ══ RESET ═════════════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s}
 
-/* ══ TOPBAR ════════════════════════════════════════════ */
-.topbar{position:sticky;top:0;z-index:100;background:linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:none;padding:0 2rem;height:70px;display:flex;align-items:center;justify-content:space-between;transition:all .3s;box-shadow:0 4px 20px rgba(30,58,138,0.15)}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-icon{width:34px;height:34px;background:var(--acc);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.brand-name{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;color:#ffffff}
-.brand-tag{font-family:var(--font-sans);font-size:.7rem;color:rgba(255,255,255,0.9);letter-spacing:.03em;margin-top:3px}
+/* ══ LAYOUT: SIDEBAR + MAIN ════════════════════════════ */
+.app-layout{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ───────────────────────────────────────────── */
+.sidebar{
+  width:var(--sidebar-w);
+  min-height:100vh;
+  background:var(--sidebar-bg);
+  border-right:1px solid var(--sidebar-border);
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+  top:0;left:0;bottom:0;
+  z-index:200;
+  transition:background .25s, border-color .25s;
+}
+.sidebar-logo{
+  padding:20px 20px 24px;
+  border-bottom:1px solid var(--sidebar-border);
+}
+.sidebar-logo img{
+  height:28px;
+  display:block;
+}
+.sidebar-logo .logo-text{
+  font-size:1.25rem;
+  font-weight:800;
+  color:var(--acc);
+  letter-spacing:-.02em;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.sidebar-logo .logo-text span{
+  font-size:.55rem;
+  font-weight:600;
+  color:var(--txtm);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  display:block;
+  margin-top:4px;
+}
+
+.sidebar-nav{
+  flex:1;
+  padding:12px 10px;
+  overflow-y:auto;
+}
+.nav-section-label{
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  color:var(--txtf);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  padding:16px 12px 8px;
+  font-weight:700;
+}
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:.88rem;
+  font-weight:500;
+  color:var(--txtm);
+  cursor:pointer;
+  transition:all .15s;
+  margin-bottom:2px;
+  border:1px solid transparent;
+}
+.nav-item:hover{
+  background:var(--sidebar-hover);
+  color:var(--txt);
+}
+.nav-item.active{
+  background:var(--sidebar-active);
+  color:var(--acc);
+  font-weight:700;
+  border-color:var(--accm);
+}
+.nav-item .nav-icon{
+  width:20px;
+  text-align:center;
+  font-size:1rem;
+  flex-shrink:0;
+}
+.nav-item .nav-badge{
+  margin-left:auto;
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  background:var(--accd);
+  color:var(--acc);
+  padding:2px 8px;
+  border-radius:8px;
+  font-weight:700;
+}
+
+.sidebar-footer{
+  padding:14px 16px;
+  border-top:1px solid var(--sidebar-border);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* ── MAIN CONTENT AREA ─────────────────────────────────── */
+.main-wrap{
+  margin-left:var(--sidebar-w);
+  flex:1;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+
+/* Blume Watermark */
+.main-wrap::before{
+  content:'';
+  position:fixed;
+  top:50%;left:calc(var(--sidebar-w) + 50%);
+  transform:translate(-50%,-50%);
+  width:500px;height:500px;
+  /* Blume Ventures logo SVG as background watermark */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='42' fill='%233B82F6'%3EBlume%3C/text%3E%3Ctext x='50%25' y='68%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-weight='400' font-size='14' fill='%233B82F6'%3EVentures%3C/text%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+  opacity:var(--watermark-opacity);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── TOP HEADER BAR ────────────────────────────────────── */
+.topbar{
+  height:56px;
+  background:var(--topbar-bg);
+  border-bottom:1px solid var(--sidebar-border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  transition:all .25s;
+}
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.topbar-title{
+  font-size:.95rem;
+  font-weight:600;
+  color:var(--txtm);
+}
 .topbar-right{display:flex;align-items:center;gap:10px}
 
 /* Edit Mode Badge */
-.edit-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:16px;background:rgba(0,229,160,0.2);border:1px solid var(--acc);color:var(--acc);font-family:var(--font-mono);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-.edit-badge.view-only{background:rgba(245,158,11,0.2);border-color:var(--warn);color:var(--warn)}
+.edit-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:16px;background:rgba(59,130,246,0.1);border:1px solid var(--acc);color:var(--acc);font-family:var(--font-mono);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.edit-badge.view-only{background:rgba(245,158,11,0.15);border-color:var(--warn);color:var(--warn)}
 
 .sync-wrap{display:flex;align-items:center;gap:7px}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--txtf);transition:all .3s}
-.sync-dot.live{background:var(--acc);box-shadow:0 0 7px var(--acc)}
+.sync-dot.live{background:#22c55e;box-shadow:0 0 7px #22c55e}
 .sync-dot.err{background:var(--red)}
 .sync-dot.loading{background:var(--warn);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.sync-label{font-family:var(--font-mono);font-size:.7rem;color:rgba(255,255,255,0.9)}
+.sync-label{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm)}
 
 /* Theme toggle */
-.theme-btn{width:38px;height:38px;border-radius:20px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s}
-.theme-btn:hover{background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.4)}
+.theme-btn{width:34px;height:34px;border-radius:10px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .2s}
+.theme-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
 
 /* Bell */
 .bell-wrap{position:relative}
-.bell-btn{width:38px;height:38px;border-radius:20px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all .2s}
-.bell-btn:hover{background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.4)}
-.bell-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-family:var(--font-mono);font-size:10px;min-width:18px;height:18px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.bell-btn{width:34px;height:34px;border-radius:10px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .2s}
+.bell-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.bell-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-family:var(--font-mono);font-size:9px;min-width:17px;height:17px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 4px;font-weight:700}
 .bell-badge.on{display:flex}
-.notif-dd{position:absolute;top:calc(100% + 10px);right:0;width:340px;background:var(--sur);border:1px solid var(--bor);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);display:none;z-index:200}
+.notif-dd{position:absolute;top:calc(100% + 10px);right:0;width:340px;background:var(--sur);border:1px solid var(--bor);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:none;z-index:200}
 .notif-dd.open{display:block}
 .notif-hd{padding:14px 16px;border-bottom:1px solid var(--bor);display:flex;justify-content:space-between;align-items:center}
 .notif-hd span{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--txtm)}
@@ -99,80 +263,123 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 
 /* ══ BOOT ══════════════════════════════════════════════ */
 .boot-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
-.boot-icon{width:56px;height:56px;background:var(--acc);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.boot-icon{width:56px;height:56px;background:var(--acc);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px}
 .boot-title{font-size:1.4rem;font-weight:800}
 .boot-sub{font-family:var(--font-mono);font-size:.7rem;color:var(--txtm)}
 .boot-spinner{width:32px;height:32px;border:3px solid var(--bor);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;margin-top:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .boot-err{font-family:var(--font-mono);font-size:.7rem;color:var(--red);text-align:center;max-width:360px;line-height:1.6;display:none}
 
-/* ══ MAIN LAYOUT ═══════════════════════════════════════ */
-.main{max-width:1320px;margin:0 auto;padding:2rem;position:relative}
-.main::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;background-image:url('data:image/png;base64,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e5sHCyCvYO5rHgL96G6/8q4/2ZF7bgcc3Li7kYZXDFR0bRkWtXZ7FdBtCxgujuAaL1Ra6tfpp7IZrqtlSw5OPyGlvezTTbzFvWgiIsxcEREAREQBERAEREBEW0vBjQOkvNmhJoyeKop2jnD3uaPxO8f0fN8HF8Nx2ryW5tp6fVlMwg1E+nKNvh3uPYP8gVYVfjGtYNGNDR3AaLdDPnGHD5/c5tnsyuVnGnpfsR9tTpqWy4DS2qgjEUDqlkYaOsgBziT3kkDU+KiRThtPx6tyCzwNt/C6enl6QRudw8YIIIBPLXq6/FRr9wOXf1OfnMP21LHsjw9X1M+bTN2e7Hprwd/Yx+GTvRJPpMU0KONl2I3e0Xea5XWFtNpCYo4uka9ziSCT70kAcv8AFSOs2RJSn0N2DCUKtSWgiIqDYEREAREQBERAEREBwniinjMU0TJWHra9oIP6iulDY7LBN00Nnt8cn47KZgd+0BegibAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREB//9k=');background-repeat:no-repeat;background-position:center;background-size:contain;opacity:0.03;pointer-events:none;z-index:0}
+/* ══ MAIN CONTENT ══════════════════════════════════════ */
+.main{max-width:1200px;margin:0 auto;padding:28px 32px;position:relative;z-index:1}
 .view{display:none}.view.on{display:block}
 
-/* ══ DASHBOARD HEADER ══════════════════════════════════ */
-.dash-hd{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2rem;gap:12px;flex-wrap:wrap}
-.page-title{font-size:2rem;font-weight:800;letter-spacing:-.03em;line-height:1}
-.page-sub{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
+/* ══ PAGE HEADER ═══════════════════════════════════════ */
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:24px;
+  gap:12px;
+  flex-wrap:wrap;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--bor);
+}
+.page-title{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--txt)}
+.page-sub{font-family:var(--font-mono);font-size:.62rem;color:var(--txtf);margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
+
+/* Tab bar (Ontra style) */
+.tab-bar{
+  display:flex;
+  gap:0;
+  border-bottom:2px solid var(--bor);
+  margin-bottom:24px;
+}
+.tab-item{
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--txtm);
+  padding:12px 20px;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-2px;
+  transition:all .15s;
+}
+.tab-item:hover{color:var(--txt)}
+.tab-item.active{color:var(--acc);border-bottom-color:var(--acc)}
 
 /* Action Buttons */
 .actions-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.action-btn{font-family:var(--font-mono);font-size:.7rem;padding:8px 16px;border-radius:14px;background:var(--sur);border:1px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.action-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd);transform:translateY(-1px)}
-.action-btn.primary{background:var(--accd);border-color:var(--acc);color:var(--acc)}
+.action-btn{font-family:var(--font-mono);font-size:.68rem;padding:8px 16px;border-radius:8px;background:var(--sur);border:1px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.action-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.action-btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.action-btn.primary:hover{background:var(--acc2)}
 .action-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-/* ══ STAT CARDS ════════════════════════════════════════ */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-.sc{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:24px;position:relative;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg, #1E3A8A, #3B82F6)}
-.sc-label{font-family:var(--font-mono);font-size:.62rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.10em}
-.sc-val{font-size:2rem;font-weight:800;margin-top:8px;color:var(--acc)}.sc-desc{font-size:.72rem;color:var(--txtf);margin-top:4px}
+/* ══ STAT CARDS (Ontra style) ══════════════════════════ */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.sc{
+  background:var(--sur);
+  border:1px solid var(--bor);
+  border-radius:12px;
+  padding:20px 24px;
+  position:relative;
+  transition:all .2s;
+}
+.sc:hover{box-shadow:var(--card-hover-shadow)}
+.sc-label{font-size:.82rem;color:var(--txtm);font-weight:500;margin-bottom:12px}
+.sc-val{font-size:1.8rem;font-weight:800;color:var(--acc)}.sc-desc{font-size:.7rem;color:var(--txtf);margin-top:4px;font-family:var(--font-mono)}
 
 /* ══ FILTER ROW ════════════════════════════════════════ */
 .fil-row{display:flex;gap:8px;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap}
-.fbtn{font-family:var(--font-mono);font-size:.67rem;padding:6px 14px;border-radius:12px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.07em}
+.fbtn{font-family:var(--font-mono);font-size:.65rem;padding:6px 14px;border-radius:8px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.07em}
 .fbtn:hover,.fbtn.on{border-color:var(--acc);color:var(--acc);background:var(--accd)}
-.sbox{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--sur2);border:1px solid var(--bor);border-radius:20px;padding:6px 12px;transition:border-color .2s}
-.sbox:focus-within{border-color:var(--accm)}
+.sbox{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;padding:6px 12px;transition:border-color .2s}
+.sbox:focus-within{border-color:var(--acc)}
 .sbox input{background:none;border:none;outline:none;font-family:var(--font-mono);font-size:.73rem;color:var(--txt);width:180px}
 .sbox input::placeholder{color:var(--txtf)}
 
 /* Advanced Filters */
-.advanced-filters{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:20px;margin-bottom:1.5rem;display:none}
+.advanced-filters{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:20px;margin-bottom:1.5rem;display:none}
 .advanced-filters.on{display:block}
 .filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .filter-group label{display:block;font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em}
-.filter-group select,.filter-group input{width:100%;padding:8px 12px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px;color:var(--txt);font-family:var(--font-mono);font-size:.73rem;transition:border-color .2s}
-.filter-group select:focus,.filter-group input:focus{outline:none;border-color:var(--accm)}
+.filter-group select,.filter-group input{width:100%;padding:8px 12px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;color:var(--txt);font-family:var(--font-mono);font-size:.73rem;transition:border-color .2s}
+.filter-group select:focus,.filter-group input:focus{outline:none;border-color:var(--acc)}
 
 /* ══ CARDS GRID ════════════════════════════════════════ */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
-.card{background:var(--sur);border:2px solid var(--bor);border-radius:20px;padding:20px;transition:all .3s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.03)}
-.card:hover{transform:translateY(-3px);box-shadow:var(--card-hover-shadow);border-color:var(--accm)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{
+  background:var(--sur);
+  border:1px solid var(--bor);
+  border-radius:12px;
+  padding:20px;
+  transition:all .2s;
+  cursor:pointer;
+}
+.card:hover{transform:translateY(-2px);box-shadow:var(--card-hover-shadow);border-color:var(--accm)}
 .card-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
-.cname{font-size:1.1rem;font-weight:700;line-height:1.3}
-.cid{font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-top:4px}
-.cstart{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-top:4px}
-.chip{font-family:var(--font-mono);font-size:.65rem;padding:5px 10px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-.chip-done{background:var(--accd);color:var(--acc);border:1px solid var(--acc)}
+.cname{font-size:1.05rem;font-weight:700;line-height:1.3}
+.cid{font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-top:4px}
+.cstart{font-family:var(--font-mono);font-size:.62rem;color:var(--txtm);margin-top:4px}
+.chip{font-family:var(--font-mono);font-size:.62rem;padding:4px 10px;border-radius:6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.chip-done{background:rgba(34,197,94,0.1);color:#16a34a;border:1px solid rgba(34,197,94,0.3)}
 .chip-prog{background:var(--warnd);color:var(--warn);border:1px solid var(--warn)}
 .chip-new{background:var(--sur2);color:var(--txtm);border:1px solid var(--bor)}
 .prog-wrap{margin-bottom:14px}
 .prog-lbl{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:6px;font-family:var(--font-mono)}
 .prog-lbl span{color:var(--txtm);text-transform:uppercase;letter-spacing:.08em}
 .prog-lbl strong{color:var(--acc)}
-.prog-bg{height:8px;background:var(--sur2);border-radius:10px;overflow:hidden;border:1px solid var(--bor)}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),#3b82f6);transition:width .5s}
-.prog-fill.w{background:linear-gradient(90deg,var(--warn),#f59e0b)}
-.prog-fill.l{background:linear-gradient(90deg,var(--txtf),var(--txtm))}
+.prog-bg{height:6px;background:var(--sur2);border-radius:10px;overflow:hidden;border:1px solid var(--bor)}
+.prog-fill{height:100%;background:var(--acc);transition:width .5s;border-radius:10px}
+.prog-fill.w{background:var(--warn)}
+.prog-fill.l{background:var(--txtf)}
 .cmeta{display:flex;gap:12px;padding-top:12px;border-top:1px solid var(--bor)}
 .mi{flex:1;text-align:center}
-.mi strong{display:block;font-size:1.2rem;font-weight:800;color:var(--acc);margin-bottom:2px}
-.mi{font-family:var(--font-mono);font-size:.62rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em}
+.mi strong{display:block;font-size:1.1rem;font-weight:800;color:var(--acc);margin-bottom:2px}
+.mi{font-family:var(--font-mono);font-size:.6rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em}
 .cact{display:flex;gap:8px;margin-top:12px}
-.del-card-btn{flex:1;font-family:var(--font-mono);font-size:.65rem;padding:6px;border-radius:10px;border:1px solid var(--bor);background:var(--sur2);color:var(--txtm);cursor:pointer;transition:all .2s;font-weight:600}
+.del-card-btn{flex:1;font-family:var(--font-mono);font-size:.63rem;padding:6px;border-radius:8px;border:1px solid var(--bor);background:var(--sur2);color:var(--txtm);cursor:pointer;transition:all .2s;font-weight:600}
 .del-card-btn:hover{border-color:var(--red);color:var(--red);background:var(--redd)}
 
 /* Empty State */
@@ -180,90 +387,194 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .empty-icon{font-size:3rem;margin-bottom:1rem}
 .empty-msg{font-family:var(--font-mono);font-size:.85rem}
 
+/* ══ ANALYTICS VIEW ════════════════════════════════════ */
+.analytics-filters{
+  background:var(--sur);
+  border:1px solid var(--bor);
+  border-radius:12px;
+  padding:24px;
+  margin-bottom:24px;
+}
+.analytics-filters h3{
+  font-size:.95rem;
+  font-weight:700;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.analytics-filter-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+.analytics-filter-grid label{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:.63rem;
+  color:var(--txtm);
+  margin-bottom:6px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:600;
+}
+.analytics-filter-grid select{
+  width:100%;
+  padding:10px 12px;
+  background:var(--sur2);
+  border:1px solid var(--bor);
+  border-radius:8px;
+  color:var(--txt);
+  font-family:var(--font-mono);
+  font-size:.78rem;
+  transition:border-color .2s;
+}
+.analytics-filter-grid select:focus{outline:none;border-color:var(--acc)}
+
+/* Analytics summary cards */
+.analytics-summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:24px;
+}
+.as-card{
+  background:var(--sur);
+  border:1px solid var(--bor);
+  border-radius:12px;
+  padding:20px;
+}
+.as-card h4{font-size:.8rem;color:var(--txtm);font-weight:500;margin-bottom:12px}
+.as-card .as-val{font-size:2rem;font-weight:800;color:var(--acc)}
+.as-card .as-sub{font-family:var(--font-mono);font-size:.65rem;color:var(--txtf);margin-top:4px}
+
+/* Analytics table */
+.analytics-table{
+  background:var(--sur);
+  border:1px solid var(--bor);
+  border-radius:12px;
+  overflow:hidden;
+}
+.analytics-table table{width:100%;border-collapse:collapse}
+.analytics-table th{
+  text-align:left;
+  padding:14px 16px;
+  font-family:var(--font-mono);
+  font-size:.65rem;
+  color:var(--txtm);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:700;
+  border-bottom:2px solid var(--bor);
+  background:var(--sur2);
+}
+.analytics-table td{
+  padding:14px 16px;
+  font-size:.85rem;
+  border-bottom:1px solid var(--bor);
+  vertical-align:middle;
+}
+.analytics-table tr:last-child td{border-bottom:none}
+.analytics-table tr:hover td{background:var(--accd)}
+.at-progress{display:flex;align-items:center;gap:10px}
+.at-progress .prog-bg{flex:1;height:6px}
+.at-progress span{font-family:var(--font-mono);font-size:.75rem;font-weight:700;color:var(--acc);min-width:36px}
+
 /* ══ MODALS ════════════════════════════════════════════ */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center;padding:2rem;animation:fadeIn .3s}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center;padding:2rem;animation:fadeIn .2s}
 .modal-overlay.on{display:flex}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--sur);border:2px solid var(--bor);border-radius:24px;max-width:700px;width:100%;max-height:85vh;overflow:hidden;box-shadow:var(--shadow);animation:slideIn .3s}
-@keyframes slideIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal{background:var(--sur);border:1px solid var(--bor);border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow:hidden;box-shadow:var(--shadow);animation:slideIn .2s}
+@keyframes slideIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
 .modal.wide{max-width:900px}
-.modal-hd{padding:24px 28px;border-bottom:2px solid var(--bor);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg, var(--sur) 0%, var(--sur2) 100%)}
-.modal-title{font-size:1.3rem;font-weight:800;letter-spacing:-.02em}
-.modal-close{width:36px;height:36px;border-radius:14px;border:1px solid var(--bor);background:var(--sur2);color:var(--txtm);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:all .2s;font-weight:700}
+.modal-hd{padding:20px 24px;border-bottom:1px solid var(--bor);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:1.15rem;font-weight:800;letter-spacing:-.02em}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--bor);background:var(--sur2);color:var(--txtm);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .2s;font-weight:700}
 .modal-close:hover{border-color:var(--red);color:var(--red);background:var(--redd)}
-.modal-body{padding:28px;overflow-y:auto;max-height:calc(85vh - 160px)}
-.modal-footer{padding:20px 28px;border-top:2px solid var(--bor);display:flex;justify-content:flex-end;gap:10px;background:var(--sur2)}
+.modal-body{padding:24px;overflow-y:auto;max-height:calc(85vh - 140px)}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--bor);display:flex;justify-content:flex-end;gap:10px;background:var(--sur2)}
 
 /* Modal Form */
 .form-row{margin-bottom:20px}
-.form-row label{display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.form-row input,.form-row select,.form-row textarea{width:100%;padding:12px 16px;background:var(--sur2);border:2px solid var(--bor);border-radius:14px;color:var(--txt);font-family:var(--font-mono);font-size:.8rem;transition:border-color .2s}
+.form-row label{display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:10px 14px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;color:var(--txt);font-family:var(--font-mono);font-size:.8rem;transition:border-color .2s}
 .form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--accd)}
 .form-row textarea{font-family:var(--font-sans);resize:vertical;min-height:80px;line-height:1.6}
 .form-row.inline{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
 
 /* Buttons */
-.btn{font-family:var(--font-mono);font-size:.75rem;padding:10px 20px;border-radius:14px;border:1px solid var(--bor);background:var(--sur2);color:var(--txt);cursor:pointer;transition:all .2s;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd);transform:translateY(-1px)}
-.btn.primary{background:var(--acc);border-color:var(--acc);color:var(--bg)}
-.btn.primary:hover{background:var(--accm);box-shadow:0 4px 12px var(--accm)}
+.btn{font-family:var(--font-mono);font-size:.73rem;padding:9px 18px;border-radius:8px;border:1px solid var(--bor);background:var(--sur2);color:var(--txt);cursor:pointer;transition:all .2s;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.primary:hover{background:var(--acc2)}
 .btn.secondary{background:var(--sur2);border-color:var(--bor);color:var(--txtm)}
 .btn.danger{background:var(--redd);border-color:var(--red);color:var(--red)}
 .btn.danger:hover{background:var(--red);color:#fff}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 
 /* Items Section */
-.items-section{margin-top:24px;padding-top:24px;border-top:2px solid var(--bor)}
+.items-section{margin-top:24px;padding-top:24px;border-top:1px solid var(--bor)}
 .items-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.items-hd h3{font-size:1.1rem;font-weight:700}
-.items-list{display:flex;flex-direction:column;gap:10px}
-.item-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--sur2);border:1px solid var(--bor);border-radius:14px;transition:all .2s}
-.item-row:hover{border-color:var(--accm);background:var(--accd)}
-.item-chk{width:18px;height:18px;border:2px solid var(--bor);border-radius:6px;cursor:pointer;flex-shrink:0;transition:all .2s}
+.items-hd h3{font-size:1.05rem;font-weight:700}
+.items-list{display:flex;flex-direction:column;gap:8px}
+.item-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--sur2);border:1px solid var(--bor);border-radius:10px;transition:all .2s}
+.item-row:hover{border-color:var(--accm)}
+.item-chk{width:18px;height:18px;border:2px solid var(--bor);border-radius:5px;cursor:pointer;flex-shrink:0;transition:all .2s}
 .item-chk:hover{border-color:var(--acc)}
 .item-chk.checked{background:var(--acc);border-color:var(--acc);position:relative}
-.item-chk.checked::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:12px;font-weight:700}
+.item-chk.checked::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
 .item-content{flex:1;min-width:0}
-.item-title{font-size:.85rem;word-wrap:break-word}
+.item-title{font-size:.83rem;word-wrap:break-word}
 .item-title.done{text-decoration:line-through;opacity:.5}
-.item-deadline{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-top:4px}
+.item-deadline{font-family:var(--font-mono);font-size:.63rem;color:var(--txtm);margin-top:4px}
 .item-deadline.overdue{color:var(--red);font-weight:700}
 .item-deadline.warning{color:var(--warn);font-weight:700}
-.item-status{font-family:var(--font-mono);font-size:.65rem;padding:4px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.item-status{font-family:var(--font-mono);font-size:.62rem;padding:4px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
 .item-status.todo{background:var(--warnd);border:1px solid var(--warn);color:var(--warn)}
 .item-status.progress{background:var(--accd);border:1px solid var(--acc);color:var(--acc)}
-.item-status.done{background:var(--accd);border:1px solid var(--acc);color:var(--acc)}
+.item-status.done{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#16a34a}
 .item-del{color:var(--txtf);cursor:pointer;font-size:1rem;padding:4px;transition:color .2s}
 .item-del:hover{color:var(--red)}
 
 /* Sector & Team Chips */
 .chip-grid{display:flex;flex-wrap:wrap;gap:8px}
-.chip-option{font-family:var(--font-mono);font-size:.7rem;padding:8px 14px;border-radius:12px;background:var(--sur2);border:2px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.chip-option{font-family:var(--font-mono);font-size:.68rem;padding:8px 14px;border-radius:8px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .chip-option:hover{border-color:var(--accm);background:var(--accd)}
-.chip-option.selected{border-color:var(--acc);background:var(--accd);color:var(--acc);box-shadow:0 0 0 2px var(--accm)}
+.chip-option.selected{border-color:var(--acc);background:var(--accd);color:var(--acc)}
 
 /* Add Custom */
 .add-custom{display:flex;gap:8px;margin-top:12px}
-.add-custom input{flex:1;padding:8px 12px;background:var(--sur2);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.73rem;color:var(--txt)}
-.add-custom input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 2px var(--accd)}
-.add-custom button{padding:8px 16px;background:var(--accd);border:2px solid var(--acc);border-radius:12px;color:var(--acc);font-family:var(--font-mono);font-size:.7rem;font-weight:600;cursor:pointer;transition:all .2s;text-transform:uppercase}
-.add-custom button:hover{background:var(--acc);color:var(--bg)}
+.add-custom input{flex:1;padding:8px 12px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.73rem;color:var(--txt)}
+.add-custom input:focus{outline:none;border-color:var(--acc)}
+.add-custom button{padding:8px 16px;background:var(--accd);border:1px solid var(--acc);border-radius:8px;color:var(--acc);font-family:var(--font-mono);font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.add-custom button:hover{background:var(--acc);color:#fff}
 
 /* Toast */
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--sur);border:2px solid var(--acc);border-radius:16px;padding:16px 24px;box-shadow:var(--shadow);font-family:var(--font-mono);font-size:.8rem;color:var(--txt);z-index:1000;display:none;animation:toastIn .3s}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--sur);border:1px solid var(--acc);border-radius:10px;padding:14px 20px;box-shadow:var(--shadow);font-family:var(--font-mono);font-size:.78rem;color:var(--txt);z-index:1000;display:none;animation:toastIn .3s}
 .toast.on{display:block}
 @keyframes toastIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .toast.error{border-color:var(--red);background:var(--redd);color:var(--red)}
 
 /* Responsive */
-@media (max-width: 768px) {
-  .topbar{padding:0 1rem}
-  .main{padding:1rem}
+@media (max-width: 900px) {
+  .sidebar{width:60px;overflow:hidden}
+  .sidebar .nav-item span:not(.nav-icon){display:none}
+  .sidebar .nav-badge{display:none}
+  .sidebar-logo .logo-text{font-size:0;gap:0}
+  .sidebar-logo .logo-text::before{content:'B';font-size:1.2rem}
+  .sidebar .nav-section-label{display:none}
+  :root{--sidebar-w:60px}
+  .main{padding:16px}
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .grid{grid-template-columns:1fr}
-  .dash-hd{flex-direction:column;align-items:flex-start}
+  .analytics-filter-grid{grid-template-columns:repeat(2,1fr)}
+  .analytics-summary{grid-template-columns:1fr}
+}
+@media (max-width: 600px) {
+  .sidebar{display:none}
+  :root{--sidebar-w:0px}
+  .page-header{flex-direction:column;align-items:flex-start}
   .actions-row{width:100%}
-  .sbox{margin-left:0;width:100%}
 }
 </style>
 </head>
@@ -278,136 +589,210 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   <div class="boot-err" id="boot-err" style="display: block;">Error: firebase is not defined</div>
 </div>
 
-<!-- Topbar -->
-<div class="topbar">
-  <div class="brand">
-    <div class="brand-icon">📊</div>
-    <div>
-      <div class="brand-name">Fund ESAP Tracker</div>
-      <div class="brand-tag">Portfolio Management</div>
-    </div>
-  </div>
-  
-  <div class="topbar-right">
-    <div class="edit-badge view-only" id="editBadge">
-      <span id="editMode">🔒 View Only</span>
-    </div>
-    
-    <div class="sync-wrap">
-      <div class="sync-dot live" id="sync-dot"></div>
-      <div class="sync-label" id="sync-label">Live • 12 companies</div>
-    </div>
-    
-    <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-    
-    <div class="bell-wrap">
-      <div class="bell-btn" onclick="toggleNotif()">🔔</div>
-      <div class="bell-badge on" id="bb">31</div>
-      <div class="notif-dd" id="nd">
-        <div class="notif-hd">
-          <span>Notifications</span>
-          <button class="notif-clear" onclick="clearNotifs()">Clear</button>
-        </div>
-        <div class="notif-list" id="nl"><div class="notif-item" onclick="readN(&#39;vf8nfpjnjhfmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Curious</b>: Incident Reporting &amp; Investigation Procedure</div><div class="nmeta">Overdue by 6d</div></div></div><div class="notif-item" onclick="readN(&#39;kk07sbz0rcqmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall develop a Corporate Level E&amp;S Managem...</div><div class="nmeta">Overdue by 707d</div></div></div><div class="notif-item" onclick="readN(&#39;kbt7qdrkh7bmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall prepare a corporate level EPR Plan fo...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;h5yk6ozmv8mnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall develop a Privacy Policy for their we...</div><div class="nmeta">Overdue by 707d</div></div></div><div class="notif-item" onclick="readN(&#39;3xgk4ovt8y5mnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall monitor its primary supply chain on a...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;pfxp889qbmjmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall obtain the Principal Employer Registr...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;9corkt0g1rmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall apply and obtain “Brand Owner” regist...</div><div class="nmeta">Overdue by 797d</div></div></div><div class="notif-item" onclick="readN(&#39;wr0n14zyo9mnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall document an overtime policy and shall...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;z3uns1bvszmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall reconstitute the Internal Committee (...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;aokoat60wljmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>SuperK</b>: The Company shall draft following Governance related po...</div><div class="nmeta">Overdue by 767d</div></div></div><div class="notif-item" onclick="readN(&#39;z19vs9kr7gmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall develop a Corporate level overarching...</div><div class="nmeta">Overdue by 799d</div></div></div><div class="notif-item" onclick="readN(&#39;cpvxdb2stxmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall apply for and update its office addre...</div><div class="nmeta">Overdue by 829d</div></div></div><div class="notif-item" onclick="readN(&#39;ah38242pod8mnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: IK shall update their HR policies with inclusion of pol...</div><div class="nmeta">Overdue by 799d</div></div></div><div class="notif-item" onclick="readN(&#39;61tnfyvitfvmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall constitute IC as per the POSH Act 201...</div><div class="nmeta">Overdue by 859d</div></div></div><div class="notif-item" onclick="readN(&#39;1mrg87vuekumnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Interview Kickstart</b>: The Company shall draft the Code of Conduct including B...</div><div class="nmeta">Overdue by 799d</div></div></div><div class="notif-item" onclick="readN(&#39;3qjnm94sql4mnoc0hdb&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of accident/incident register (Form# 26) at the...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;965r7yiydxfmnoc0hdb&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: The Facility intends to transition to Piped Natural Gas...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;m0qy3lti65emnoc0hdb&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Presence of Schedule-H drugs in first-aid box and ansen...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;pqe8uz8p3xmnoc0hdb&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of attendance records and overtime register for...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;vfhj9ni0ypamnoc0hdb&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of sample copies of salary slips of employees f...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;gszt9y6eksdmnoc0hdb&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of periodic ambient air quality level monitorin...</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;9a7azrpss0lmnoc0hdb&#39;)"><div class="ndot"></div><div><div class="ntext"><b>Bidso</b>: Absence of first-aid box in the warehouse.</div><div class="nmeta">Due in 1d</div></div></div><div class="notif-item" onclick="readN(&#39;4wfb0hh4fxmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Ido</b>: Organisation Management
-Moving forward as company is p...</div><div class="nmeta">Overdue by 89d</div></div></div><div class="notif-item" onclick="readN(&#39;xvp7olhas8amnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Organizational Capacity &amp; Competency
-The Company shall...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;85doy9mxfx7mnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Data Information and Security
-As per Rule 5(9) of Info...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;b4q5jqvm28gmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Human Resource Policies and Procedures 
-Company shall ...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;7pgjf4bimx8mnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Group Insurance 
-Company shall ensure health insurance...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;p9uuazcskemnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Employees' State Insurance (ESI)
-Since the employee co...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;wjvpzd9p8fmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Board Meetings
-The Company shall hold a minimum of fou...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;shuf85k3mmrmnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Annual General Meeting
-The Company shall ensure to con...</div><div class="nmeta">Overdue by 83d</div></div></div><div class="notif-item" onclick="readN(&#39;oc7axbb4qr8mnoc0hdb&#39;)"><div class="ndot ov"></div><div><div class="ntext"><b>Confido</b>: Corporate Governance Policies
-The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></div></div>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- ═══ APP LAYOUT ═══ -->
+<div class="app-layout">
 
-<!-- Main Content -->
-<div class="main" id="main-app" style="display: block;">
-  <!-- Dashboard View -->
-  <div class="view on" id="vdash">
-    <!-- Header -->
-    <div class="dash-hd">
-      <div>
-        <div class="page-title">Portfolio Dashboard</div>
-        <div class="page-sub">ESAP Implementation Tracking</div>
-      </div>
-      
-      <div class="actions-row">
-        <button class="action-btn primary" onclick="openAddModal()" id="btnAdd" disabled="">
-          <span>➕</span> Add Company
-        </button>
-        <button class="action-btn" onclick="exportData()">
-          <span>📥</span> Export
-        </button>
-        <button class="action-btn" onclick="backupData()">
-          <span>💾</span> Backup
-        </button>
+  <!-- ── SIDEBAR ──────────────────────────────────────── -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="6" fill="var(--acc)"/>
+          <text x="12" y="16" text-anchor="middle" fill="#fff" font-size="12" font-weight="800" font-family="sans-serif">B</text>
+        </svg>
+        Blume
+        <span>Ventures</span>
       </div>
     </div>
-    
-    <!-- Analytics / Stats Cards -->
-    <div class="stats-row">
-      <div class="sc">
-        <div class="sc-label">Total Companies</div>
-        <div class="sc-val" id="s0">12</div>
-        <div class="sc-desc">In portfolio</div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Funds</div>
+      <div class="nav-item active" id="navFund4" onclick="switchView('fund4')">
+        <span class="nav-icon">📁</span>
+        <span>Fund IV</span>
+        <span class="nav-badge" id="navFund4Count">0</span>
       </div>
-      <div class="sc">
-        <div class="sc-label">Total Actions</div>
-        <div class="sc-val" id="s1">263</div>
-        <div class="sc-desc">Across all companies</div>
+      <div class="nav-item" id="navFund5" onclick="switchView('fund5')">
+        <span class="nav-icon">📁</span>
+        <span>Fund V</span>
+        <span class="nav-badge" id="navFund5Count">0</span>
       </div>
-      <div class="sc">
-        <div class="sc-label">Completed</div>
-        <div class="sc-val" id="s2">69</div>
-        <div class="sc-desc">Actions done</div>
-      </div>
-      <div class="sc">
-        <div class="sc-label">Avg Progress</div>
-        <div class="sc-val" id="s3">32%</div>
-        <div class="sc-desc">Portfolio average</div>
+
+      <div class="nav-section-label">Tools</div>
+      <div class="nav-item" id="navAnalytics" onclick="switchView('analytics')">
+        <span class="nav-icon">📊</span>
+        <span>Analytics</span>
       </div>
     </div>
-    
-    <!-- Filter Row -->
-    <div class="fil-row">
-      <button class="fbtn on" data-f="all" onclick="setF(this,&#39;all&#39;)">All</button>
-      <button class="fbtn" data-f="new" onclick="setF(this,&#39;new&#39;)">Not Started</button>
-      <button class="fbtn" data-f="prog" onclick="setF(this,&#39;prog&#39;)">In Progress</button>
-      <button class="fbtn" data-f="done" onclick="setF(this,&#39;done&#39;)">Completed</button>
-      <button class="fbtn" onclick="toggleAdvFilters()">📊 More Filters</button>
-      
-      <div class="sbox">
-        <span>🔎</span>
-        <input type="text" placeholder="Search companies..." id="si" oninput="renderDash()">
+
+    <div class="sidebar-footer">
+      <div class="sync-wrap">
+        <div class="sync-dot live" id="sync-dot"></div>
+        <div class="sync-label" id="sync-label">Live</div>
       </div>
     </div>
-    
-    <!-- Advanced Filters (Partner/Sector/Fund) -->
-    <div class="advanced-filters" id="advFilters">
-      <div class="filter-grid">
-        <div class="filter-group">
-          <label>Partner</label>
-          <select id="filterPartner" onchange="applyAdvFilters()"><option value="">All Partners</option><option value="Sanjay">Sanjay</option><option value="Ashish">Ashish</option><option value="Karthik">Karthik</option><option value="Arpit">Arpit</option><option value="Sajith">Sajith</option></select>
+  </div>
+
+  <!-- ── MAIN CONTENT ─────────────────────────────────── -->
+  <div class="main-wrap">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title" id="topbarTitle">Fund IV</div>
+      </div>
+      <div class="topbar-right">
+        <div class="edit-badge view-only" id="editBadge">
+          <span id="editMode">🔒 View Only</span>
         </div>
-        <div class="filter-group">
-          <label>Sector</label>
-          <select id="filterSector" onchange="applyAdvFilters()"><option value="">All Sectors</option><option value="AI/SaaS">AI/SaaS</option><option value="Finance">Finance</option><option value="Manufacturing">Manufacturing</option></select>
-        </div>
-        <div class="filter-group">
-          <label>Fund</label>
-          <select id="filterFund" onchange="applyAdvFilters()"><option value="">All Funds</option></select>
+
+        <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
+
+        <div class="bell-wrap">
+          <div class="bell-btn" onclick="toggleNotif()">🔔</div>
+          <div class="bell-badge on" id="bb">0</div>
+          <div class="notif-dd" id="nd">
+            <div class="notif-hd">
+              <span>Notifications</span>
+              <button class="notif-clear" onclick="clearNotifs()">Clear</button>
+            </div>
+            <div class="notif-list" id="nl"></div>
+          </div>
         </div>
       </div>
     </div>
-    
-    <!-- Grid -->
-    <div class="grid" id="gr"></div>
-    <div class="empty" id="emp" style="display: none;">
-      <div class="empty-icon">📭</div>
-      <div class="empty-msg">No companies found</div>
+
+    <!-- ═══ FUND IV VIEW ═══ -->
+    <div class="main" id="main-app" style="display: block;">
+      <div class="view on" id="vFund4">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Fund IV</div>
+            <div class="page-sub">ESAP Implementation Tracking</div>
+          </div>
+          <div class="actions-row">
+            <button class="action-btn primary" onclick="openAddModal('Fund IV')" id="btnAdd4" disabled>
+              <span>➕</span> Add Company
+            </button>
+            <button class="action-btn" onclick="exportData()">
+              <span>📥</span> Export
+            </button>
+            <button class="action-btn" onclick="backupData()">
+              <span>💾</span> Backup
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="sc"><div class="sc-label">Total Companies</div><div class="sc-val" id="s0_f4">0</div><div class="sc-desc">Fund IV</div></div>
+          <div class="sc"><div class="sc-label">Total Actions</div><div class="sc-val" id="s1_f4">0</div><div class="sc-desc">Across all companies</div></div>
+          <div class="sc"><div class="sc-label">Completed</div><div class="sc-val" id="s2_f4">0</div><div class="sc-desc">Actions done</div></div>
+          <div class="sc"><div class="sc-label">Avg Progress</div><div class="sc-val" id="s3_f4">0%</div><div class="sc-desc">Fund average</div></div>
+        </div>
+
+        <div class="fil-row">
+          <button class="fbtn on" data-vf="fund4" data-f="all" onclick="setF(this,'all','fund4')">All</button>
+          <button class="fbtn" data-vf="fund4" data-f="new" onclick="setF(this,'new','fund4')">Not Started</button>
+          <button class="fbtn" data-vf="fund4" data-f="prog" onclick="setF(this,'prog','fund4')">In Progress</button>
+          <button class="fbtn" data-vf="fund4" data-f="done" onclick="setF(this,'done','fund4')">Completed</button>
+          <div class="sbox">
+            <span>🔎</span>
+            <input type="text" placeholder="Search companies..." id="si4" oninput="renderFundView('fund4')">
+          </div>
+        </div>
+
+        <div class="grid" id="gr4"></div>
+        <div class="empty" id="emp4"><div class="empty-icon">📭</div><div class="empty-msg">No companies found in Fund IV</div></div>
+      </div>
+
+      <!-- ═══ FUND V VIEW ═══ -->
+      <div class="view" id="vFund5">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Fund V</div>
+            <div class="page-sub">ESAP Implementation Tracking</div>
+          </div>
+          <div class="actions-row">
+            <button class="action-btn primary" onclick="openAddModal('Fund V')" id="btnAdd5" disabled>
+              <span>➕</span> Add Company
+            </button>
+            <button class="action-btn" onclick="exportData()">
+              <span>📥</span> Export
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="sc"><div class="sc-label">Total Companies</div><div class="sc-val" id="s0_f5">0</div><div class="sc-desc">Fund V</div></div>
+          <div class="sc"><div class="sc-label">Total Actions</div><div class="sc-val" id="s1_f5">0</div><div class="sc-desc">Across all companies</div></div>
+          <div class="sc"><div class="sc-label">Completed</div><div class="sc-val" id="s2_f5">0</div><div class="sc-desc">Actions done</div></div>
+          <div class="sc"><div class="sc-label">Avg Progress</div><div class="sc-val" id="s3_f5">0%</div><div class="sc-desc">Fund average</div></div>
+        </div>
+
+        <div class="fil-row">
+          <button class="fbtn on" data-vf="fund5" data-f="all" onclick="setF(this,'all','fund5')">All</button>
+          <button class="fbtn" data-vf="fund5" data-f="new" onclick="setF(this,'new','fund5')">Not Started</button>
+          <button class="fbtn" data-vf="fund5" data-f="prog" onclick="setF(this,'prog','fund5')">In Progress</button>
+          <button class="fbtn" data-vf="fund5" data-f="done" onclick="setF(this,'done','fund5')">Completed</button>
+          <div class="sbox">
+            <span>🔎</span>
+            <input type="text" placeholder="Search companies..." id="si5" oninput="renderFundView('fund5')">
+          </div>
+        </div>
+
+        <div class="grid" id="gr5"></div>
+        <div class="empty" id="emp5"><div class="empty-icon">📭</div><div class="empty-msg">No companies found in Fund V</div></div>
+      </div>
+
+      <!-- ═══ ANALYTICS VIEW ═══ -->
+      <div class="view" id="vAnalytics">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Analytics</div>
+            <div class="page-sub">Implementation Status Overview</div>
+          </div>
+          <div class="actions-row">
+            <button class="action-btn" onclick="exportData()"><span>📥</span> Export</button>
+            <button class="action-btn" onclick="backupData()"><span>💾</span> Backup</button>
+          </div>
+        </div>
+
+        <!-- Analytics Filters -->
+        <div class="analytics-filters">
+          <h3>🔍 Filters</h3>
+          <div class="analytics-filter-grid">
+            <div>
+              <label>Fund</label>
+              <select id="aFilterFund" onchange="renderAnalytics()">
+                <option value="">All Funds</option>
+                <option value="Fund IV">Fund IV</option>
+                <option value="Fund V">Fund V</option>
+              </select>
+            </div>
+            <div>
+              <label>Partner</label>
+              <select id="aFilterPartner" onchange="renderAnalytics()"></select>
+            </div>
+            <div>
+              <label>Sector</label>
+              <select id="aFilterSector" onchange="renderAnalytics()"></select>
+            </div>
+            <div>
+              <label>Company</label>
+              <select id="aFilterCompany" onchange="renderAnalytics()"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Summary -->
+        <div class="analytics-summary" id="analyticsSummary"></div>
+
+        <!-- Analytics Table -->
+        <div class="analytics-table" id="analyticsTable"></div>
+      </div>
+
+      <!-- Old dashboard view (hidden, kept for compatibility) -->
+      <div class="view" id="vdash" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -417,7 +802,7 @@ The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></
   <div class="modal">
     <div class="modal-hd">
       <div class="modal-title" id="modalAddTitle">Add Company</div>
-      <div class="modal-close" onclick="closeM(&#39;mAdd&#39;)">×</div>
+      <div class="modal-close" onclick="closeM('mAdd')">×</div>
     </div>
     <div class="modal-body">
       <div class="form-row">
@@ -443,9 +828,6 @@ The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></
         <label>Fund</label>
         <select id="fundSelect">
           <option value="">Select Fund</option>
-          <option value="Fund I">Fund I</option>
-          <option value="Fund II">Fund II</option>
-          <option value="Fund III">Fund III</option>
           <option value="Fund IV">Fund IV</option>
           <option value="Fund V">Fund V</option>
         </select>
@@ -471,15 +853,15 @@ The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></
         <label>Upload ESAP Document (.xlsx to auto-import actions)</label>
         <input type="file" id="esapFile" accept=".pdf,.doc,.docx,.xls,.xlsx" style="display:none" onchange="handleESAPUpload(event)">
         <div style="display:flex;gap:8px;align-items:center">
-          <button type="button" class="btn secondary" onclick="document.getElementById(&#39;esapFile&#39;).click()">
+          <button type="button" class="btn secondary" onclick="document.getElementById('esapFile').click()">
             📎 Choose File
           </button>
           <span id="esapFileName" style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">No file selected</span>
         </div>
         <div id="currentESAP" style="margin-top:8px;display:none">
-          <div style="padding:8px 12px;background:var(--accd);border:1px solid var(--acc);border-radius:10px;display:inline-flex;align-items:center;gap:8px">
+          <div style="padding:8px 12px;background:var(--accd);border:1px solid var(--acc);border-radius:8px;display:inline-flex;align-items:center;gap:8px">
             <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--acc)">📄 <span id="currentESAPName"></span></span>
-            <a href="file:///C:/Users/sreenidhi/Downloads/index_final_1.html#" id="downloadESAP" target="_blank" style="color:var(--acc);font-size:.75rem">Download</a>
+            <a href="#" id="downloadESAP" target="_blank" style="color:var(--acc);font-size:.75rem">Download</a>
             <button type="button" onclick="removeESAP()" style="background:none;border:none;color:var(--acc);cursor:pointer;font-weight:700;font-size:1rem">×</button>
           </div>
         </div>
@@ -487,7 +869,7 @@ The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn secondary" onclick="closeM(&#39;mAdd&#39;)">Cancel</button>
+      <button class="btn secondary" onclick="closeM('mAdd')">Cancel</button>
       <button class="btn primary" onclick="saveCompany()" id="btnSave">Save Company</button>
     </div>
   </div>
@@ -497,25 +879,25 @@ The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></
 <div class="modal-overlay" id="mDetail">
   <div class="modal wide">
     <div class="modal-hd">
-      <div class="modal-title" id="detailTitle">Curious</div>
-      <div class="modal-close" onclick="closeM(&#39;mDetail&#39;)">×</div>
+      <div class="modal-title" id="detailTitle">Company</div>
+      <div class="modal-close" onclick="closeM('mDetail')">×</div>
     </div>
     <div class="modal-body">
-      <div id="detailContent"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px"><div><strong>Partner:</strong> Sanjay</div><div><strong>Sector:</strong> AI/SaaS</div><div><strong>Fund:</strong> Not assigned</div><div><strong>Start Date:</strong> 02 Mar 2026</div><div><strong>SPOC:</strong> N/A</div><div><strong>Email:</strong> N/A</div></div><div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>Overall Progress</strong><span style="font-family:var(--font-mono);font-weight:700;color:var(--acc)">0%</span></div><div class="prog-bg"><div class="prog-fill" style="width:0%"></div></div></div></div>
+      <div id="detailContent"></div>
       
       <!-- Action Items -->
       <div class="items-section">
         <div class="items-hd">
           <h3>📋 Action Items</h3>
-          <button class="btn primary" onclick="addItem()" id="btnAddItem" disabled="">+ Add Item</button>
+          <button class="btn primary" onclick="addItem()" id="btnAddItem" disabled>+ Add Item</button>
         </div>
-        <div class="items-list" id="itemsList"><div class="item-row"><div class="item-content"><div class="item-title">Incident Reporting &amp; Investigation Procedure</div><div class="item-deadline overdue">⚠️ Overdue by 6 days (01 Apr 2026)</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Grievance Redressal Mechanism</div><div class="item-deadline ">📅 Due: 31 May 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Whistleblower Policy</div><div class="item-deadline ">📅 Due: 31 May 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Sanction Policy</div><div class="item-deadline ">📅 Due: 31 May 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No designated person for ESG monitoring</div><div class="item-deadline ">📅 Due: 31 May 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">Absence of POSH Policy &amp; ICC</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">Absence of Anti-Harassment Policy and Child Protection Policy</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Data Privacy Policy (GDPR/DPDP Act)</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Cyber Security Policy</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Code of Conduct</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">Anti-Discrimination/Equal Opportunity Policy</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Health &amp; Safety Policy</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Anti-Money Laundering/Anti-Bribery Policy</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Governance Road Map</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No E&amp;S Policy</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Stakeholder Engagement Plan</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">PF/ESI and Gratuity Scheme</div><div class="item-deadline ">📅 Due: 29 Aug 2026</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">No Data Retention &amp; Deletion Policy</div><div class="item-deadline ">📅 Due: 02 Mar 2027</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">Gift and Hospitality Policy</div><div class="item-deadline ">📅 Due: 02 Mar 2027</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">Internal Audit</div><div class="item-deadline ">📅 Due: 02 Mar 2027</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">Legal Tracker</div><div class="item-deadline ">📅 Due: 02 Mar 2027</div></div><div class="item-status progress">progress</div></div><div class="item-row"><div class="item-content"><div class="item-title">Training and awareness</div><div class="item-deadline ">📅 Due: 02 Mar 2027</div></div><div class="item-status progress">progress</div></div></div>
+        <div class="items-list" id="itemsList"></div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn secondary" onclick="closeM(&#39;mDetail&#39;)">Close</button>
-      <button class="btn" onclick="editCompany()" id="btnEdit" disabled="">Edit Company</button>
-      <button class="btn danger" onclick="confirmDelete()" id="btnDelete" disabled="">Delete</button>
+      <button class="btn secondary" onclick="closeM('mDetail')">Close</button>
+      <button class="btn" onclick="editCompany()" id="btnEdit" disabled>Edit Company</button>
+      <button class="btn danger" onclick="confirmDelete()" id="btnDelete" disabled>Delete</button>
     </div>
   </div>
 </div>
@@ -524,20 +906,14 @@ The Company shall draft ...</div><div class="nmeta">Overdue by 83d</div></div></
 <div class="toast" id="toast"></div>
 
 <!-- Firebase & Libraries -->
-<!-- Firebase SDK from CDN -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════════════
-//  FUND ESAP TRACKER — UPDATED VERSION
-//  ✅ Partner/Sector/Fund Filters (No Folders)
-//  ✅ Partner name on cards (not code)
-//  ✅ Nudge only in edit mode
-//  ✅ Action items in email
-//  ✅ Blume logo background
-//  ✅ Excel parser + all features retained
+//  FUND ESAP TRACKER — ONTRA-STYLE UI
+//  All original functions preserved
 // ═══════════════════════════════════════════════════════
 
 // Firebase Configuration
@@ -558,252 +934,317 @@ var sectors = ['Health Care', 'AI/SaaS', 'Finance', 'Consumer', 'Logistics', 'Ot
 var teamMembers = ['Ashish', 'Arpit', 'Sanjay', 'Karthik', 'Sajith'];
 var unsubscribe = null;
 var curId = null;
-var curF = 'all';
-var activeFilters = {
-  partner: '',
-  sector: '',
-  fund: ''
-};
+var curFilters = { fund4: 'all', fund5: 'all' };
+var activeFilters = { partner: '', sector: '', fund: '' };
 var editingId = null;
 var notifications = [];
 var isEditMode = false;
 var pendingESAPFile = null;
 var pendingESAPFileName = '';
 var parsedActions = [];
+var currentView = 'fund4';
+var addModalDefaultFund = '';
 
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// VIEW SWITCHING (Sidebar Navigation)
+// ══════════════════════════════════════════════════════
+function switchView(view) {
+  currentView = view;
+  
+  // Update sidebar active state
+  document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+  var navMap = { fund4: 'navFund4', fund5: 'navFund5', analytics: 'navAnalytics' };
+  var navEl = document.getElementById(navMap[view]);
+  if(navEl) navEl.classList.add('active');
+  
+  // Update topbar title
+  var titles = { fund4: 'Fund IV', fund5: 'Fund V', analytics: 'Analytics' };
+  document.getElementById('topbarTitle').textContent = titles[view] || '';
+  
+  // Toggle views
+  document.querySelectorAll('.view').forEach(function(el){ el.classList.remove('on'); });
+  var viewMap = { fund4: 'vFund4', fund5: 'vFund5', analytics: 'vAnalytics' };
+  var viewEl = document.getElementById(viewMap[view]);
+  if(viewEl) viewEl.classList.add('on');
+  
+  // Render
+  if(view === 'fund4' || view === 'fund5') {
+    renderFundView(view);
+  } else if(view === 'analytics') {
+    populateAnalyticsFilters();
+    renderAnalytics();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// FUND-SPECIFIC RENDERING
+// ══════════════════════════════════════════════════════
+function getFundCompanies(fundKey) {
+  var fundName = fundKey === 'fund4' ? 'Fund IV' : 'Fund V';
+  return companies.filter(function(c) { return c.fund === fundName; });
+}
+
+function renderFundView(fundKey) {
+  var fundName = fundKey === 'fund4' ? 'Fund IV' : 'Fund V';
+  var suffix = fundKey === 'fund4' ? '4' : '5';
+  var gr = document.getElementById('gr' + suffix);
+  var em = document.getElementById('emp' + suffix);
+  var si = document.getElementById('si' + suffix);
+  var q = si ? si.value.toLowerCase() : '';
+  var f = curFilters[fundKey] || 'all';
+  
+  var fundCos = companies.filter(function(c) { return c.fund === fundName; });
+  
+  var cos = fundCos.filter(function(c) {
+    if(q && !c.name.toLowerCase().includes(q)) return false;
+    var p = pct(c);
+    if(f === 'done') return p === 100;
+    if(f === 'prog') return p > 0 && p < 100;
+    if(f === 'new') return p === 0;
+    return true;
+  });
+  
+  if(!cos.length) {
+    gr.innerHTML = '';
+    em.style.display = 'block';
+  } else {
+    em.style.display = 'none';
+    gr.innerHTML = cos.map(function(c) {
+      var p = pct(c), done = (c.items || []).filter(function(i) { return i.status === 'done'; }).length, tot = (c.items || []).length;
+      var fc = p >= 70 ? '' : p >= 30 ? 'w' : 'l';
+      var partnerSectorText = '';
+      if(c.team) partnerSectorText += esc(c.team);
+      if(c.sector) partnerSectorText += (c.team ? ' · ' : '') + esc(c.sector);
+      
+      return '<div class="card" onclick="showDetail(\'' + c.id + '\')">'
+        + '<div class="card-hd"><div>'
+        + '<div class="cname">' + esc(c.name) + '</div>'
+        + '<div class="cid">' + partnerSectorText + '</div>'
+        + (c.startDate ? '<div class="cstart">📅 Start: ' + fmt(c.startDate) + '</div>' : '<div class="cstart" style="color:var(--warn)">⚠ No start date set</div>')
+        + '</div>' + chipHtml(p) + '</div>'
+        + '<div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>' + p + '%</strong></div>'
+        + '<div class="prog-bg"><div class="prog-fill ' + fc + '" style="width:' + p + '%"></div></div></div>'
+        + '<div class="cmeta"><div class="mi"><strong>' + tot + '</strong>Total</div><div class="mi"><strong>' + done + '</strong>Done</div><div class="mi"><strong>' + (tot - done) + '</strong>Pending</div></div>'
+        + (isEditMode ? '<div class="cact">'
+        + '<button class="del-card-btn" onclick="event.stopPropagation();askDel(\'' + c.id + '\')">🗑 Delete</button>'
+        + '</div>' : '')
+        + '</div>';
+    }).join('');
+  }
+  
+  // Update stats for this fund
+  var all = fundCos.flatMap(function(c) { return c.items || []; });
+  var dn = all.filter(function(i) { return i.status === 'done'; }).length;
+  var avg = fundCos.length ? Math.round(fundCos.map(pct).reduce(function(a, b) { return a + b; }, 0) / fundCos.length) : 0;
+  document.getElementById('s0_f' + suffix).textContent = fundCos.length;
+  document.getElementById('s1_f' + suffix).textContent = all.length;
+  document.getElementById('s2_f' + suffix).textContent = dn;
+  document.getElementById('s3_f' + suffix).textContent = avg + '%';
+}
+
+function updateSidebarCounts() {
+  var f4 = companies.filter(function(c) { return c.fund === 'Fund IV'; }).length;
+  var f5 = companies.filter(function(c) { return c.fund === 'Fund V'; }).length;
+  document.getElementById('navFund4Count').textContent = f4;
+  document.getElementById('navFund5Count').textContent = f5;
+}
+
+// ══════════════════════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════════════════════
+function populateAnalyticsFilters() {
+  var partners = [], sectorsList = [], companyNames = [];
+  companies.forEach(function(c) {
+    if(c.team && partners.indexOf(c.team) === -1) partners.push(c.team);
+    if(c.sector && sectorsList.indexOf(c.sector) === -1) sectorsList.push(c.sector);
+    companyNames.push(c.name);
+  });
+  
+  document.getElementById('aFilterPartner').innerHTML = '<option value="">All Partners</option>' +
+    partners.sort().map(function(p) { return '<option value="' + esc(p) + '">' + esc(p) + '</option>'; }).join('');
+  
+  document.getElementById('aFilterSector').innerHTML = '<option value="">All Sectors</option>' +
+    sectorsList.sort().map(function(s) { return '<option value="' + esc(s) + '">' + esc(s) + '</option>'; }).join('');
+  
+  document.getElementById('aFilterCompany').innerHTML = '<option value="">All Companies</option>' +
+    companyNames.sort().map(function(n) { return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join('');
+}
+
+function renderAnalytics() {
+  var fund = document.getElementById('aFilterFund').value;
+  var partner = document.getElementById('aFilterPartner').value;
+  var sector = document.getElementById('aFilterSector').value;
+  var company = document.getElementById('aFilterCompany').value;
+  
+  var filtered = companies.filter(function(c) {
+    if(fund && c.fund !== fund) return false;
+    if(partner && c.team !== partner) return false;
+    if(sector && c.sector !== sector) return false;
+    if(company && c.name !== company) return false;
+    return true;
+  });
+  
+  // Summary cards
+  var totalItems = 0, doneItems = 0, overdueItems = 0;
+  filtered.forEach(function(c) {
+    var items = c.items || [];
+    totalItems += items.length;
+    items.forEach(function(i) {
+      if(i.status === 'done') doneItems++;
+      else {
+        var dl = resolveDeadline(i, c);
+        if(dl && daysTo(dl) < 0) overdueItems++;
+      }
+    });
+  });
+  
+  var avgProg = filtered.length ? Math.round(filtered.map(pct).reduce(function(a, b) { return a + b; }, 0) / filtered.length) : 0;
+  
+  document.getElementById('analyticsSummary').innerHTML =
+    '<div class="as-card"><h4>Total Companies</h4><div class="as-val">' + filtered.length + '</div><div class="as-sub">Matching filters</div></div>' +
+    '<div class="as-card"><h4>Open Actions</h4><div class="as-val" style="color:var(--warn)">' + (totalItems - doneItems) + '</div><div class="as-sub">' + overdueItems + ' overdue</div></div>' +
+    '<div class="as-card"><h4>Avg Progress</h4><div class="as-val">' + avgProg + '%</div><div class="as-sub">' + doneItems + ' of ' + totalItems + ' completed</div></div>';
+  
+  // Table
+  if(filtered.length === 0) {
+    document.getElementById('analyticsTable').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txtf);font-family:var(--font-mono)">No companies match the selected filters</div>';
+    return;
+  }
+  
+  var rows = filtered.map(function(c) {
+    var p = pct(c);
+    var items = c.items || [];
+    var done = items.filter(function(i) { return i.status === 'done'; }).length;
+    var overdue = items.filter(function(i) {
+      if(i.status === 'done') return false;
+      var dl = resolveDeadline(i, c);
+      return dl && daysTo(dl) < 0;
+    }).length;
+    var fc = p >= 70 ? '' : p >= 30 ? 'w' : 'l';
+    
+    return '<tr style="cursor:pointer" onclick="showDetail(\'' + c.id + '\')">'
+      + '<td style="font-weight:700">' + esc(c.name) + '</td>'
+      + '<td>' + esc(c.fund || '—') + '</td>'
+      + '<td>' + esc(c.team || '—') + '</td>'
+      + '<td>' + esc(c.sector || '—') + '</td>'
+      + '<td><div class="at-progress"><div class="prog-bg"><div class="prog-fill ' + fc + '" style="width:' + p + '%"></div></div><span>' + p + '%</span></div></td>'
+      + '<td style="font-family:var(--font-mono);font-size:.78rem">' + done + '/' + items.length + '</td>'
+      + '<td style="font-family:var(--font-mono);font-size:.78rem;color:' + (overdue > 0 ? 'var(--red);font-weight:700' : 'var(--txtm)') + '">' + overdue + '</td>'
+      + '</tr>';
+  }).join('');
+  
+  document.getElementById('analyticsTable').innerHTML =
+    '<table><thead><tr>'
+    + '<th>Company</th><th>Fund</th><th>Partner</th><th>Sector</th><th>Progress</th><th>Done/Total</th><th>Overdue</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+// ══════════════════════════════════════════════════════
 // TIMELINE PARSER HELPER
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 function parseTimeline(timelineStr) {
-  if (!timelineStr || typeof timelineStr !== 'string') {
-    return null;
-  }
-  
+  if (!timelineStr || typeof timelineStr !== 'string') return null;
   var cleaned = timelineStr.trim().toLowerCase();
-  
-  // Match "XX days" format (like "120 days", "60 days")
   var daysMatch = cleaned.match(/(\d+)\s*days?/);
-  if (daysMatch) {
-    return { type: 'offset', days: parseInt(daysMatch[1]) };
-  }
-  
-  // Match specific dates (YYYY-MM-DD)
+  if (daysMatch) return { type: 'offset', days: parseInt(daysMatch[1]) };
   var dateMatch = cleaned.match(/\d{4}-\d{2}-\d{2}/);
-  if (dateMatch) {
-    return { type: 'specific', date: dateMatch[0] };
-  }
-  
-  // Parse as just a number
+  if (dateMatch) return { type: 'specific', date: dateMatch[0] };
   var number = parseInt(cleaned);
-  if (!isNaN(number) && number > 0) {
-    return { type: 'offset', days: number };
-  }
-  
+  if (!isNaN(number) && number > 0) return { type: 'offset', days: number };
   return null;
 }
   
-// ══════════════════════════════════════════════════════════════
-// FLEXIBLE EXCEL PARSER
-// ══════════════════════════════════════════════════════════════
-
+// ══════════════════════════════════════════════════════
+// FLEXIBLE EXCEL PARSER (unchanged)
+// ══════════════════════════════════════════════════════
 function parseESAPExcel(file) {
   return new Promise(function(resolve, reject) {
     var reader = new FileReader();
-    
     reader.onload = function(e) {
       try {
         var data = new Uint8Array(e.target.result);
         var workbook = XLSX.read(data, { type: 'array' });
-        
-        console.log('📊 Parsing Excel file:', file.name);
-        console.log('Sheets found:', workbook.SheetNames);
-        
         var allActions = [];
         var errors = [];
-        
         workbook.SheetNames.forEach(function(sheetName) {
-          console.log('Processing sheet:', sheetName);
-          
           try {
             var worksheet = workbook.Sheets[sheetName];
-            var jsonData = XLSX.utils.sheet_to_json(worksheet, { 
-              header: 1,
-              defval: null,
-              blankrows: false,
-              raw: false
-            });
-            
-            if (jsonData.length === 0) {
-              console.log('  ⚠️ Sheet is empty');
-              return;
-            }
-            
+            var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null, blankrows: false, raw: false });
+            if (jsonData.length === 0) return;
             var headerRowIndex = findHeaderRow(jsonData);
-            if (headerRowIndex === -1) {
-              console.log('  ⚠️ No header row found');
-              return;
-            }
-            
-            console.log('  ✅ Header row found at index:', headerRowIndex);
-            
+            if (headerRowIndex === -1) return;
             var headers = jsonData[headerRowIndex];
             var columnMap = mapColumns(headers);
-            
-            console.log('  Column mapping:', columnMap);
-            
-            if (columnMap.action === -1) {
-              console.log('  ⚠️ No action column found');
-              return;
-            }
-            
+            if (columnMap.action === -1) return;
             var actionsFound = 0;
             for (var i = headerRowIndex + 1; i < jsonData.length; i++) {
               var row = jsonData[i];
               if (!row || row.every(function(cell) { return !cell; })) continue;
-              
               var actionText = columnMap.action !== -1 ? row[columnMap.action] : null;
               if (!actionText || !actionText.toString().trim()) continue;
-              
               var action = {
-  id: 'i_' + Date.now() + '_' + actionsFound,
-  action: cleanText(actionText),
-  title: cleanText(actionText).substring(0, 100),
-  status: mapStatus(columnMap.status !== -1 ? row[columnMap.status] : ''),
-  createdAt: new Date().toISOString()
-};
-
-// Parse timeline
-var timelineStr = columnMap.timeline !== -1 ? cleanText(row[columnMap.timeline]) : '';
-var timelineInfo = parseTimeline(timelineStr);
-if (timelineInfo) {
-  if (timelineInfo.type === 'offset' && timelineInfo.days) {
-    action.offsetDays = timelineInfo.days;
-
-    var today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    var dueDate = new Date(today);
-    dueDate.setDate(today.getDate() + timelineInfo.days);
-
-    action.deadline = dueDate.toISOString().split('T')[0];
-
-    console.log(
-      '  ✅ Offset → Date:',
-      action.action.substring(0, 50),
-      '->',
-      action.deadline
-    );
-
-  } else if (timelineInfo.type === 'specific') {
-    action.deadline = timelineInfo.date;
-
-    console.log(
-      '  ✅ Date:',
-      action.action.substring(0, 50),
-      '->',
-      timelineInfo.date
-    );
-  }
-}
-              
+                id: 'i_' + Date.now() + '_' + actionsFound,
+                action: cleanText(actionText),
+                title: cleanText(actionText).substring(0, 100),
+                status: mapStatus(columnMap.status !== -1 ? row[columnMap.status] : ''),
+                createdAt: new Date().toISOString()
+              };
+              var timelineStr = columnMap.timeline !== -1 ? cleanText(row[columnMap.timeline]) : '';
+              var timelineInfo = parseTimeline(timelineStr);
+              if (timelineInfo) {
+                if (timelineInfo.type === 'offset' && timelineInfo.days) {
+                  action.offsetDays = timelineInfo.days;
+                  var today = new Date(); today.setHours(0, 0, 0, 0);
+                  var dueDate = new Date(today);
+                  dueDate.setDate(today.getDate() + timelineInfo.days);
+                  action.deadline = dueDate.toISOString().split('T')[0];
+                } else if (timelineInfo.type === 'specific') {
+                  action.deadline = timelineInfo.date;
+                }
+              }
               allActions.push(action);
               actionsFound++;
             }
-            
-            console.log('  ✅ Found', actionsFound, 'actions in sheet:', sheetName);
-            
           } catch (err) {
-            console.error('  ❌ Error parsing sheet:', sheetName, err);
             errors.push('Sheet "' + sheetName + '": ' + err.message);
           }
         });
-        
-        console.log('📊 Total actions parsed:', allActions.length);
-        
         if (allActions.length === 0) {
-          reject(new Error('No action items found in Excel file. Make sure the file has columns for actions.'));
+          reject(new Error('No action items found in Excel file.'));
         } else {
-          resolve({
-            actions: allActions,
-            count: allActions.length,
-            errors: errors
-          });
+          resolve({ actions: allActions, count: allActions.length, errors: errors });
         }
-        
       } catch (err) {
-        console.error('❌ Excel parsing error:', err);
         reject(new Error('Failed to parse Excel file: ' + err.message));
       }
     };
-    
-    reader.onerror = function() {
-      reject(new Error('Failed to read file'));
-    };
-    
+    reader.onerror = function() { reject(new Error('Failed to read file')); };
     reader.readAsArrayBuffer(file);
   });
 }
 
 function findHeaderRow(data) {
   var keywords = ['action', 's.no', 's. no', 'timeline', 'status', 'aspect', 'risk', 'deadline'];
-  
   for (var i = 0; i < Math.min(15, data.length); i++) {
     var row = data[i];
     if (!row || row.length === 0) continue;
-    
-    var rowText = row.map(function(cell) {
-      return (cell || '').toString().toLowerCase();
-    }).join(' ');
-    
-    var matches = keywords.filter(function(k) {
-      return rowText.indexOf(k) !== -1;
-    }).length;
-    
-    if (matches >= 2) {
-      console.log('  Found header row at', i, 'with', matches, 'keyword matches');
-      return i;
-    }
+    var rowText = row.map(function(cell) { return (cell || '').toString().toLowerCase(); }).join(' ');
+    var matches = keywords.filter(function(k) { return rowText.indexOf(k) !== -1; }).length;
+    if (matches >= 2) return i;
   }
-  
-  console.log('  No header row found, using row 0');
   return 0;
 }
 
 function mapColumns(headers) {
-  var mapping = {
-    serialNo: -1,
-    action: -1,
-    timeline: -1,
-    status: -1
-  };
-  
+  var mapping = { serialNo: -1, action: -1, timeline: -1, status: -1 };
   headers.forEach(function(header, index) {
     if (!header) return;
     var h = header.toString().toLowerCase().trim();
-    
-    if ((h.indexOf('s.no') !== -1 || h.indexOf('s. no') !== -1 || h === '#' || 
-         h === 's.no.' || h === 'sno' || h === 'sr.no' || h === 'sr. no.') && 
-        mapping.serialNo === -1) {
-      mapping.serialNo = index;
-    }
-    
-    if ((h === 'action' || h === 'actions' || h.indexOf('action item') !== -1 || 
-         h.indexOf('esap action') !== -1 || h.indexOf('activity') !== -1) && 
-        h.indexOf('interaction') === -1 && mapping.action === -1) {
-      mapping.action = index;
-    }
-    
-    if ((h.indexOf('timeline') !== -1 || h.indexOf('deadline') !== -1 || 
-         h.indexOf('due') !== -1 || h.indexOf('completion') !== -1) && 
-        mapping.timeline === -1) {
-      mapping.timeline = index;
-    }
-    
-    if (h.indexOf('status') !== -1 && mapping.status === -1) {
-      mapping.status = index;
-    }
+    if ((h.indexOf('s.no') !== -1 || h.indexOf('s. no') !== -1 || h === '#' || h === 's.no.' || h === 'sno' || h === 'sr.no' || h === 'sr. no.') && mapping.serialNo === -1) mapping.serialNo = index;
+    if ((h === 'action' || h === 'actions' || h.indexOf('action item') !== -1 || h.indexOf('esap action') !== -1 || h.indexOf('activity') !== -1) && h.indexOf('interaction') === -1 && mapping.action === -1) mapping.action = index;
+    if ((h.indexOf('timeline') !== -1 || h.indexOf('deadline') !== -1 || h.indexOf('due') !== -1 || h.indexOf('completion') !== -1) && mapping.timeline === -1) mapping.timeline = index;
+    if (h.indexOf('status') !== -1 && mapping.status === -1) mapping.status = index;
   });
-  
   return mapping;
 }
 
@@ -814,80 +1255,45 @@ function cleanText(value) {
 
 function mapStatus(statusText) {
   if (!statusText) return 'progress';
-  
   var s = statusText.toString().toLowerCase();
   if (s.indexOf('complet') !== -1 || s.indexOf('done') !== -1) return 'done';
-  if (s.indexOf('not') !== -1 || s.indexOf('pending') !== -1 || s === '') return 'progress';
   return 'progress';
 }
 
-// ══════════════════════════════════════════════════════════════
-// FILE UPLOAD HANDLER
-// ══════════════════════════════════════════════════════════════
-
+// ══════════════════════════════════════════════════════
+// FILE UPLOAD HANDLER (unchanged)
+// ══════════════════════════════════════════════════════
 function handleESAPUpload(event) {
   var file = event.target.files[0];
   if (!file) return;
-  
-  if (file.size > 10 * 1024 * 1024) {
-    toast('File too large. Maximum size is 10MB', true);
-    event.target.value = '';
-    return;
-  }
-  
+  if (file.size > 10 * 1024 * 1024) { toast('File too large. Maximum size is 10MB', true); event.target.value = ''; return; }
   var isExcel = file.name.match(/\.(xlsx|xls)$/i);
-  
   if (isExcel) {
     document.getElementById('parseStatus').style.display = 'block';
     document.getElementById('parseStatus').textContent = '⏳ Parsing Excel file...';
     document.getElementById('parseStatus').style.color = 'var(--warn)';
-    
-    parseESAPExcel(file)
-      .then(function(result) {
-        parsedActions = result.actions;
-        
-        document.getElementById('parseStatus').textContent = 
-          '✅ Found ' + result.count + ' action items in Excel file';
-        document.getElementById('parseStatus').style.color = 'var(--acc)';
-        
-        toast('Excel parsed: ' + result.count + ' actions found');
-        
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          pendingESAPFile = e.target.result;
-          pendingESAPFileName = file.name;
-          document.getElementById('esapFileName').textContent = file.name;
-        };
-        reader.readAsDataURL(file);
-      })
-      .catch(function(err) {
-        console.error('Excel parsing error:', err);
-        document.getElementById('parseStatus').textContent = '❌ ' + err.message;
-        document.getElementById('parseStatus').style.color = 'var(--red)';
-        toast('Failed to parse Excel: ' + err.message, true);
-        
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          pendingESAPFile = e.target.result;
-          pendingESAPFileName = file.name;
-          document.getElementById('esapFileName').textContent = file.name;
-        };
-        reader.readAsDataURL(file);
-      });
+    parseESAPExcel(file).then(function(result) {
+      parsedActions = result.actions;
+      document.getElementById('parseStatus').textContent = '✅ Found ' + result.count + ' action items in Excel file';
+      document.getElementById('parseStatus').style.color = 'var(--acc)';
+      toast('Excel parsed: ' + result.count + ' actions found');
+      var reader = new FileReader();
+      reader.onload = function(e) { pendingESAPFile = e.target.result; pendingESAPFileName = file.name; document.getElementById('esapFileName').textContent = file.name; };
+      reader.readAsDataURL(file);
+    }).catch(function(err) {
+      document.getElementById('parseStatus').textContent = '❌ ' + err.message;
+      document.getElementById('parseStatus').style.color = 'var(--red)';
+      toast('Failed to parse Excel: ' + err.message, true);
+      var reader = new FileReader();
+      reader.onload = function(e) { pendingESAPFile = e.target.result; pendingESAPFileName = file.name; document.getElementById('esapFileName').textContent = file.name; };
+      reader.readAsDataURL(file);
+    });
   } else {
     parsedActions = [];
     document.getElementById('parseStatus').style.display = 'none';
-    
     var reader = new FileReader();
-    reader.onload = function(e) {
-      pendingESAPFile = e.target.result;
-      pendingESAPFileName = file.name;
-      document.getElementById('esapFileName').textContent = file.name;
-      toast('File ready to upload');
-    };
-    reader.onerror = function() {
-      toast('Error reading file', true);
-    };
+    reader.onload = function(e) { pendingESAPFile = e.target.result; pendingESAPFileName = file.name; document.getElementById('esapFileName').textContent = file.name; toast('File ready to upload'); };
+    reader.onerror = function() { toast('Error reading file', true); };
     reader.readAsDataURL(file);
   }
 }
@@ -895,108 +1301,54 @@ function handleESAPUpload(event) {
 function removeESAP() {
   if (!checkEditMode()) return;
   if (!confirm('Remove ESAP document?')) return;
-  
   if (editingId) {
-    fsSet(editingId, { esapFile: null, esapFileName: null })
-      .then(function() {
-        toast('ESAP removed');
-        document.getElementById('currentESAP').style.display = 'none';
-      })
-      .catch(function(e) { toast('Error: ' + e.message, true); });
+    fsSet(editingId, { esapFile: null, esapFileName: null }).then(function() { toast('ESAP removed'); document.getElementById('currentESAP').style.display = 'none'; }).catch(function(e) { toast('Error: ' + e.message, true); });
   } else {
-    pendingESAPFile = null;
-    pendingESAPFileName = '';
-    parsedActions = [];
+    pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = [];
     document.getElementById('esapFileName').textContent = 'No file selected';
     document.getElementById('esapFile').value = '';
     document.getElementById('parseStatus').style.display = 'none';
   }
 }
 
-// ── NUDGE FUNCTIONS ────────────────────────────────────
-
+// ── NUDGE FUNCTIONS (unchanged) ────────────────────────
 function addNudgeEmail() {
   var input = document.getElementById('newNudgeEmail');
   var email = input.value.trim();
-  
-  if (!email) {
-    toast('Enter an email address');
-    return;
-  }
-  
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast('Invalid email address', true);
-    return;
-  }
-  
+  if (!email) { toast('Enter an email address'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Invalid email address', true); return; }
   var c = companies.find(function(x){ return x.id === curId; });
   if (!c) return;
-  
   var emails = c.additionalNudgeEmails || [];
-  
-  if (emails.indexOf(email) !== -1) {
-    toast('Email already added');
-    return;
-  }
-  
+  if (emails.indexOf(email) !== -1) { toast('Email already added'); return; }
   emails.push(email);
-  
-  fsSet(curId, { additionalNudgeEmails: emails })
-    .then(function(){ 
-      input.value = '';
-      showDetail(curId);
-      toast('Email added'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
+  fsSet(curId, { additionalNudgeEmails: emails }).then(function(){ input.value = ''; showDetail(curId); toast('Email added'); }).catch(function(e){ toast('Error: ' + e.message, true); });
 }
 
 function removeNudgeEmail(idx) {
   var c = companies.find(function(x){ return x.id === curId; });
   if (!c) return;
-  
   var emails = c.additionalNudgeEmails || [];
   emails.splice(idx, 1);
-  
-  fsSet(curId, { additionalNudgeEmails: emails })
-    .then(function(){ 
-      showDetail(curId);
-      toast('Email removed'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
+  fsSet(curId, { additionalNudgeEmails: emails }).then(function(){ showDetail(curId); toast('Email removed'); }).catch(function(e){ toast('Error: ' + e.message, true); });
 }
 
 function sendNudge() {
   var c = companies.find(function(x){ return x.id === curId; });
   if (!c) return;
-  
   var spocName = document.getElementById('nudgeSpocName').value.trim();
   var spocEmail = document.getElementById('nudgeSpocEmail').value.trim();
   var additionalEmails = c.additionalNudgeEmails || [];
-  
-  if (!spocEmail && additionalEmails.length === 0) {
-    toast('Add at least one email address', true);
-    return;
-  }
-  
-  fsSet(curId, { 
-    spocName: spocName,
-    spocEmail: spocEmail
-  }).then(function(){
-    
+  if (!spocEmail && additionalEmails.length === 0) { toast('Add at least one email address', true); return; }
+  fsSet(curId, { spocName: spocName, spocEmail: spocEmail }).then(function(){
     var recipients = [];
     if (spocEmail) recipients.push(spocEmail);
     recipients = recipients.concat(additionalEmails);
-    
     var progress = pct(c);
     var items = c.items || [];
     var completed = items.filter(function(i){ return i.status === 'done'; }).length;
     var pending = items.length - completed;
-    var overdue = items.filter(function(i){
-      if(i.status === 'done') return false;
-      var deadline = resolveDeadline(i, c);
-      return deadline && daysTo(deadline) < 0;
-    }).length;
-    
+    var overdue = items.filter(function(i){ if(i.status === 'done') return false; var deadline = resolveDeadline(i, c); return deadline && daysTo(deadline) < 0; }).length;
     var subject = 'ESAP Implementation Status Update Request - ' + c.name;
     var body = 'Dear ' + (spocName || 'Team') + ',\n\n';
     body += 'This is a gentle reminder to provide an update on the ESAP implementation progress for ' + c.name + '.\n\n';
@@ -1006,94 +1358,52 @@ function sendNudge() {
     body += '• Completed: ' + completed + '\n';
     body += '• Pending: ' + pending + '\n';
     if(overdue > 0) body += '• Overdue: ' + overdue + '\n';
-    
-    // ADD ACTION ITEMS LIST TO EMAIL
     body += '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
     body += 'ACTION ITEMS LIST\n';
     body += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-    
     items.forEach(function(item, idx) {
       var num = (idx + 1);
       var action = item.action || item.title || 'Untitled';
       var deadline = resolveDeadline(item, c);
       var deadlineText = deadline ? (typeof deadline === 'string' ? deadline : fmt(deadline)) : 'Not set';
       var status = item.status === 'done' ? '✓ Completed' : '⏳ Pending';
-      
       body += num + '. ' + action + '\n';
       body += '   Timeline: ' + deadlineText + '\n';
       body += '   Status: ' + status + '\n\n';
     });
-    
     body += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
     body += 'Please update us on the latest status of pending action items.\n\n';
     body += 'Best regards,\nESAP Tracking Team';
-    
-    var mailto = 'mailto:' + recipients.join(',') + 
-                 '?subject=' + encodeURIComponent(subject) + 
-                 '&body=' + encodeURIComponent(body);
-    
+    var mailto = 'mailto:' + recipients.join(',') + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     window.location.href = mailto;
-    
     var nudgeHistory = c.nudgeHistory || [];
-    nudgeHistory.push({
-      date: new Date().toISOString(),
-      recipients: recipients,
-      sentBy: 'User'
-    });
-    
-    fsSet(curId, { 
-      nudgeHistory: nudgeHistory,
-      lastNudgeSent: new Date().toISOString()
-    }).then(function(){
-      toast('📧 Nudge email opened in your email client');
-    });
-    
-  }).catch(function(e){ 
-    toast('Error: ' + e.message, true); 
-  });
+    nudgeHistory.push({ date: new Date().toISOString(), recipients: recipients, sentBy: 'User' });
+    fsSet(curId, { nudgeHistory: nudgeHistory, lastNudgeSent: new Date().toISOString() }).then(function(){ toast('📧 Nudge email opened in your email client'); });
+  }).catch(function(e){ toast('Error: ' + e.message, true); });
 }
 
 // ── INITIALIZATION ─────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function(){
-  console.log('🚀 App starting...');
-  
   var params = new URLSearchParams(window.location.search);
   isEditMode = params.get('edit') === 'true';
   updateEditBadge();
   
-  var saved = localStorage.getItem('st_theme') || 'dark';
+  var saved = localStorage.getItem('st_theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
   document.getElementById('theme-toggle').textContent = saved === 'dark' ? '🌙' : '☀️';
   
   loadCustomSectors();
   
-  // Clear any hardcoded content in the grid
-  document.getElementById('gr').innerHTML = '';
-  
-  console.log('🔧 Initializing Firebase...');
-  console.log('📍 Project ID:', FIREBASE_CONFIG.projectId);
-  
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
-    console.log('✅ Firebase initialized');
-    
     db = firebase.firestore();
-    console.log('✅ Firestore connected');
-    
-    db.enablePersistence({synchronizeTabs:true}).catch(function(e){
-      console.warn('⚠️ Persistence unavailable:', e.code);
-    });
-    
+    db.enablePersistence({synchronizeTabs:true}).catch(function(e){ console.warn('Persistence unavailable:', e.code); });
     startListener();
   } catch(e) {
-    console.error('❌ Firebase init error:', e);
-    
     if(e.code === 'app/duplicate-app'){
-      console.log('♻️ Using existing Firebase instance');
       db = firebase.firestore();
       startListener();
     } else {
-      console.error('💥 Fatal error:', e.message);
       showBootError(e);
     }
   }
@@ -1103,30 +1413,19 @@ window.addEventListener('DOMContentLoaded', function(){
 function updateEditBadge(){
   var badge = document.getElementById('editBadge');
   var modeText = document.getElementById('editMode');
-  var btnIds = ['btnAdd'];
-  
   if(isEditMode){
     badge.classList.remove('view-only');
     modeText.textContent = '🔓 Edit Mode';
-    btnIds.forEach(function(id){
-      var btn = document.getElementById(id);
-      if(btn) btn.disabled = false;
-    });
+    ['btnAdd4','btnAdd5'].forEach(function(id){ var btn = document.getElementById(id); if(btn) btn.disabled = false; });
   } else {
     badge.classList.add('view-only');
     modeText.textContent = '🔒 View Only';
-    btnIds.forEach(function(id){
-      var btn = document.getElementById(id);
-      if(btn) btn.disabled = true;
-    });
+    ['btnAdd4','btnAdd5'].forEach(function(id){ var btn = document.getElementById(id); if(btn) btn.disabled = true; });
   }
 }
 
 function checkEditMode(){
-  if(!isEditMode){
-    toast('You are in view-only mode. Add ?edit=true to URL for edit access', true);
-    return false;
-  }
+  if(!isEditMode){ toast('You are in view-only mode. Add ?edit=true to URL for edit access', true); return false; }
   return true;
 }
 
@@ -1141,42 +1440,11 @@ function toggleTheme(){
 }
 
 // ── FILTERS ────────────────────────────────────────────
-
-function toggleAdvFilters(){
-  var el = document.getElementById('advFilters');
-  el.classList.toggle('on');
-}
-
-function applyAdvFilters(){
-  activeFilters.partner = document.getElementById('filterPartner').value;
-  activeFilters.sector = document.getElementById('filterSector').value;
-  activeFilters.fund = document.getElementById('filterFund').value;
-  renderDash();
-}
-
-function populateFilters(){
-  var partners = [];
-  var sectorsList = [];
-  var funds = [];
-  
-  companies.forEach(function(c){
-    if(c.team && partners.indexOf(c.team) === -1) partners.push(c.team);
-    if(c.sector && sectorsList.indexOf(c.sector) === -1) sectorsList.push(c.sector);
-    if(c.fund && funds.indexOf(c.fund) === -1) funds.push(c.fund);
-  });
-  
-  var partnerSelect = document.getElementById('filterPartner');
-  var sectorSelect = document.getElementById('filterSector');
-  var fundSelect = document.getElementById('filterFund');
-  
-  partnerSelect.innerHTML = '<option value="">All Partners</option>' + 
-    partners.map(function(p){ return '<option value="'+esc(p)+'">'+esc(p)+'</option>'; }).join('');
-  
-  sectorSelect.innerHTML = '<option value="">All Sectors</option>' + 
-    sectorsList.map(function(s){ return '<option value="'+esc(s)+'">'+esc(s)+'</option>'; }).join('');
-  
-  fundSelect.innerHTML = '<option value="">All Funds</option>' + 
-    funds.map(function(f){ return '<option value="'+esc(f)+'">'+esc(f)+'</option>'; }).join('');
+function setF(btn, f, fundKey){
+  curFilters[fundKey] = f;
+  document.querySelectorAll('[data-vf="'+fundKey+'"]').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  renderFundView(fundKey);
 }
 
 // ── CUSTOM SECTORS ─────────────────────────────────────
@@ -1184,9 +1452,7 @@ function loadCustomSectors(){
   try {
     var custom = JSON.parse(localStorage.getItem('fund_sectors') || '[]');
     sectors = ['Health Care', 'AI/SaaS', 'Finance', 'Consumer', 'Logistics', 'Other'];
-    custom.forEach(function(s){
-      if(sectors.indexOf(s) === -1) sectors.push(s);
-    });
+    custom.forEach(function(s){ if(sectors.indexOf(s) === -1) sectors.push(s); });
   } catch(e){}
 }
 
@@ -1201,7 +1467,6 @@ function addCustomSector(){
   var value = input.value.trim();
   if(!value){ toast('Enter sector name'); return; }
   if(sectors.indexOf(value) !== -1){ toast('Sector already exists'); return; }
-  
   sectors.push(value);
   saveCustomSectors();
   renderSectorChips();
@@ -1211,69 +1476,44 @@ function addCustomSector(){
 
 // ── FIREBASE ───────────────────────────────────────────
 function startListener(){
-  console.log('👂 Starting Firestore listener...');
   setSyncStatus('loading', 'Connecting...');
-  
   unsubscribe = db.collection('companies').orderBy('createdAt','asc').onSnapshot(
     function(snap){
-      console.log('📦 Received', snap.size, 'companies from Firestore');
       companies = [];
-      snap.forEach(function(doc){
-        var d = doc.data();
-        d.id = doc.id;
-        companies.push(d);
-      });
-      
-      console.log('✅ Loaded', companies.length, 'companies');
+      snap.forEach(function(doc){ var d = doc.data(); d.id = doc.id; companies.push(d); });
       showApp();
-      setSyncStatus('live', 'Live • ' + companies.length + (companies.length===1?' company':' companies'));
-      renderDash();
+      setSyncStatus('live', 'Live · ' + companies.length + ' companies');
+      renderAll();
       refreshN();
-      
-      // Auto-backup to localStorage on every data change
       try {
-        var quickBackup = {
-          timestamp: new Date().toISOString(),
-          companies: companies,
-          sectors: sectors
-        };
-        localStorage.setItem('esap_auto_backup', JSON.stringify(quickBackup));
-        console.log('💾 Auto-backup saved');
-      } catch(e) {
-        console.error('❌ Auto-backup failed:', e);
-      }
+        localStorage.setItem('esap_auto_backup', JSON.stringify({ timestamp: new Date().toISOString(), companies: companies, sectors: sectors }));
+      } catch(e) {}
     },
     function(err){
-      console.error('❌ Firestore listener error:', err);
-      console.error('Error code:', err.code);
-      console.error('Error message:', err.message);
-      
       showApp();
       setSyncStatus('err','Connection failed');
       toast('Sync error: ' + err.message, true);
-      
-      // Try to load from localStorage backup
       try {
-        var autoBackup = localStorage.getItem('esap_auto_backup');
-        var fullBackup = localStorage.getItem('esap_full_backup');
-        var backupToUse = fullBackup || autoBackup;
-        
+        var backupToUse = localStorage.getItem('esap_full_backup') || localStorage.getItem('esap_auto_backup');
         if (backupToUse && companies.length === 0) {
           var backup = JSON.parse(backupToUse);
           companies = backup.companies || [];
-          if (companies.length > 0) {
-            renderDash();
-            var timestamp = backup.timestamp ? new Date(backup.timestamp).toLocaleString() : 'Unknown';
-            toast('📦 Loaded from backup (' + timestamp + ')');
-            setSyncStatus('loading', 'Backup mode • ' + companies.length + ' companies');
-          }
+          if (companies.length > 0) { renderAll(); toast('📦 Loaded from backup'); setSyncStatus('loading', 'Backup mode · ' + companies.length + ' companies'); }
         }
-      } catch(e) {
-        console.error('Failed to load backup:', e);
-      }
+      } catch(e) {}
     }
   );
 }
+
+function renderAll() {
+  updateSidebarCounts();
+  renderFundView('fund4');
+  renderFundView('fund5');
+  if(currentView === 'analytics') { populateAnalyticsFilters(); renderAnalytics(); }
+}
+
+// Keep old renderDash for compatibility
+function renderDash() { renderAll(); }
 
 function setSyncStatus(state, label){
   var dot = document.getElementById('sync-dot');
@@ -1299,75 +1539,7 @@ function showBootError(e){
   setSyncStatus('err','Connection failed');
 }
 
-// ── DASHBOARD ──────────────────────────────────────────
-function setF(btn,f){
-  curF=f;
-  document.querySelectorAll('[data-f]').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');
-  renderDash();
-}
-
-function renderDash(){
-  console.log('🎨 Rendering dashboard with', companies.length, 'companies');
-  var gr=document.getElementById('gr'),em=document.getElementById('emp');
-  var q=document.getElementById('si').value.toLowerCase();
-
-  var cos=companies.filter(function(c){
-    // PARTNER/SECTOR/FUND FILTERS (NO FOLDERS)
-    if(activeFilters.partner && c.team !== activeFilters.partner) return false;
-    if(activeFilters.sector && c.sector !== activeFilters.sector) return false;
-    if(activeFilters.fund && c.fund !== activeFilters.fund) return false;
-    
-    if(q&&!c.name.toLowerCase().includes(q)) return false;
-    var p=pct(c);
-    if(curF==='done') return p===100;
-    if(curF==='prog') return p>0&&p<100;
-    if(curF==='new')  return p===0;
-    return true;
-  });
-
-  if(!cos.length){
-    gr.innerHTML='';
-    em.style.display='block';
-  } else {
-    em.style.display='none';
-    gr.innerHTML=cos.map(function(c){
-      var p=pct(c),done=(c.items||[]).filter(function(i){return i.status==='done';}).length,tot=(c.items||[]).length;
-      var fc=p>=70?'':p>=30?'w':'l';
-      
-      // SHOW PARTNER NAME (NOT CODE)
-      var partnerSectorText = '';
-      if(c.team) partnerSectorText += esc(c.team);
-      if(c.sector) partnerSectorText += (c.team ? ' • ' : '') + esc(c.sector);
-      
-      return '<div class="card" onclick="showDetail(\''+c.id+'\')">'
-        +'<div class="card-hd"><div>'
-        +'<div class="cname">'+esc(c.name)+'</div>'
-        +'<div class="cid">'+partnerSectorText+'</div>'
-        +(c.startDate?'<div class="cstart">📅 Start: '+fmt(c.startDate)+'</div>':'<div class="cstart" style="color:var(--warn)">⚠ No start date set</div>')
-        +'</div>'+chipHtml(p)+'</div>'
-        +'<div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>'+p+'%</strong></div>'
-        +'<div class="prog-bg"><div class="prog-fill '+fc+'" style="width:'+p+'%"></div></div></div>'
-        +'<div class="cmeta"><div class="mi"><strong>'+tot+'</strong>Total</div><div class="mi"><strong>'+done+'</strong>Done</div><div class="mi"><strong>'+(tot-done)+'</strong>Pending</div></div>'
-        +(isEditMode?'<div class="cact">'
-        +'<button class="del-card-btn" onclick="event.stopPropagation();askDel(\''+c.id+'\')">🗑 Delete</button>'
-        +'</div>':'')
-        +'</div>';
-    }).join('');
-  }
-
-  var all=companies.flatMap(function(c){return c.items||[];});
-  var dn=all.filter(function(i){return i.status==='done';}).length;
-  var avg=companies.length?Math.round(companies.map(pct).reduce(function(a,b){return a+b;},0)/companies.length):0;
-  document.getElementById('s0').textContent=companies.length;
-  document.getElementById('s1').textContent=all.length;
-  document.getElementById('s2').textContent=dn;
-  document.getElementById('s3').textContent=avg+'%';
-  
-  // Populate filter dropdowns
-  populateFilters();
-}
-
+// ── HELPERS ────────────────────────────────────────────
 function pct(c){
   if(!c.items||!c.items.length) return 0;
   return Math.round(c.items.filter(function(i){return i.status==='done';}).length / c.items.length * 100);
@@ -1375,31 +1547,27 @@ function pct(c){
 
 function chipHtml(p){
   if(p===100) return '<span class="chip chip-done">Complete</span>';
-  if(p>0)     return '<span class="chip chip-prog">In Progress</span>';
+  if(p>0) return '<span class="chip chip-prog">In Progress</span>';
   return '<span class="chip chip-new">Not Started</span>';
 }
 
 // ── ADD/EDIT COMPANY ───────────────────────────────────
-function openAddModal(){
+function openAddModal(defaultFund){
   if(!checkEditMode()) return;
   editingId = null;
+  addModalDefaultFund = defaultFund || '';
   document.getElementById('modalAddTitle').textContent = 'Add Company';
   document.getElementById('btnSave').textContent = 'Save Company';
-  
   document.getElementById('cn').value = '';
   document.getElementById('csd').value = '';
   document.getElementById('spocName').value = '';
   document.getElementById('spocEmail').value = '';
-  document.getElementById('fundSelect').value = '';
-  
-  pendingESAPFile = null;
-  pendingESAPFileName = '';
-  parsedActions = [];
+  document.getElementById('fundSelect').value = addModalDefaultFund;
+  pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = [];
   document.getElementById('esapFile').value = '';
   document.getElementById('esapFileName').textContent = 'No file selected';
   document.getElementById('currentESAP').style.display = 'none';
   document.getElementById('parseStatus').style.display = 'none';
-  
   renderSectorChips();
   renderTeamChips();
   openM('mAdd');
@@ -1407,43 +1575,33 @@ function openAddModal(){
 
 function renderSectorChips(){
   var selected = editingId ? (companies.find(function(c){return c.id===editingId}) || {}).sector : '';
-  var html = sectors.map(function(s){
-    var cls = s === selected ? 'chip-option selected' : 'chip-option';
-    return '<div class="'+cls+'" onclick="selectSector(\''+esc(s)+'\')">'+esc(s)+'</div>';
+  document.getElementById('sectorChips').innerHTML = sectors.map(function(s){
+    return '<div class="chip-option'+(s===selected?' selected':'')+'" onclick="selectSector(\''+esc(s)+'\')">'+esc(s)+'</div>';
   }).join('');
-  document.getElementById('sectorChips').innerHTML = html;
 }
 
 function selectSector(sector){
-  document.querySelectorAll('#sectorChips .chip-option').forEach(function(el){
-    el.classList.remove('selected');
-  });
+  document.querySelectorAll('#sectorChips .chip-option').forEach(function(el){ el.classList.remove('selected'); });
   event.target.classList.add('selected');
 }
 
 function renderTeamChips(){
   var selected = editingId ? (companies.find(function(c){return c.id===editingId}) || {}).team : '';
-  var html = teamMembers.map(function(t){
-    var cls = t === selected ? 'chip-option selected' : 'chip-option';
-    return '<div class="'+cls+'" onclick="selectTeam(\''+esc(t)+'\')">'+esc(t)+'</div>';
+  document.getElementById('teamChips').innerHTML = teamMembers.map(function(t){
+    return '<div class="chip-option'+(t===selected?' selected':'')+'" onclick="selectTeam(\''+esc(t)+'\')">'+esc(t)+'</div>';
   }).join('');
-  document.getElementById('teamChips').innerHTML = html;
 }
 
 function selectTeam(team){
-  document.querySelectorAll('#teamChips .chip-option').forEach(function(el){
-    el.classList.remove('selected');
-  });
+  document.querySelectorAll('#teamChips .chip-option').forEach(function(el){ el.classList.remove('selected'); });
   event.target.classList.add('selected');
 }
 
 function saveCompany(){
   var name = document.getElementById('cn').value.trim();
   if(!name){ toast('Enter company name'); return; }
-  
   var sectorEl = document.querySelector('#sectorChips .chip-option.selected');
   var teamEl = document.querySelector('#teamChips .chip-option.selected');
-  
   var data = {
     name: name,
     sector: sectorEl ? sectorEl.textContent.trim() : '',
@@ -1454,57 +1612,24 @@ function saveCompany(){
     spocEmail: document.getElementById('spocEmail').value.trim(),
     createdAt: new Date().toISOString()
   };
-  
-  if(pendingESAPFile){
-    data.esapFile = pendingESAPFile;
-    data.esapFileName = pendingESAPFileName;
-  }
-  
+  if(pendingESAPFile){ data.esapFile = pendingESAPFile; data.esapFileName = pendingESAPFileName; }
   if(parsedActions && parsedActions.length > 0){
-    data.items = editingId ? 
-      (companies.find(function(c){return c.id===editingId}) || {}).items || [] : 
-      [];
+    data.items = editingId ? (companies.find(function(c){return c.id===editingId}) || {}).items || [] : [];
     data.items = data.items.concat(parsedActions);
-  } else if(!editingId){
-    data.items = [];
-  }
-  
+  } else if(!editingId){ data.items = []; }
   if(editingId){
-    fsSet(editingId, data)
-      .then(function(){ 
-        closeM('mAdd'); 
-        toast('Company updated' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : ''));
-        pendingESAPFile = null;
-        pendingESAPFileName = '';
-        parsedActions = [];
-      })
-      .catch(function(e){ toast('Error: ' + e.message, true); });
+    fsSet(editingId, data).then(function(){ closeM('mAdd'); toast('Company updated' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : '')); pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = []; }).catch(function(e){ toast('Error: ' + e.message, true); });
   } else {
-    fsAdd(data)
-      .then(function(){ 
-        closeM('mAdd'); 
-        toast('Company added' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : ''));
-        pendingESAPFile = null;
-        pendingESAPFileName = '';
-        parsedActions = [];
-      })
-      .catch(function(e){ toast('Error: ' + e.message, true); });
+    fsAdd(data).then(function(){ closeM('mAdd'); toast('Company added' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : '')); pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = []; }).catch(function(e){ toast('Error: ' + e.message, true); });
   }
 }
 
 // ── COMPANY DETAIL ─────────────────────────────────────
 function showDetail(id){
-  console.log('👁️ Opening company detail:', id);
   curId = id;
   var c = companies.find(function(x){ return x.id === id; });
-  if(!c) {
-    console.error('❌ Company not found:', id);
-    return;
-  }
-  
-  console.log('✅ Found company:', c.name);
+  if(!c) return;
   document.getElementById('detailTitle').textContent = c.name;
-  
   var html = '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px">';
   html += '<div><strong>Partner:</strong> '+(c.team || 'Not assigned')+'</div>';
   html += '<div><strong>Sector:</strong> '+(c.sector || 'N/A')+'</div>';
@@ -1513,263 +1638,144 @@ function showDetail(id){
   html += '<div><strong>SPOC:</strong> '+(c.spocName || 'N/A')+'</div>';
   html += '<div><strong>Email:</strong> '+(c.spocEmail || 'N/A')+'</div>';
   html += '</div>';
-  
   if(c.esapFile){
-    html += '<div style="margin-bottom:20px;padding:12px;background:var(--accd);border:1px solid var(--acc);border-radius:14px">';
-    html += '<div style="display:flex;align-items:center;gap:12px">';
-    html += '<span style="font-size:2rem">📄</span>';
-    html += '<div style="flex:1">';
-    html += '<div style="font-weight:700;margin-bottom:4px">ESAP Document</div>';
-    html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">'+esc(c.esapFileName || 'Document.pdf')+'</div>';
-    html += '</div>';
-    html += '<a href="'+c.esapFile+'" download="'+esc(c.esapFileName || 'ESAP.pdf')+'" class="btn primary" style="text-decoration:none">📥 Download</a>';
-    html += '</div>';
-    html += '</div>';
+    html += '<div style="margin-bottom:20px;padding:12px;background:var(--accd);border:1px solid var(--acc);border-radius:10px">';
+    html += '<div style="display:flex;align-items:center;gap:12px"><span style="font-size:2rem">📄</span><div style="flex:1"><div style="font-weight:700;margin-bottom:4px">ESAP Document</div><div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">'+esc(c.esapFileName || 'Document.pdf')+'</div></div>';
+    html += '<a href="'+c.esapFile+'" download="'+esc(c.esapFileName || 'ESAP.pdf')+'" class="btn primary" style="text-decoration:none">📥 Download</a></div></div>';
   }
-  
   var progress = pct(c);
-  html += '<div style="margin-bottom:20px">';
-  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px">';
-  html += '<strong>Overall Progress</strong>';
-  html += '<span style="font-family:var(--font-mono);font-weight:700;color:var(--acc)">'+progress+'%</span>';
-  html += '</div>';
-  html += '<div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div>';
-  html += '</div>';
+  html += '<div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>Overall Progress</strong><span style="font-family:var(--font-mono);font-weight:700;color:var(--acc)">'+progress+'%</span></div><div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div></div>';
   
   // NUDGE SECTION - ONLY IN EDIT MODE
   if(isEditMode) {
-    html += '<div style="margin-top:24px;padding:24px;background:var(--sur2);border:2px solid var(--bor);border-radius:20px">';
-    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">';
-    html += '<span style="font-size:1.2rem">📧</span>';
-    html += '<h3 style="font-size:1.1rem;font-weight:700">Point of Contact & Nudge Settings</h3>';
-    html += '</div>';
-    
+    html += '<div style="margin-top:24px;padding:24px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px">';
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px"><span style="font-size:1.2rem">📧</span><h3 style="font-size:1rem;font-weight:700">Point of Contact & Nudge Settings</h3></div>';
     html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">';
-    html += '<div>';
-    html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC NAME</label>';
-    html += '<input type="text" id="nudgeSpocName" value="'+(c.spocName||'')+'" placeholder="Enter contact name" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
-    html += '</div>';
-    html += '<div>';
-    html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC EMAIL</label>';
-    html += '<input type="email" id="nudgeSpocEmail" value="'+(c.spocEmail||'')+'" placeholder="contact@company.com" style="width:100%;padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)">';
-    html += '</div>';
-    html += '</div>';
-    
-    html += '<div style="margin-bottom:16px">';
-    html += '<label style="display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">ADDITIONAL EMAIL RECIPIENTS</label>';
-    html += '<div id="additionalEmails" style="padding:12px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;min-height:48px;margin-bottom:8px">';
-    
+    html += '<div><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC NAME</label>';
+    html += '<input type="text" id="nudgeSpocName" value="'+(c.spocName||'')+'" placeholder="Enter contact name" style="width:100%;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)"></div>';
+    html += '<div><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC EMAIL</label>';
+    html += '<input type="email" id="nudgeSpocEmail" value="'+(c.spocEmail||'')+'" placeholder="contact@company.com" style="width:100%;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)"></div></div>';
+    html += '<div style="margin-bottom:16px"><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">ADDITIONAL EMAIL RECIPIENTS</label>';
+    html += '<div id="additionalEmails" style="padding:12px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;min-height:48px;margin-bottom:8px">';
     var additionalEmails = c.additionalNudgeEmails || [];
-    if(additionalEmails.length === 0){
-      html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtf)">No additional emails</div>';
-    } else {
-      additionalEmails.forEach(function(email, idx){
-        html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
-        html += '<span style="font-family:var(--font-mono);font-size:.75rem;flex:1">'+esc(email)+'</span>';
-        html += '<button onclick="removeNudgeEmail('+idx+')" style="background:var(--redd);border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:8px;font-size:.7rem;cursor:pointer">Remove</button>';
-        html += '</div>';
-      });
-    }
-    
+    if(additionalEmails.length === 0) html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtf)">No additional emails</div>';
+    else additionalEmails.forEach(function(email, idx){
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-family:var(--font-mono);font-size:.75rem;flex:1">'+esc(email)+'</span>';
+      html += '<button onclick="removeNudgeEmail('+idx+')" style="background:var(--redd);border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:6px;font-size:.7rem;cursor:pointer">Remove</button></div>';
+    });
     html += '</div>';
-    
-    html += '<div style="display:flex;gap:8px">';
-    html += '<input type="email" id="newNudgeEmail" placeholder="Add email address..." style="flex:1;padding:10px;background:var(--sur);border:2px solid var(--bor);border-radius:12px;font-family:var(--font-mono);font-size:.75rem">';
-    html += '<button onclick="addNudgeEmail()" style="background:var(--accd);border:2px solid var(--acc);color:var(--acc);padding:10px 16px;border-radius:12px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;cursor:pointer;text-transform:uppercase">+ Add</button>';
-    html += '</div>';
-    html += '</div>';
-    
-    html += '<button onclick="sendNudge()" style="width:100%;background:#ff8c00;border:2px solid #ff8c00;color:#fff;padding:14px;border-radius:14px;font-family:var(--font-mono);font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:all .2s">';
-    html += '<span style="font-size:1.2rem">📧</span>';
-    html += '<span>Send Nudge</span>';
-    html += '</button>';
-    html += '<div style="font-family:var(--font-mono);font-size:.7rem;color:var(--txtm);text-align:center;margin-top:8px">Request implementation status update</div>';
-    
-    html += '</div>';
+    html += '<div style="display:flex;gap:8px"><input type="email" id="newNudgeEmail" placeholder="Add email address..." style="flex:1;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.75rem">';
+    html += '<button onclick="addNudgeEmail()" style="background:var(--accd);border:1px solid var(--acc);color:var(--acc);padding:10px 16px;border-radius:8px;font-family:var(--font-mono);font-size:.68rem;font-weight:600;cursor:pointer;text-transform:uppercase">+ Add</button></div></div>';
+    html += '<button onclick="sendNudge()" style="width:100%;background:var(--acc);border:1px solid var(--acc);color:#fff;padding:12px;border-radius:8px;font-family:var(--font-mono);font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:all .2s">';
+    html += '<span style="font-size:1.2rem">📧</span><span>Send Nudge</span></button>';
+    html += '<div style="font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);text-align:center;margin-top:8px">Request implementation status update</div></div>';
   }
   
   document.getElementById('detailContent').innerHTML = html;
   renderItems();
-  
   document.getElementById('btnAddItem').disabled = !isEditMode;
   document.getElementById('btnEdit').disabled = !isEditMode;
   document.getElementById('btnDelete').disabled = !isEditMode;
-  
   openM('mDetail');
 }
 
 function renderItems(){
   var c = companies.find(function(x){ return x.id === curId; });
   if(!c) return;
-  
-  var items = c.items || [];
-  
-  items = items.slice().sort(function(a, b){
-    var aDate = resolveDeadline(a, c);
-    var bDate = resolveDeadline(b, c);
-    if(!aDate && !bDate) return 0;
-    if(!aDate) return 1;
-    if(!bDate) return -1;
+  var items = (c.items || []).slice().sort(function(a, b){
+    var aDate = resolveDeadline(a, c), bDate = resolveDeadline(b, c);
+    if(!aDate && !bDate) return 0; if(!aDate) return 1; if(!bDate) return -1;
     return new Date(aDate) - new Date(bDate);
   });
-  
   if(items.length === 0){
     document.getElementById('itemsList').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--txtf);font-family:var(--font-mono);font-size:.85rem">No action items yet</div>';
     return;
   }
-  
-  var html = items.map(function(item){
+  document.getElementById('itemsList').innerHTML = items.map(function(item){
     var idx = c.items.indexOf(item);
     var statusCls = item.status === 'done' ? 'done' : 'progress';
     var deadline = resolveDeadline(item, c);
     var daysLeft = deadline ? daysTo(deadline) : null;
     var deadlineHtml = '';
-    
     if(deadline){
       var deadlineCls = '';
-      if(daysLeft !== null && daysLeft < 0 && item.status !== 'done'){
-        deadlineCls = 'overdue';
-        deadlineHtml = '⚠️ Overdue by ' + Math.abs(daysLeft) + ' days ('+fmt(deadline)+')';
-      } else if(daysLeft !== null && daysLeft <= 7 && daysLeft >= 0 && item.status !== 'done'){
-        deadlineCls = 'warning';
-        deadlineHtml = '⏰ Due in ' + daysLeft + ' days ('+fmt(deadline)+')';
-      } else {
-        deadlineHtml = '📅 Due: ' + fmt(deadline);
-      }
+      if(daysLeft !== null && daysLeft < 0 && item.status !== 'done'){ deadlineCls = 'overdue'; deadlineHtml = '⚠️ Overdue by ' + Math.abs(daysLeft) + ' days ('+fmt(deadline)+')'; }
+      else if(daysLeft !== null && daysLeft <= 7 && daysLeft >= 0 && item.status !== 'done'){ deadlineCls = 'warning'; deadlineHtml = '⏰ Due in ' + daysLeft + ' days ('+fmt(deadline)+')'; }
+      else { deadlineHtml = '📅 Due: ' + fmt(deadline); }
       deadlineHtml = '<div class="item-deadline '+deadlineCls+'">'+deadlineHtml+'</div>';
     }
-    
     var row = '<div class="item-row">';
-    if(isEditMode){
-      row += '<div class="item-chk'+(item.status==='done'?' checked':'')+'" onclick="toggleItem('+idx+')"></div>';
-    }
-    row += '<div class="item-content">';
-    row += '<div class="item-title'+(item.status==='done'?' done':'')+'">'+esc(item.action || item.title || 'Untitled')+'</div>';
-    row += deadlineHtml;
-    row += '</div>';
+    if(isEditMode) row += '<div class="item-chk'+(item.status==='done'?' checked':'')+'" onclick="toggleItem('+idx+')"></div>';
+    row += '<div class="item-content"><div class="item-title'+(item.status==='done'?' done':'')+'">'+esc(item.action || item.title || 'Untitled')+'</div>'+deadlineHtml+'</div>';
     row += '<div class="item-status '+statusCls+'">'+statusCls+'</div>';
-    if(isEditMode){
-      row += '<div class="item-del" onclick="deleteItem('+idx+')">🗑</div>';
-    }
+    if(isEditMode) row += '<div class="item-del" onclick="deleteItem('+idx+')">🗑</div>';
     row += '</div>';
     return row;
   }).join('');
-  
-  document.getElementById('itemsList').innerHTML = html;
 }
 
 function addItem(){
   if(!checkEditMode()) return;
   var title = prompt('Enter action item title:');
   if(!title) return;
-  
   var c = companies.find(function(x){ return x.id === curId; });
   if(!c) return;
-  
   var items = c.items || [];
-  items.push({ 
-    id: 'i_'+Date.now(),
-    action: title,
-    status: 'progress',
-    createdAt: new Date().toISOString() 
-  });
-  
-  fsSet(curId, { items: items })
-    .then(function(){ 
-      renderItems(); 
-      toast('Item added'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
+  items.push({ id: 'i_'+Date.now(), action: title, status: 'progress', createdAt: new Date().toISOString() });
+  fsSet(curId, { items: items }).then(function(){ renderItems(); toast('Item added'); }).catch(function(e){ toast('Error: ' + e.message, true); });
 }
 
 function toggleItem(idx){
   if(!checkEditMode()) return;
   var c = companies.find(function(x){ return x.id === curId; });
   if(!c) return;
-  
   var items = c.items || [];
   items[idx].status = items[idx].status === 'done' ? 'progress' : 'done';
-  
-  fsSet(curId, { items: items })
-    .then(function(){ renderItems(); })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
+  fsSet(curId, { items: items }).then(function(){ renderItems(); }).catch(function(e){ toast('Error: ' + e.message, true); });
 }
 
 function deleteItem(idx){
   if(!checkEditMode()) return;
   if(!confirm('Delete this item?')) return;
-  
   var c = companies.find(function(x){ return x.id === curId; });
   if(!c) return;
-  
   var items = c.items || [];
   items.splice(idx, 1);
-  
-  fsSet(curId, { items: items })
-    .then(function(){ 
-      renderItems(); 
-      toast('Item deleted'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
+  fsSet(curId, { items: items }).then(function(){ renderItems(); toast('Item deleted'); }).catch(function(e){ toast('Error: ' + e.message, true); });
 }
 
 function editCompany(){
   if(!checkEditMode()) return;
   var c = companies.find(function(x){ return x.id === curId; });
   if(!c) return;
-  
   editingId = curId;
   document.getElementById('modalAddTitle').textContent = 'Edit Company';
   document.getElementById('btnSave').textContent = 'Update Company';
-  
   document.getElementById('cn').value = c.name || '';
   document.getElementById('csd').value = c.startDate || '';
   document.getElementById('spocName').value = c.spocName || '';
   document.getElementById('spocEmail').value = c.spocEmail || '';
   document.getElementById('fundSelect').value = c.fund || '';
-  
-  pendingESAPFile = null;
-  pendingESAPFileName = '';
-  parsedActions = [];
+  pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = [];
   document.getElementById('esapFile').value = '';
   document.getElementById('esapFileName').textContent = 'No file selected';
   document.getElementById('parseStatus').style.display = 'none';
-  
-  if(c.esapFile){
-    document.getElementById('currentESAP').style.display = 'block';
-    document.getElementById('currentESAPName').textContent = c.esapFileName || 'Document';
-    document.getElementById('downloadESAP').href = c.esapFile;
-    document.getElementById('downloadESAP').download = c.esapFileName || 'ESAP.pdf';
-  } else {
-    document.getElementById('currentESAP').style.display = 'none';
-  }
-  
-  renderSectorChips();
-  renderTeamChips();
-  
-  closeM('mDetail');
-  openM('mAdd');
+  if(c.esapFile){ document.getElementById('currentESAP').style.display = 'block'; document.getElementById('currentESAPName').textContent = c.esapFileName || 'Document'; document.getElementById('downloadESAP').href = c.esapFile; document.getElementById('downloadESAP').download = c.esapFileName || 'ESAP.pdf'; }
+  else { document.getElementById('currentESAP').style.display = 'none'; }
+  renderSectorChips(); renderTeamChips();
+  closeM('mDetail'); openM('mAdd');
 }
 
-function confirmDelete(){
-  if(!checkEditMode()) return;
-  askDel(curId);
-}
+function confirmDelete(){ if(!checkEditMode()) return; askDel(curId); }
 
 function askDel(id){
   if(!confirm('Delete this company? This cannot be undone.')) return;
-  fsDel(id)
-    .then(function(){ 
-      closeM('mDetail'); 
-      toast('Company deleted'); 
-    })
-    .catch(function(e){ toast('Error: ' + e.message, true); });
+  fsDel(id).then(function(){ closeM('mDetail'); toast('Company deleted'); }).catch(function(e){ toast('Error: ' + e.message, true); });
 }
 
 // ── NOTIFICATIONS ──────────────────────────────────────
 function refreshN(){
-  var rm={};
-  notifications.forEach(function(n){rm[n.key]=n.read;});
+  var rm={}; notifications.forEach(function(n){rm[n.key]=n.read;});
   var f=[];
   companies.forEach(function(co){
     (co.items||[]).forEach(function(item){
@@ -1778,23 +1784,18 @@ function refreshN(){
       if(d===null) return;
       var k=co.id+':'+item.id;
       if(d<=15&&d>=0) f.push({id:uid(),key:k,co:co.name,act:item.action||item.title||'Untitled',d:d,ov:false,read:rm[k]||false});
-      else if(d<0)    f.push({id:uid(),key:k+':ov',co:co.name,act:item.action||item.title||'Untitled',d:d,ov:true,read:rm[k+':ov']||false});
+      else if(d<0) f.push({id:uid(),key:k+':ov',co:co.name,act:item.action||item.title||'Untitled',d:d,ov:true,read:rm[k+':ov']||false});
     });
   });
-  notifications=f;
-  renderN();
+  notifications=f; renderN();
 }
 
 function renderN(){
   var u=notifications.filter(function(n){return !n.read;});
   var b=document.getElementById('bb');
-  b.textContent=u.length;
-  b.classList.toggle('on',u.length>0);
+  b.textContent=u.length; b.classList.toggle('on',u.length>0);
   var l=document.getElementById('nl');
-  if(!notifications.length){
-    l.innerHTML='<div class="nempty">No pending reminders</div>';
-    return;
-  }
+  if(!notifications.length){ l.innerHTML='<div class="nempty">No pending reminders</div>'; return; }
   l.innerHTML=notifications.map(function(n){
     return '<div class="notif-item'+(n.read?' read':'')+'" onclick="readN(\''+n.id+'\')">'
       +'<div class="ndot'+(n.ov?' ov':'')+'"></div>'
@@ -1803,214 +1804,92 @@ function renderN(){
   }).join('');
 }
 
-function readN(id){
-  var n=notifications.find(function(x){return x.id===id;});
-  if(n){n.read=true;renderN();}
-}
-
-function clearNotifs(){
-  notifications.forEach(function(n){n.read=true;});
-  renderN();
-}
-
-function toggleNotif(){
-  document.getElementById('nd').classList.toggle('open');
-}
+function readN(id){ var n=notifications.find(function(x){return x.id===id;}); if(n){n.read=true;renderN();} }
+function clearNotifs(){ notifications.forEach(function(n){n.read=true;}); renderN(); }
+function toggleNotif(){ document.getElementById('nd').classList.toggle('open'); }
 
 // ── EXPORT ─────────────────────────────────────────────
 function exportData(){
   var data = companies.map(function(c){
-    return {
-      Name: c.name,
-      Partner: c.team,
-      Sector: c.sector,
-      Fund: c.fund,
-      'Start Date': c.startDate,
-      'SPOC Name': c.spocName,
-      'SPOC Email': c.spocEmail,
-      Progress: pct(c) + '%',
-      'Total Items': (c.items || []).length,
-      'Completed': (c.items || []).filter(function(i){ return i.status === 'done'; }).length
-    };
+    return { Name: c.name, Partner: c.team, Sector: c.sector, Fund: c.fund, 'Start Date': c.startDate, 'SPOC Name': c.spocName, 'SPOC Email': c.spocEmail, Progress: pct(c) + '%', 'Total Items': (c.items || []).length, 'Completed': (c.items || []).filter(function(i){ return i.status === 'done'; }).length };
   });
-  
   var ws = XLSX.utils.json_to_sheet(data);
   var wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Companies');
-  
-  var filename = 'fund-esap-export-' + new Date().toISOString().split('T')[0] + '.xlsx';
-  XLSX.writeFile(wb, filename);
-  toast('Exported to ' + filename);
+  XLSX.writeFile(wb, 'fund-esap-export-' + new Date().toISOString().split('T')[0] + '.xlsx');
+  toast('Exported successfully');
 }
 
 function backupData(){
-  // Create comprehensive backup with fund allocation
   var fundAllocation = {};
-  var metadata = {
-    totalCompanies: companies.length,
-    fundsUsed: [],
-    partners: [],
-    sectors: []
-  };
-  
   companies.forEach(function(c){
     var fund = c.fund || 'Unassigned';
     if (!fundAllocation[fund]) fundAllocation[fund] = [];
-    fundAllocation[fund].push({
-      id: c.id,
-      name: c.name,
-      partner: c.team || c.partner,
-      sector: c.sector,
-      startDate: c.startDate,
-      itemCount: (c.items || []).length,
-      completed: (c.items || []).filter(function(i){ return i.status === 'Done'; }).length
-    });
+    fundAllocation[fund].push({ id: c.id, name: c.name, partner: c.team || c.partner, sector: c.sector, startDate: c.startDate, itemCount: (c.items || []).length, completed: (c.items || []).filter(function(i){ return i.status === 'done'; }).length });
   });
-  
-  // Collect metadata
-  metadata.fundsUsed = Object.keys(fundAllocation).filter(function(f){ return f !== 'Unassigned'; });
-  metadata.partners = [...new Set(companies.map(function(c){ return c.team || c.partner; }).filter(Boolean))];
-  metadata.sectors = [...new Set(companies.map(function(c){ return c.sector; }).filter(Boolean))];
-  
-  var backup = {
-    timestamp: new Date().toISOString(),
-    version: '3.0',
-    companies: companies,
-    fundAllocation: fundAllocation,
-    sectors: sectors,
-    metadata: metadata
-  };
-  
-  // Save to localStorage for auto-recovery
-  try {
-    localStorage.setItem('esap_full_backup', JSON.stringify(backup));
-    localStorage.setItem('esap_backup_timestamp', backup.timestamp);
-  } catch(e) {
-    console.error('LocalStorage backup failed:', e);
-  }
-  
-  // Download JSON file
+  var backup = { timestamp: new Date().toISOString(), version: '3.0', companies: companies, fundAllocation: fundAllocation, sectors: sectors };
+  try { localStorage.setItem('esap_full_backup', JSON.stringify(backup)); } catch(e) {}
   var json = JSON.stringify(backup, null, 2);
   var blob = new Blob([json], {type: 'application/json'});
   var url = URL.createObjectURL(blob);
-  
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'ESAP_Backup_' + new Date().toISOString().split('T')[0] + '_' + Date.now() + '.json';
-  a.click();
+  var a = document.createElement('a'); a.href = url; a.download = 'ESAP_Backup_' + new Date().toISOString().split('T')[0] + '.json'; a.click();
   URL.revokeObjectURL(url);
-  
-  // Show summary
-  var summary = '✅ Backup created!\n\n';
-  summary += 'Total Companies: ' + companies.length + '\n';
-  summary += 'Funds:\n';
-  Object.keys(fundAllocation).sort().forEach(function(fund){
-    summary += '  • ' + fund + ': ' + fundAllocation[fund].length + ' companies\n';
-  });
-  
-  toast(summary.split('\n')[0]); // Just show first line in toast
-  console.log(summary); // Full summary in console
-  console.log('Full backup:', backup);
+  toast('✅ Backup created');
 }
 
-// Auto-backup every 5 minutes
 setInterval(function(){
   if (companies.length > 0) {
-    try {
-      var backup = {
-        timestamp: new Date().toISOString(),
-        companies: companies,
-        sectors: sectors
-      };
-      localStorage.setItem('esap_auto_backup', JSON.stringify(backup));
-      console.log('✅ Auto-backup saved:', new Date().toLocaleTimeString());
-    } catch(e) {
-      console.error('Auto-backup failed:', e);
-    }
+    try { localStorage.setItem('esap_auto_backup', JSON.stringify({ timestamp: new Date().toISOString(), companies: companies, sectors: sectors })); } catch(e) {}
   }
 }, 5 * 60 * 1000);
 
 // ── MODALS ─────────────────────────────────────────────
-function openM(id){
-  document.getElementById(id).classList.add('on');
-}
-
-function closeM(id){
-  document.getElementById(id).classList.remove('on');
-}
+function openM(id){ document.getElementById(id).classList.add('on'); }
+function closeM(id){ document.getElementById(id).classList.remove('on'); }
 
 // ── UTILITIES ──────────────────────────────────────────
 function uid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36); }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function trunc(s,n){ return s&&s.length>n ? s.slice(0,n)+'...' : s; }
 
-function addDays(iso, n){
-  var d=new Date(iso);
-  d.setDate(d.getDate()+n);
-  return d.toISOString().slice(0,10);
-}
+function addDays(iso, n){ var d=new Date(iso); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 
 function resolveDeadline(item, co){
-  // Check deadlineDays (old field name)
-  if(item.deadlineDays != null && co && co.startDate) 
-    return addDays(co.startDate, item.deadlineDays);
-  
-  // Check offsetDays (new field name from Excel parser)
-  if(item.offsetDays != null && co && co.startDate) 
-    return addDays(co.startDate, item.offsetDays);
-  
-  // Check deadlineDate (old field name)
+  if(item.deadlineDays != null && co && co.startDate) return addDays(co.startDate, item.deadlineDays);
+  if(item.offsetDays != null && co && co.startDate) return addDays(co.startDate, item.offsetDays);
   if(item.deadlineDate) return item.deadlineDate;
-  
-  // Check deadline (new field name from Excel parser)
   if(item.deadline) return item.deadline;
-  
   return null;
 }
 
 function daysTo(iso){
   if(!iso) return null;
-  var d=new Date(iso);
-  if(isNaN(d)) return null;
-  var n=new Date();
-  n.setHours(0,0,0,0);
+  var d=new Date(iso); if(isNaN(d)) return null;
+  var n=new Date(); n.setHours(0,0,0,0);
   return Math.round((d-n)/86400000);
 }
 
 function fmt(iso){
   if(!iso) return '--';
-  var d=new Date(iso);
-  if(isNaN(d)) return iso;
+  var d=new Date(iso); if(isNaN(d)) return iso;
   return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
 }
 
 function toast(msg, isError){
   var t = document.getElementById('toast');
   t.textContent = msg;
-  if(isError) t.classList.add('error');
-  else t.classList.remove('error');
+  if(isError) t.classList.add('error'); else t.classList.remove('error');
   t.classList.add('on');
-  setTimeout(function(){
-    t.classList.remove('on');
-  }, 3000);
+  setTimeout(function(){ t.classList.remove('on'); }, 3000);
 }
 
-document.addEventListener('click', function(e){
-  if(e.target.classList.contains('modal-overlay')){
-    e.target.classList.remove('on');
-  }
-});
+document.addEventListener('click', function(e){ if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('on'); });
+document.addEventListener('click', function(e){ var bell = document.querySelector('.bell-wrap'); var dd = document.getElementById('nd'); if(!bell.contains(e.target) && dd.classList.contains('open')) dd.classList.remove('open'); });
 
-document.addEventListener('click', function(e){
-  var bell = document.querySelector('.bell-wrap');
-  var dd = document.getElementById('nd');
-  if(!bell.contains(e.target) && dd.classList.contains('open')){
-    dd.classList.remove('open');
-  }
-});
-
+// Dummy for old compatibility
+function populateFilters(){}
+function toggleAdvFilters(){}
+function applyAdvFilters(){}
 </script>
-
-
 
 </body></html>
