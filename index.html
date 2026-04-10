@@ -85,30 +85,23 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   transition:background .25s, border-color .25s;
 }
 .sidebar-logo{
-  padding:20px 20px 24px;
+  padding:16px 20px 18px;
   border-bottom:1px solid var(--sidebar-border);
-}
-.sidebar-logo img{
-  height:28px;
-  display:block;
-}
-.sidebar-logo .logo-text{
-  font-size:1.25rem;
-  font-weight:800;
-  color:var(--acc);
-  letter-spacing:-.02em;
   display:flex;
   align-items:center;
-  gap:10px;
 }
-.sidebar-logo .logo-text span{
-  font-size:.55rem;
-  font-weight:600;
-  color:var(--txtm);
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  display:block;
-  margin-top:4px;
+/* Logo container — full-width SVG, scales to fit sidebar */
+.sidebar-logo .blume-logo-wrap {
+  display: block;
+  width: 100%;
+  max-width: 160px;
+}
+/* In light mode the SVG text is white — invert to dark */
+[data-theme="light"] .sidebar-logo .blume-logo-wrap svg path[fill="white"] {
+  fill: #14305A;
+}
+[data-theme="light"] .sidebar-logo .blume-logo-wrap .logo-wordmark {
+  fill: #14305A;
 }
 
 .sidebar-nav{
@@ -191,7 +184,6 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   top:50%;left:calc(var(--sidebar-w) + 50%);
   transform:translate(-50%,-50%);
   width:500px;height:500px;
-  /* Blume Ventures logo SVG as background watermark */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='42' fill='%233B82F6'%3EBlume%3C/text%3E%3Ctext x='50%25' y='68%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-weight='400' font-size='14' fill='%233B82F6'%3EVentures%3C/text%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:center;
@@ -560,8 +552,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   .sidebar{width:60px;overflow:hidden}
   .sidebar .nav-item span:not(.nav-icon){display:none}
   .sidebar .nav-badge{display:none}
-  .sidebar-logo .logo-text{font-size:0;gap:0}
-  .sidebar-logo .logo-text::before{content:'B';font-size:1.2rem}
+  .sidebar-logo .blume-logo-wrap{display:none}
   .sidebar .nav-section-label{display:none}
   :root{--sidebar-w:60px}
   .main{padding:16px}
@@ -595,13 +586,24 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   <!-- ── SIDEBAR ──────────────────────────────────────── -->
   <div class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-text">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <rect width="24" height="24" rx="6" fill="var(--acc)"/>
-          <text x="12" y="16" text-anchor="middle" fill="#fff" font-size="12" font-weight="800" font-family="sans-serif">B</text>
+      <!-- Blume Ventures logo — full SVG embedded -->
+      <div class="blume-logo-wrap">
+        <svg viewBox="0 0 637 176" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+          <!-- Wordmark — white on dark, swapped to dark on light via JS class -->
+          <path class="logo-wordmark" d="M139 140.25V35.69h55c19.91 0 30.09 12.69 30.09 26.64 0 13.16-8.14 21.94-18 24 11.13 1.72 20.06 12.54 20.06 25.7 0 15.67-10.5 28.21-30.4 28.21l-56.75.01Zm22.23-62.56h27.9c7.52 0 12.22-4.86 12.22-11.6 0-6.43-4.7-11.44-12.22-11.44h-27.9v23.04Zm0 43.57h28.68c8.46 0 13.48-4.86 13.48-12.38 0-6.59-4.7-12.23-13.48-12.23h-28.68v24.61ZM241.31 140.25V35.69h22.26v85h44.19v19.59l-66.45-.03ZM318 35.69h22.57v62.06c0 14.57 8 24.6 24.29 24.6 16 0 24-10 24-24.6V35.69h22.57v62.68c0 26-14.89 43.73-46.55 43.73-32 0-46.86-17.87-46.86-43.57L318 35.69ZM521.38 140.25V65.02l-29.47 75.23h-9.71l-29.47-75.23v75.23h-22.25V35.69h31.19l25.38 65.19 25.39-65.19h31.35v104.56h-22.41ZM562.91 140.25V35.69h74v19.12h-51.75v22.72h50.62v19.16h-50.62v24.29h51.72v19.28l-73.97-.01Z" fill="currentColor"/>
+          <!-- Flower mark — always uses its own brand colors -->
+          <path d="M100.2 0H79c-7.34 0-11.25 5.58-10.42 11.87l4.39 33.5L90.6 65.29l20.11-17.6V10.51C110.71 4.69 107 0 100.2 0Z" fill="#78AAB9"/>
+          <path d="M73 130.6l-4.39 33.49c-.83 6.3 3.08 11.88 10.42 11.88h21.17c6.8 0 10.51-4.71 10.51-10.51v-37.2l-20.07-17.57L73 130.6Z" fill="#78AAB9"/>
+          <path d="m43.69 69.55-31.45-2.5C6.13 66.57.9 70.41.9 77.53v20.91c0 7.12 5.23 11 11.34 10.47l31.45-2.49 21.05-18.44-21.05-18.43Z" fill="#649BC8"/>
+          <path d="m43.69 106.42-24.76 21.69a10.504 10.504 0 0 0-3.577 7.562 10.507 10.507 0 0 0 3.077 7.778l15 15a10.502 10.502 0 0 0 7.752 3.071 10.525 10.525 0 0 0 7.548-3.541L73 130.6l3.51-26.78-32.82 2.6Z" fill="#6EAAC8"/>
+          <path d="M73 45.37 48.75 17.96a10.512 10.512 0 0 0-15.3-.47l-15 15a10.51 10.51 0 0 0 .5 15.34l24.76 21.69 32.83 2.6L73 45.37Z" fill="#6EAAC8"/>
+          <path d="m77.17 98.88-12.43-10.9-21.05 18.44 32.83-2.6.65-4.94ZM82.29 72.6l8.35-7.31-17.63-19.92 3.51 26.78 5.77.45ZM90.64 110.68l20.07 17.58v-27.15l-12.49.99-7.58 8.58Z" fill="#416482"/>
+          <path d="m98.22 73.87 12.49.98V47.7L90.64 65.29l7.58 8.58ZM82.29 103.36l-5.77.46-3.51 26.78 17.63-19.92-8.35-7.32ZM77.17 77.09l-.65-4.94-32.83-2.6 21.05 18.43 12.43-10.89Z" fill="#285082"/>
+          <path d="M110.71 87.98V74.85l-12.49-.98 12.49 14.11ZM82.29 103.36l-5.12-4.48-.65 4.94 5.77-.46ZM98.22 73.87l-7.58-8.58-8.35 7.31 15.93 1.27Z" fill="#254164"/>
+          <path d="m98.22 102.1-15.93 1.26 8.35 7.32 7.58-8.58ZM77.17 77.09l5.12-4.49-5.77-.45.65 4.94ZM110.71 101.11V87.98L98.22 102.1l12.49-.99Z" fill="#254164"/>
+          <path d="m77.17 98.88 1.43-10.9-1.43-10.89-12.43 10.89 12.43 10.9Z" fill="#254164"/>
+          <path d="M98.22 73.87 82.29 72.6l-5.12 4.49 1.43 10.89-1.43 10.9 5.12 4.48 15.93-1.26 12.49-14.12-12.49-14.11Z" fill="#14305A"/>
         </svg>
-        Blume
-        <span>Ventures</span>
       </div>
     </div>
 
@@ -944,6 +946,20 @@ var pendingESAPFileName = '';
 var parsedActions = [];
 var currentView = 'fund4';
 var addModalDefaultFund = '';
+
+// ══════════════════════════════════════════════════════
+// LOGO THEME ADAPTATION
+// Swap wordmark color based on theme
+// ══════════════════════════════════════════════════════
+function updateLogoTheme(theme) {
+  var wordmark = document.querySelector('.sidebar-logo .logo-wordmark');
+  if (!wordmark) return;
+  if (theme === 'dark') {
+    wordmark.setAttribute('fill', '#ffffff');
+  } else {
+    wordmark.setAttribute('fill', '#14305A');
+  }
+}
 
 // ══════════════════════════════════════════════════════
 // VIEW SWITCHING (Sidebar Navigation)
@@ -1391,6 +1407,7 @@ window.addEventListener('DOMContentLoaded', function(){
   var saved = localStorage.getItem('st_theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
   document.getElementById('theme-toggle').textContent = saved === 'dark' ? '🌙' : '☀️';
+  updateLogoTheme(saved);
   
   loadCustomSectors();
   
@@ -1437,6 +1454,7 @@ function toggleTheme(){
   html.setAttribute('data-theme', next);
   localStorage.setItem('st_theme', next);
   document.getElementById('theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
+  updateLogoTheme(next);
 }
 
 // ── FILTERS ────────────────────────────────────────────
@@ -1512,7 +1530,6 @@ function renderAll() {
   if(currentView === 'analytics') { populateAnalyticsFilters(); renderAnalytics(); }
 }
 
-// Keep old renderDash for compatibility
 function renderDash() { renderAll(); }
 
 function setSyncStatus(state, label){
@@ -1646,7 +1663,6 @@ function showDetail(id){
   var progress = pct(c);
   html += '<div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>Overall Progress</strong><span style="font-family:var(--font-mono);font-weight:700;color:var(--acc)">'+progress+'%</span></div><div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div></div>';
   
-  // NUDGE SECTION - ONLY IN EDIT MODE
   if(isEditMode) {
     html += '<div style="margin-top:24px;padding:24px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px">';
     html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px"><span style="font-size:1.2rem">📧</span><h3 style="font-size:1rem;font-weight:700">Point of Contact & Nudge Settings</h3></div>';
