@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fund ESAP Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -28,6 +27,7 @@
   --txt: #e8eaed;
   --txtm: #8b95a5;
   --txtf: #555e6e;
+  --green: #22c55e;
   --sidebar-bg: #13151a;
   --sidebar-hover: rgba(59,130,246,0.08);
   --sidebar-active: rgba(59,130,246,0.15);
@@ -54,6 +54,7 @@
   --txt: #111827;
   --txtm: #6b7280;
   --txtf: #9ca3af;
+  --green: #16a34a;
   --sidebar-bg: #ffffff;
   --sidebar-hover: rgba(59,130,246,0.05);
   --sidebar-active: rgba(59,130,246,0.10);
@@ -90,20 +91,17 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   display:flex;
   align-items:center;
 }
-/* Logo container — full-width SVG, scales to fit sidebar */
 .sidebar-logo .blume-logo-wrap {
   display: block;
   width: 100%;
   max-width: 160px;
 }
-/* In light mode the SVG text is white — invert to dark */
 [data-theme="light"] .sidebar-logo .blume-logo-wrap svg path[fill="white"] {
   fill: #14305A;
 }
 [data-theme="light"] .sidebar-logo .blume-logo-wrap .logo-wordmark {
   fill: #14305A;
 }
-
 .sidebar-nav{
   flex:1;
   padding:12px 10px;
@@ -132,98 +130,23 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   margin-bottom:2px;
   border:1px solid transparent;
 }
-.nav-item:hover{
-  background:var(--sidebar-hover);
-  color:var(--txt);
-}
-.nav-item.active{
-  background:var(--sidebar-active);
-  color:var(--acc);
-  font-weight:700;
-  border-color:var(--accm);
-}
-.nav-item .nav-icon{
-  width:20px;
-  text-align:center;
-  font-size:1rem;
-  flex-shrink:0;
-}
-.nav-item .nav-badge{
-  margin-left:auto;
-  font-family:var(--font-mono);
-  font-size:.6rem;
-  background:var(--accd);
-  color:var(--acc);
-  padding:2px 8px;
-  border-radius:8px;
-  font-weight:700;
-}
-
-.sidebar-footer{
-  padding:14px 16px;
-  border-top:1px solid var(--sidebar-border);
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
+.nav-item:hover{background:var(--sidebar-hover);color:var(--txt)}
+.nav-item.active{background:var(--sidebar-active);color:var(--acc);font-weight:700;border-color:var(--accm)}
+.nav-item .nav-icon{width:20px;text-align:center;font-size:1rem;flex-shrink:0}
+.nav-item .nav-badge{margin-left:auto;font-family:var(--font-mono);font-size:.6rem;background:var(--accd);color:var(--acc);padding:2px 8px;border-radius:8px;font-weight:700}
+.sidebar-footer{padding:14px 16px;border-top:1px solid var(--sidebar-border);display:flex;align-items:center;gap:8px}
 
 /* ── MAIN CONTENT AREA ─────────────────────────────────── */
-.main-wrap{
-  margin-left:var(--sidebar-w);
-  flex:1;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  position:relative;
-}
+.main-wrap{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column;position:relative}
+.main-wrap::before{content:'';position:fixed;top:50%;left:calc(var(--sidebar-w) + 50%);transform:translate(-50%,-50%);width:70vw;height:70vh;background-image:url("logo-blume-reversed.svg");background-repeat:no-repeat;background-position:center;background-size:contain;opacity:0.04;pointer-events:none;z-index:0}
 
-/* Blume Watermark */
-.main-wrap::before{
-  content:'';
-  position:fixed;
-  top:50%;
-  left:calc(var(--sidebar-w) + 50%);
-  transform:translate(-50%,-50%);
-  width:70vw;
-  height:70vh;
-  background-image: url("logo-blume-reversed.svg");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-  opacity:0.04;
-  pointer-events:none;
-  z-index:0;
-}
 /* ── TOP HEADER BAR ────────────────────────────────────── */
-.topbar{
-  height:56px;
-  background:var(--topbar-bg);
-  border-bottom:1px solid var(--sidebar-border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 28px;
-  position:sticky;
-  top:0;
-  z-index:100;
-  transition:all .25s;
-}
-.topbar-left{
-  display:flex;
-  align-items:center;
-  gap:16px;
-}
-.topbar-title{
-  font-size:.95rem;
-  font-weight:600;
-  color:var(--txtm);
-}
+.topbar{height:56px;background:var(--topbar-bg);border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100;transition:all .25s}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.topbar-title{font-size:.95rem;font-weight:600;color:var(--txtm)}
 .topbar-right{display:flex;align-items:center;gap:10px}
-
-/* Edit Mode Badge */
 .edit-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:16px;background:rgba(59,130,246,0.1);border:1px solid var(--acc);color:var(--acc);font-family:var(--font-mono);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
 .edit-badge.view-only{background:rgba(245,158,11,0.15);border-color:var(--warn);color:var(--warn)}
-
 .sync-wrap{display:flex;align-items:center;gap:7px}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--txtf);transition:all .3s}
 .sync-dot.live{background:#22c55e;box-shadow:0 0 7px #22c55e}
@@ -231,12 +154,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .sync-dot.loading{background:var(--warn);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .sync-label{font-family:var(--font-mono);font-size:.65rem;color:var(--txtm)}
-
-/* Theme toggle */
 .theme-btn{width:34px;height:34px;border-radius:10px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .2s}
 .theme-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
-
-/* Bell */
 .bell-wrap{position:relative}
 .bell-btn{width:34px;height:34px;border-radius:10px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .2s}
 .bell-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
@@ -268,36 +187,13 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .view{display:none}.view.on{display:block}
 
 /* ══ PAGE HEADER ═══════════════════════════════════════ */
-.page-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  margin-bottom:24px;
-  gap:12px;
-  flex-wrap:wrap;
-  padding-bottom:20px;
-  border-bottom:1px solid var(--bor);
-}
+.page-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;gap:12px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--bor)}
 .page-title{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--txt)}
 .page-sub{font-family:var(--font-mono);font-size:.62rem;color:var(--txtf);margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
 
-/* Tab bar (Ontra style) */
-.tab-bar{
-  display:flex;
-  gap:0;
-  border-bottom:2px solid var(--bor);
-  margin-bottom:24px;
-}
-.tab-item{
-  font-size:.88rem;
-  font-weight:600;
-  color:var(--txtm);
-  padding:12px 20px;
-  cursor:pointer;
-  border-bottom:2px solid transparent;
-  margin-bottom:-2px;
-  transition:all .15s;
-}
+/* Tab bar */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid var(--bor);margin-bottom:24px}
+.tab-item{font-size:.88rem;font-weight:600;color:var(--txtm);padding:12px 20px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
 .tab-item:hover{color:var(--txt)}
 .tab-item.active{color:var(--acc);border-bottom-color:var(--acc)}
 
@@ -309,16 +205,9 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .action-btn.primary:hover{background:var(--acc2)}
 .action-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-/* ══ STAT CARDS (Ontra style) ══════════════════════════ */
+/* ══ STAT CARDS ══════════════════════════════════════ */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-.sc{
-  background:var(--sur);
-  border:1px solid var(--bor);
-  border-radius:12px;
-  padding:20px 24px;
-  position:relative;
-  transition:all .2s;
-}
+.sc{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:20px 24px;position:relative;transition:all .2s}
 .sc:hover{box-shadow:var(--card-hover-shadow)}
 .sc-label{font-size:.82rem;color:var(--txtm);font-weight:500;margin-bottom:12px}
 .sc-val{font-size:1.8rem;font-weight:800;color:var(--acc)}.sc-desc{font-size:.7rem;color:var(--txtf);margin-top:4px;font-family:var(--font-mono)}
@@ -342,14 +231,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 
 /* ══ CARDS GRID ════════════════════════════════════════ */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-.card{
-  background:var(--sur);
-  border:1px solid var(--bor);
-  border-radius:12px;
-  padding:20px;
-  transition:all .2s;
-  cursor:pointer;
-}
+.card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:20px;transition:all .2s;cursor:pointer}
 .card:hover{transform:translateY(-2px);box-shadow:var(--card-hover-shadow);border-color:var(--accm)}
 .card-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
 .cname{font-size:1.05rem;font-weight:700;line-height:1.3}
@@ -381,92 +263,21 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .empty-msg{font-family:var(--font-mono);font-size:.85rem}
 
 /* ══ ANALYTICS VIEW ════════════════════════════════════ */
-.analytics-filters{
-  background:var(--sur);
-  border:1px solid var(--bor);
-  border-radius:12px;
-  padding:24px;
-  margin-bottom:24px;
-}
-.analytics-filters h3{
-  font-size:.95rem;
-  font-weight:700;
-  margin-bottom:16px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.analytics-filter-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-}
-.analytics-filter-grid label{
-  display:block;
-  font-family:var(--font-mono);
-  font-size:.63rem;
-  color:var(--txtm);
-  margin-bottom:6px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  font-weight:600;
-}
-.analytics-filter-grid select{
-  width:100%;
-  padding:10px 12px;
-  background:var(--sur2);
-  border:1px solid var(--bor);
-  border-radius:8px;
-  color:var(--txt);
-  font-family:var(--font-mono);
-  font-size:.78rem;
-  transition:border-color .2s;
-}
+.analytics-filters{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:24px;margin-bottom:24px}
+.analytics-filters h3{font-size:.95rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.analytics-filter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.analytics-filter-grid label{display:block;font-family:var(--font-mono);font-size:.63rem;color:var(--txtm);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.analytics-filter-grid select{width:100%;padding:10px 12px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;color:var(--txt);font-family:var(--font-mono);font-size:.78rem;transition:border-color .2s}
 .analytics-filter-grid select:focus{outline:none;border-color:var(--acc)}
-
-/* Analytics summary cards */
-.analytics-summary{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-  margin-bottom:24px;
-}
-.as-card{
-  background:var(--sur);
-  border:1px solid var(--bor);
-  border-radius:12px;
-  padding:20px;
-}
+.analytics-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.as-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:20px}
 .as-card h4{font-size:.8rem;color:var(--txtm);font-weight:500;margin-bottom:12px}
 .as-card .as-val{font-size:2rem;font-weight:800;color:var(--acc)}
 .as-card .as-sub{font-family:var(--font-mono);font-size:.65rem;color:var(--txtf);margin-top:4px}
-
-/* Analytics table */
-.analytics-table{
-  background:var(--sur);
-  border:1px solid var(--bor);
-  border-radius:12px;
-  overflow:hidden;
-}
+.analytics-table{background:var(--sur);border:1px solid var(--bor);border-radius:12px;overflow:hidden}
 .analytics-table table{width:100%;border-collapse:collapse}
-.analytics-table th{
-  text-align:left;
-  padding:14px 16px;
-  font-family:var(--font-mono);
-  font-size:.65rem;
-  color:var(--txtm);
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  font-weight:700;
-  border-bottom:2px solid var(--bor);
-  background:var(--sur2);
-}
-.analytics-table td{
-  padding:14px 16px;
-  font-size:.85rem;
-  border-bottom:1px solid var(--bor);
-  vertical-align:middle;
-}
+.analytics-table th{text-align:left;padding:14px 16px;font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;font-weight:700;border-bottom:2px solid var(--bor);background:var(--sur2)}
+.analytics-table td{padding:14px 16px;font-size:.85rem;border-bottom:1px solid var(--bor);vertical-align:middle}
 .analytics-table tr:last-child td{border-bottom:none}
 .analytics-table tr:hover td{background:var(--accd)}
 .at-progress{display:flex;align-items:center;gap:10px}
@@ -494,8 +305,6 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--accd)}
 .form-row textarea{font-family:var(--font-sans);resize:vertical;min-height:80px;line-height:1.6}
 .form-row.inline{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-
-/* Buttons */
 .btn{font-family:var(--font-mono);font-size:.73rem;padding:9px 18px;border-radius:8px;border:1px solid var(--bor);background:var(--sur2);color:var(--txt);cursor:pointer;transition:all .2s;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
 .btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
 .btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
@@ -534,8 +343,6 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .chip-option{font-family:var(--font-mono);font-size:.68rem;padding:8px 14px;border-radius:8px;background:var(--sur2);border:1px solid var(--bor);color:var(--txtm);cursor:pointer;transition:all .2s;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .chip-option:hover{border-color:var(--accm);background:var(--accd)}
 .chip-option.selected{border-color:var(--acc);background:var(--accd);color:var(--acc)}
-
-/* Add Custom */
 .add-custom{display:flex;gap:8px;margin-top:12px}
 .add-custom input{flex:1;padding:8px 12px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.73rem;color:var(--txt)}
 .add-custom input:focus{outline:none;border-color:var(--acc)}
@@ -547,6 +354,52 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .toast.on{display:block}
 @keyframes toastIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .toast.error{border-color:var(--red);background:var(--redd);color:var(--red)}
+
+/* ══ ESG STYLES ══════════════════════════════════════ */
+.esg-prose{font-size:.92rem;line-height:1.8;color:var(--txt)}
+.esg-prose p{margin-bottom:12px}
+.esg-prose h3{font-size:1rem;font-weight:700;margin:20px 0 8px;color:var(--txt);display:flex;align-items:center;gap:8px}
+.esg-prose ul{padding-left:20px;margin-bottom:12px}
+.esg-prose li{margin-bottom:5px}
+.esg-prose a{color:var(--acc);text-decoration:underline;text-underline-offset:2px}
+.esg-prose a:hover{color:var(--acc2)}
+.annexure-btn{font-family:var(--font-mono);font-size:.68rem;padding:7px 14px;border-radius:8px;background:var(--accd);border:1px solid var(--accm);color:var(--acc);cursor:pointer;transition:all .2s;font-weight:600;margin-bottom:6px;display:inline-flex;align-items:center;gap:6px}
+.annexure-btn:hover{background:var(--acc);color:#fff}
+.annexure-content{display:none;margin-top:8px;padding:16px;background:var(--sur2);border:1px solid var(--bor);border-radius:10px;font-size:.85rem;line-height:1.7}
+.annexure-content.open{display:block}
+.country-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 16px;font-size:.82rem;color:var(--txtm)}
+.esg-intro-box{background:var(--accd);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:18px 20px;margin-bottom:24px;font-size:.92rem;line-height:1.8;color:var(--txt)}
+.esg-intro-box p{margin-bottom:10px}
+.esg-intro-box p:last-child{margin-bottom:0}
+.comment-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color .2s}
+.comment-card:hover{border-color:var(--accm)}
+.comment-meta{font-family:var(--font-mono);font-size:.65rem;color:var(--txtf);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.comment-author{font-weight:700;color:var(--txtm)}
+.comment-text{font-size:.88rem;line-height:1.6;color:var(--txt)}
+.comment-actions{display:flex;gap:8px;margin-top:10px}
+.comment-action-btn{font-family:var(--font-mono);font-size:.63rem;padding:5px 12px;border-radius:6px;border:1px solid var(--bor);background:transparent;cursor:pointer;color:var(--txtm);transition:all .2s;font-weight:600}
+.comment-action-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--accd)}
+.comment-action-btn.danger:hover{border-color:var(--red);color:var(--red);background:var(--redd)}
+.reply-thread{margin-top:12px;padding-top:12px;border-top:1px solid var(--bor)}
+.reply-item{padding:10px 12px;background:var(--sur2);border-radius:8px;margin-bottom:6px;font-size:.83rem}
+.reply-meta{font-family:var(--font-mono);font-size:.62rem;color:var(--txtf);margin-bottom:4px}
+.reply-box{margin-top:10px;display:none}
+.reply-box.open{display:block}
+.post-input{width:100%;padding:10px 14px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;color:var(--txt);font-family:var(--font-sans);font-size:.85rem;resize:vertical;min-height:70px;line-height:1.6;transition:border-color .2s}
+.post-input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--accd)}
+.post-name-input{width:100%;padding:9px 14px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;color:var(--txt);font-family:var(--font-mono);font-size:.78rem;margin-bottom:8px;transition:border-color .2s}
+.post-name-input:focus{outline:none;border-color:var(--acc)}
+.template-file-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--sur);border:1px solid var(--bor);border-radius:10px;margin-bottom:8px;transition:border-color .2s}
+.template-file-item:hover{border-color:var(--accm)}
+.template-file-icon{font-size:1.4rem;flex-shrink:0}
+.template-file-name{flex:1;font-size:.88rem;font-weight:600}
+.template-file-size{font-family:var(--font-mono);font-size:.65rem;color:var(--txtf)}
+.template-note-box{background:var(--accd);border:1px solid var(--accm);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:.88rem;line-height:1.7;color:var(--txt)}
+.esg-edit-bar{background:var(--warnd);border:1px solid var(--warn);border-radius:8px;padding:8px 14px;margin-bottom:16px;font-family:var(--font-mono);font-size:.68rem;color:var(--warn);display:flex;align-items:center;gap:8px}
+.upload-zone{border:2px dashed var(--bor);border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;color:var(--txtm)}
+.upload-zone:hover{border-color:var(--acc);background:var(--accd);color:var(--acc)}
+.post-section{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:20px;margin-top:24px}
+.post-section-title{font-size:.9rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--txtm);text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-mono)}
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -587,12 +440,9 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   <!-- ── SIDEBAR ──────────────────────────────────────── -->
   <div class="sidebar">
     <div class="sidebar-logo">
-      <!-- Blume Ventures logo — full SVG embedded -->
       <div class="blume-logo-wrap">
         <svg viewBox="0 0 637 176" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
-          <!-- Wordmark — white on dark, swapped to dark on light via JS class -->
           <path class="logo-wordmark" d="M139 140.25V35.69h55c19.91 0 30.09 12.69 30.09 26.64 0 13.16-8.14 21.94-18 24 11.13 1.72 20.06 12.54 20.06 25.7 0 15.67-10.5 28.21-30.4 28.21l-56.75.01Zm22.23-62.56h27.9c7.52 0 12.22-4.86 12.22-11.6 0-6.43-4.7-11.44-12.22-11.44h-27.9v23.04Zm0 43.57h28.68c8.46 0 13.48-4.86 13.48-12.38 0-6.59-4.7-12.23-13.48-12.23h-28.68v24.61ZM241.31 140.25V35.69h22.26v85h44.19v19.59l-66.45-.03ZM318 35.69h22.57v62.06c0 14.57 8 24.6 24.29 24.6 16 0 24-10 24-24.6V35.69h22.57v62.68c0 26-14.89 43.73-46.55 43.73-32 0-46.86-17.87-46.86-43.57L318 35.69ZM521.38 140.25V65.02l-29.47 75.23h-9.71l-29.47-75.23v75.23h-22.25V35.69h31.19l25.38 65.19 25.39-65.19h31.35v104.56h-22.41ZM562.91 140.25V35.69h74v19.12h-51.75v22.72h50.62v19.16h-50.62v24.29h51.72v19.28l-73.97-.01Z" fill="currentColor"/>
-          <!-- Flower mark — always uses its own brand colors -->
           <path d="M100.2 0H79c-7.34 0-11.25 5.58-10.42 11.87l4.39 33.5L90.6 65.29l20.11-17.6V10.51C110.71 4.69 107 0 100.2 0Z" fill="#78AAB9"/>
           <path d="M73 130.6l-4.39 33.49c-.83 6.3 3.08 11.88 10.42 11.88h21.17c6.8 0 10.51-4.71 10.51-10.51v-37.2l-20.07-17.57L73 130.6Z" fill="#78AAB9"/>
           <path d="m43.69 69.55-31.45-2.5C6.13 66.57.9 70.41.9 77.53v20.91c0 7.12 5.23 11 11.34 10.47l31.45-2.49 21.05-18.44-21.05-18.43Z" fill="#649BC8"/>
@@ -626,6 +476,20 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
         <span class="nav-icon">📊</span>
         <span>Analytics</span>
       </div>
+
+      <div class="nav-section-label">ESG</div>
+      <div class="nav-item" id="navESG" onclick="switchView('esg')">
+        <span class="nav-icon">🌱</span>
+        <span>ESG for Blume</span>
+      </div>
+      <div class="nav-item" id="navDiscussions" onclick="switchView('discussions')">
+        <span class="nav-icon">💬</span>
+        <span>ESG Discussions</span>
+      </div>
+      <div class="nav-item" id="navTemplates" onclick="switchView('templates')">
+        <span class="nav-icon">📁</span>
+        <span>Templates</span>
+      </div>
     </div>
 
     <div class="sidebar-footer">
@@ -647,9 +511,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
         <div class="edit-badge view-only" id="editBadge">
           <span id="editMode">🔒 View Only</span>
         </div>
-
         <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-
         <div class="bell-wrap">
           <div class="bell-btn" onclick="toggleNotif()">🔔</div>
           <div class="bell-badge on" id="bb">0</div>
@@ -664,8 +526,10 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       </div>
     </div>
 
-    <!-- ═══ FUND IV VIEW ═══ -->
+    <!-- ═══ VIEWS ═══ -->
     <div class="main" id="main-app" style="display: block;">
+
+      <!-- FUND IV -->
       <div class="view on" id="vFund4">
         <div class="page-header">
           <div>
@@ -673,42 +537,29 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
             <div class="page-sub">ESAP Implementation Tracking</div>
           </div>
           <div class="actions-row">
-            <button class="action-btn primary" onclick="openAddModal('Fund IV')" id="btnAdd4" disabled>
-              <span>➕</span> Add Company
-            </button>
-            <button class="action-btn" onclick="exportData()">
-              <span>📥</span> Export
-            </button>
-            <button class="action-btn" onclick="backupData()">
-              <span>💾</span> Backup
-            </button>
+            <button class="action-btn primary" onclick="openAddModal('Fund IV')" id="btnAdd4" disabled><span>➕</span> Add Company</button>
+            <button class="action-btn" onclick="exportData()"><span>📥</span> Export</button>
+            <button class="action-btn" onclick="backupData()"><span>💾</span> Backup</button>
           </div>
         </div>
-
-        <!-- Stats -->
         <div class="stats-row">
           <div class="sc"><div class="sc-label">Total Companies</div><div class="sc-val" id="s0_f4">0</div><div class="sc-desc">Fund IV</div></div>
           <div class="sc"><div class="sc-label">Total Actions</div><div class="sc-val" id="s1_f4">0</div><div class="sc-desc">Across all companies</div></div>
           <div class="sc"><div class="sc-label">Completed</div><div class="sc-val" id="s2_f4">0</div><div class="sc-desc">Actions done</div></div>
           <div class="sc"><div class="sc-label">Avg Progress</div><div class="sc-val" id="s3_f4">0%</div><div class="sc-desc">Fund average</div></div>
         </div>
-
         <div class="fil-row">
           <button class="fbtn on" data-vf="fund4" data-f="all" onclick="setF(this,'all','fund4')">All</button>
           <button class="fbtn" data-vf="fund4" data-f="new" onclick="setF(this,'new','fund4')">Not Started</button>
           <button class="fbtn" data-vf="fund4" data-f="prog" onclick="setF(this,'prog','fund4')">In Progress</button>
           <button class="fbtn" data-vf="fund4" data-f="done" onclick="setF(this,'done','fund4')">Completed</button>
-          <div class="sbox">
-            <span>🔎</span>
-            <input type="text" placeholder="Search companies..." id="si4" oninput="renderFundView('fund4')">
-          </div>
+          <div class="sbox"><span>🔎</span><input type="text" placeholder="Search companies..." id="si4" oninput="renderFundView('fund4')"></div>
         </div>
-
         <div class="grid" id="gr4"></div>
         <div class="empty" id="emp4"><div class="empty-icon">📭</div><div class="empty-msg">No companies found in Fund IV</div></div>
       </div>
 
-      <!-- ═══ FUND V VIEW ═══ -->
+      <!-- FUND V -->
       <div class="view" id="vFund5">
         <div class="page-header">
           <div>
@@ -716,38 +567,28 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
             <div class="page-sub">ESAP Implementation Tracking</div>
           </div>
           <div class="actions-row">
-            <button class="action-btn primary" onclick="openAddModal('Fund V')" id="btnAdd5" disabled>
-              <span>➕</span> Add Company
-            </button>
-            <button class="action-btn" onclick="exportData()">
-              <span>📥</span> Export
-            </button>
+            <button class="action-btn primary" onclick="openAddModal('Fund V')" id="btnAdd5" disabled><span>➕</span> Add Company</button>
+            <button class="action-btn" onclick="exportData()"><span>📥</span> Export</button>
           </div>
         </div>
-
         <div class="stats-row">
           <div class="sc"><div class="sc-label">Total Companies</div><div class="sc-val" id="s0_f5">0</div><div class="sc-desc">Fund V</div></div>
           <div class="sc"><div class="sc-label">Total Actions</div><div class="sc-val" id="s1_f5">0</div><div class="sc-desc">Across all companies</div></div>
           <div class="sc"><div class="sc-label">Completed</div><div class="sc-val" id="s2_f5">0</div><div class="sc-desc">Actions done</div></div>
           <div class="sc"><div class="sc-label">Avg Progress</div><div class="sc-val" id="s3_f5">0%</div><div class="sc-desc">Fund average</div></div>
         </div>
-
         <div class="fil-row">
           <button class="fbtn on" data-vf="fund5" data-f="all" onclick="setF(this,'all','fund5')">All</button>
           <button class="fbtn" data-vf="fund5" data-f="new" onclick="setF(this,'new','fund5')">Not Started</button>
           <button class="fbtn" data-vf="fund5" data-f="prog" onclick="setF(this,'prog','fund5')">In Progress</button>
           <button class="fbtn" data-vf="fund5" data-f="done" onclick="setF(this,'done','fund5')">Completed</button>
-          <div class="sbox">
-            <span>🔎</span>
-            <input type="text" placeholder="Search companies..." id="si5" oninput="renderFundView('fund5')">
-          </div>
+          <div class="sbox"><span>🔎</span><input type="text" placeholder="Search companies..." id="si5" oninput="renderFundView('fund5')"></div>
         </div>
-
         <div class="grid" id="gr5"></div>
         <div class="empty" id="emp5"><div class="empty-icon">📭</div><div class="empty-msg">No companies found in Fund V</div></div>
       </div>
 
-      <!-- ═══ ANALYTICS VIEW ═══ -->
+      <!-- ANALYTICS -->
       <div class="view" id="vAnalytics">
         <div class="page-header">
           <div>
@@ -759,39 +600,196 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
             <button class="action-btn" onclick="backupData()"><span>💾</span> Backup</button>
           </div>
         </div>
-
-        <!-- Analytics Filters -->
         <div class="analytics-filters">
           <h3>🔍 Filters</h3>
           <div class="analytics-filter-grid">
-            <div>
-              <label>Fund</label>
-              <select id="aFilterFund" onchange="renderAnalytics()">
-                <option value="">All Funds</option>
-                <option value="Fund IV">Fund IV</option>
-                <option value="Fund V">Fund V</option>
-              </select>
-            </div>
-            <div>
-              <label>Partner</label>
-              <select id="aFilterPartner" onchange="renderAnalytics()"></select>
-            </div>
-            <div>
-              <label>Sector</label>
-              <select id="aFilterSector" onchange="renderAnalytics()"></select>
-            </div>
-            <div>
-              <label>Company</label>
-              <select id="aFilterCompany" onchange="renderAnalytics()"></select>
-            </div>
+            <div><label>Fund</label><select id="aFilterFund" onchange="renderAnalytics()"><option value="">All Funds</option><option value="Fund IV">Fund IV</option><option value="Fund V">Fund V</option></select></div>
+            <div><label>Partner</label><select id="aFilterPartner" onchange="renderAnalytics()"></select></div>
+            <div><label>Sector</label><select id="aFilterSector" onchange="renderAnalytics()"></select></div>
+            <div><label>Company</label><select id="aFilterCompany" onchange="renderAnalytics()"></select></div>
+          </div>
+        </div>
+        <div class="analytics-summary" id="analyticsSummary"></div>
+        <div class="analytics-table" id="analyticsTable"></div>
+      </div>
+
+      <!-- ══ ESG FOR BLUME ══ -->
+      <div class="view" id="vESG">
+        <div class="page-header">
+          <div>
+            <div class="page-title">🌱 ESG for Blume</div>
+            <div class="page-sub">IC Requirements · Fund V</div>
           </div>
         </div>
 
-        <!-- Analytics Summary -->
-        <div class="analytics-summary" id="analyticsSummary"></div>
+        <div class="tab-bar">
+          <div class="tab-item active" onclick="esgTab('ic',this)">IC Requirements</div>
+          <div class="tab-item" onclick="esgTab('annexures',this)">Annexures</div>
+        </div>
 
-        <!-- Analytics Table -->
-        <div class="analytics-table" id="analyticsTable"></div>
+        <!-- IC Requirements Tab -->
+        <div id="esgTabIC">
+          <div id="esgEditBar" class="esg-edit-bar" style="display:none">✏️ Edit mode — you can add notes and links below</div>
+          <div class="esg-prose">
+            <p>This note outlines the ESG checks that must be completed before all Fund V ICs. While these are required for initial investments, follow-on investments will have separate requirements determined on a case-by-case basis.</p>
+
+            <h3>1. ESG Information Submission</h3>
+            <p>The deal team must complete the <a href="#" target="_blank">ESG Compliance Checklist</a> prior to bringing a company to IC1.</p>
+
+            <h3>2. Prohibited and Debarred Activities</h3>
+            <p>Before IC1, the team must confirm that:</p>
+            <ul>
+              <li>The company does not fall under Blume's Prohibition List (see Annexures tab).</li>
+              <li>The company is not listed on the <a href="#" target="_blank">Debarred Firms and Individuals list</a>.</li>
+              <li>The company has no operations or business exposure in Myanmar or Afghanistan.</li>
+            </ul>
+
+            <h3>3. Developing Country Requirement</h3>
+            <p>Blume will only invest in companies whose business is considered to be operating in a Developing Country (as defined in Annexure 2). The IC note must explicitly confirm how both the mandatory and secondary conditions are satisfied.</p>
+            <p><strong>Mandatory Condition:</strong> At least 50% of the investment proceeds raised by the Company from Blume must either fund operations in a Developing Country, or create clear developmental benefits for a Developing Country.</p>
+            <p><strong>Secondary Condition</strong> (at least one must be met — each with a 50% threshold):</p>
+            <ul>
+              <li>≥50% of employees are based in a Developing Country.</li>
+              <li>≥50% of income is taxable in a Developing Country.</li>
+              <li>≥50% of R&D activities are conducted in a Developing Country.</li>
+              <li>≥50% of business activities create developmental benefits in a Developing Country.</li>
+            </ul>
+
+            <h3>4. SDG Alignment</h3>
+            <p>The IC note must include a one-paragraph summary describing how the investment aligns with relevant <a href="https://sdgs.un.org/goals" target="_blank">UN Sustainable Development Goals (SDGs)</a>. Most investments will typically align with SDG 8 (Decent Work &amp; Economic Growth), SDG 9 (Industry &amp; Innovation), and/or SDG 10 (Reduced Inequalities). For guidance, contact <a href="mailto:sreenidhi@blume.vc">sreenidhi@blume.vc</a>.</p>
+          </div>
+
+          <!-- Edit-only: add notes/links -->
+          <div id="esgPostArea" style="display:none;margin-top:24px">
+            <div style="height:1px;background:var(--bor);margin-bottom:24px"></div>
+            <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:700">Add Note or Link</div>
+            <input class="post-name-input" id="esgLinkLabel" placeholder="Link label (e.g. ESG Compliance Checklist form link)" />
+            <input class="post-name-input" id="esgLinkUrl" placeholder="URL (e.g. https://forms.google.com/...)" style="margin-bottom:8px"/>
+            <textarea class="post-input" id="esgNoteText" placeholder="Add a note, update, or context for this section..."></textarea>
+            <div style="display:flex;justify-content:flex-end;margin-top:8px">
+              <button class="btn primary" onclick="postESGNote()">Post</button>
+            </div>
+          </div>
+          <div id="esgNotesList" style="margin-top:12px"></div>
+        </div>
+
+        <!-- Annexures Tab -->
+        <div id="esgTabAnnexures" style="display:none">
+          <button class="annexure-btn" onclick="toggleAnnexure('ann1')">📋 Annexure 1 — Prohibition List</button>
+          <div class="annexure-content" id="ann1">
+            <ul style="padding-left:18px;line-height:1.9">
+              <li>Production of or trade in any activity deemed illegal under applicable local or national laws or regulations or subject to internationally agreed phase-outs</li>
+              <li>Hazardous chemicals, pharmaceuticals, pesticides, and wastes</li>
+              <li>Ozone depleting substances</li>
+              <li>Endangered or protected wildlife or wildlife products</li>
+              <li>Unsustainable fishing methods (blast fishing, drift nets &gt;2.5km)</li>
+              <li>Production of or trade in arms — weapons, munitions, or nuclear products for military purposes</li>
+              <li>Production of, use of, or trade in unbonded asbestos fibres</li>
+              <li>Production of, or trade in radioactive materials</li>
+              <li>Prostitution</li>
+              <li>Gambling, gaming casinos and equivalent enterprises (if substantial portion)</li>
+              <li>Tobacco or tobacco-related products (if substantial)</li>
+              <li>Pornography</li>
+              <li>Speculative and/or unregulated use of cryptocurrencies</li>
+              <li>AI where it poses "unacceptable risk" as defined in the <a href="https://artificialintelligenceact.eu/" target="_blank">EU AI Act 2021</a></li>
+              <li>Social media targeting children and other vulnerable people, and dating apps</li>
+              <li>Products and services primarily designed for national security and intelligence services where there is a reasonable risk of human rights abuses</li>
+              <li>Alcoholic beverages (except beer and wine) if substantial portion of business</li>
+              <li>Animal and human cloning</li>
+              <li>Prisons and detention centres</li>
+              <li>Social media platforms or apps</li>
+              <li>Fossil Fuel Related Activities — see <a href="#" target="_blank">Fossil Fuel Exclusion List</a></li>
+            </ul>
+          </div>
+
+          <div style="height:12px"></div>
+          <button class="annexure-btn" onclick="toggleAnnexure('ann2')">🌍 Annexure 2 — Developing Countries</button>
+          <div class="annexure-content" id="ann2">
+            <div class="country-grid">
+              <div>• Armenia</div><div>• Azerbaijan</div><div>• Bangladesh</div><div>• Bhutan</div><div>• Cambodia</div><div>• Cook Islands</div>
+              <div>• Fiji</div><div>• Georgia</div><div>• India</div><div>• Indonesia</div><div>• Kazakhstan</div><div>• Kiribati</div>
+              <div>• Kyrgyz Republic</div><div>• Lao PDR</div><div>• Malaysia</div><div>• Maldives</div><div>• Marshall Islands</div><div>• Micronesia</div>
+              <div>• Mongolia</div><div>• Nauru</div><div>• Nepal</div><div>• Niue</div><div>• Pakistan</div><div>• Palau</div>
+              <div>• Papua New Guinea</div><div>• Philippines</div><div>• China</div><div>• Samoa</div><div>• Solomon Islands</div><div>• Sri Lanka</div>
+              <div>• Tajikistan</div><div>• Thailand</div><div>• Timor-Leste</div><div>• Tonga</div><div>• Turkmenistan</div><div>• Tuvalu</div>
+              <div>• Uzbekistan</div><div>• Vanuatu</div><div>• Viet Nam</div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+          <button class="annexure-btn" onclick="toggleAnnexure('ann3')">📝 Annexure 3 — SDG Alignment Example</button>
+          <div class="annexure-content" id="ann3">
+            <p style="margin-bottom:10px"><strong>Harajuku Tokyo Café</strong></p>
+            <p style="margin-bottom:8px">Investment strongly aligns with <strong>SDG 8: Decent Work and Economic Growth</strong> (sub-targets 8.2, 8.3, 8.5) by building a café–bakery chain that drives productivity through standardised operations and generates direct employment in culinary operations, service, logistics, and management.</p>
+            <p style="margin-bottom:8px">Also aligns with <strong>SDG 9: Industry, Innovation and Infrastructure</strong> (9.4, 9.b) by building a technology-enabled retail and kitchen infrastructure for a new cuisine category in India.</p>
+            <p style="margin-bottom:8px">Supports <strong>SDG 12: Responsible Consumption and Production</strong> (12.3, 12.6) through centralised sourcing, standardised production, and better inventory control.</p>
+            <p>Contributes to <strong>SDG 11: Sustainable Cities and Communities</strong> (11.3) by creating vibrant, well-designed urban spaces that function as cultural and social hubs.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ESG DISCUSSIONS ══ -->
+      <div class="view" id="vDiscussions">
+        <div class="page-header">
+          <div>
+            <div class="page-title">💬 ESG Discussions</div>
+            <div class="page-sub">Team Q&amp;A · Open to all</div>
+          </div>
+        </div>
+
+        <div class="esg-intro-box">
+          <p>Hi team,</p>
+          <p>You might be wondering why we're doing this, or even thinking "why all this effort?" — totally fair.</p>
+          <p>While this does stem from an LP requirement, at Blume we've always believed in going above and beyond wherever we can. This isn't just a checkbox exercise for us. It's about helping our companies stay ahead of emerging risks, while also positioning them as strong differentiators in their space.</p>
+          <p>Over the years, through our investments, we've driven impact that many self-proclaimed "impact funds" haven't matched.</p>
+          <p>So as we continue this journey, this process is really about understanding and showcasing the real impact we've collectively created.</p>
+        </div>
+
+        <div id="commentsList" style="margin-bottom:24px"></div>
+
+        <div class="post-section">
+          <div class="post-section-title">💬 Post a Question or Comment</div>
+          <input class="post-name-input" id="commenterName" placeholder="Your name" />
+          <textarea class="post-input" id="newComment" placeholder="Write your question or comment here..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:10px">
+            <button class="btn primary" onclick="postComment()">Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ TEMPLATES ══ -->
+      <div class="view" id="vTemplates">
+        <div class="page-header">
+          <div>
+            <div class="page-title">📁 Templates</div>
+            <div class="page-sub">Documents &amp; Resources</div>
+          </div>
+        </div>
+
+        <div id="templateNoteDisplay" class="template-note-box" style="display:none"></div>
+
+        <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:700">Files</div>
+        <div id="templateFilesList"></div>
+        <div id="templateEmptyMsg" style="padding:24px;text-align:center;color:var(--txtf);font-family:var(--font-mono);font-size:.8rem">No files uploaded yet</div>
+
+        <!-- Edit-only -->
+        <div id="templateEditArea" style="display:none;margin-top:24px">
+          <div style="height:1px;background:var(--bor);margin-bottom:24px"></div>
+          <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:700">Upload File</div>
+          <div class="upload-zone" onclick="document.getElementById('templateFileInput').click()">
+            <div style="font-size:2rem;margin-bottom:8px">📎</div>
+            <div style="font-weight:600;margin-bottom:4px">Click to upload</div>
+            <div style="font-family:var(--font-mono);font-size:.68rem">Supports .docx, .pdf, .xlsx</div>
+          </div>
+          <input type="file" id="templateFileInput" style="display:none" accept=".docx,.pdf,.xlsx,.doc,.ppt,.pptx" onchange="handleTemplateFileUpload(this)" />
+
+          <div style="height:1px;background:var(--bor);margin:20px 0"></div>
+          <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:700">Add a Note</div>
+          <textarea class="post-input" id="templateNoteInput" placeholder="Add instructions or context for these templates..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:8px">
+            <button class="btn primary" onclick="saveTemplateNote()">Save Note</button>
+          </div>
+        </div>
       </div>
 
       <!-- Old dashboard view (hidden, kept for compatibility) -->
@@ -808,57 +806,24 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       <div class="modal-close" onclick="closeM('mAdd')">×</div>
     </div>
     <div class="modal-body">
-      <div class="form-row">
-        <label>Company Name *</label>
-        <input type="text" id="cn" placeholder="e.g., Acme Corp">
-      </div>
-      
+      <div class="form-row"><label>Company Name *</label><input type="text" id="cn" placeholder="e.g., Acme Corp"></div>
       <div class="form-row">
         <label>Sector *</label>
         <div class="chip-grid" id="sectorChips"></div>
-        <div class="add-custom">
-          <input type="text" id="customSector" placeholder="Add custom sector...">
-          <button onclick="addCustomSector()">+ Add</button>
-        </div>
+        <div class="add-custom"><input type="text" id="customSector" placeholder="Add custom sector..."><button onclick="addCustomSector()">+ Add</button></div>
       </div>
-      
-      <div class="form-row">
-        <label>Assigned Team Member (Partner)</label>
-        <div class="chip-grid" id="teamChips"></div>
-      </div>
-      
-      <div class="form-row">
-        <label>Fund</label>
-        <select id="fundSelect">
-          <option value="">Select Fund</option>
-          <option value="Fund IV">Fund IV</option>
-          <option value="Fund V">Fund V</option>
-        </select>
-      </div>
-      
-      <div class="form-row">
-        <label>Start Date</label>
-        <input type="date" id="csd">
-      </div>
-      
+      <div class="form-row"><label>Assigned Team Member (Partner)</label><div class="chip-grid" id="teamChips"></div></div>
+      <div class="form-row"><label>Fund</label><select id="fundSelect"><option value="">Select Fund</option><option value="Fund IV">Fund IV</option><option value="Fund V">Fund V</option></select></div>
+      <div class="form-row"><label>Start Date</label><input type="date" id="csd"></div>
       <div class="form-row inline">
-        <div>
-          <label>SPOC Name</label>
-          <input type="text" id="spocName" placeholder="Primary contact">
-        </div>
-        <div>
-          <label>SPOC Email</label>
-          <input type="text" id="spocEmail" placeholder="email@company.com">
-        </div>
+        <div><label>SPOC Name</label><input type="text" id="spocName" placeholder="Primary contact"></div>
+        <div><label>SPOC Email</label><input type="text" id="spocEmail" placeholder="email@company.com"></div>
       </div>
-      
       <div class="form-row">
         <label>Upload ESAP Document (.xlsx to auto-import actions)</label>
         <input type="file" id="esapFile" accept=".pdf,.doc,.docx,.xls,.xlsx" style="display:none" onchange="handleESAPUpload(event)">
         <div style="display:flex;gap:8px;align-items:center">
-          <button type="button" class="btn secondary" onclick="document.getElementById('esapFile').click()">
-            📎 Choose File
-          </button>
+          <button type="button" class="btn secondary" onclick="document.getElementById('esapFile').click()">📎 Choose File</button>
           <span id="esapFileName" style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">No file selected</span>
         </div>
         <div id="currentESAP" style="margin-top:8px;display:none">
@@ -887,8 +852,6 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
     </div>
     <div class="modal-body">
       <div id="detailContent"></div>
-      
-      <!-- Action Items -->
       <div class="items-section">
         <div class="items-hd">
           <h3>📋 Action Items</h3>
@@ -915,11 +878,9 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 
 <script>
 // ═══════════════════════════════════════════════════════
-//  FUND ESAP TRACKER — ONTRA-STYLE UI
-//  All original functions preserved
+//  FUND ESAP TRACKER — All original + ESG sections
 // ═══════════════════════════════════════════════════════
 
-// Firebase Configuration
 var FIREBASE_CONFIG = {
   apiKey:            "AIzaSyB8J-qZ9g76-_GDqitqX5M5dVaogFMQMFs",
   authDomain:        "esap-9c987.firebaseapp.com",
@@ -930,7 +891,6 @@ var FIREBASE_CONFIG = {
   appId:             "1:41120222356:web:cc7d174b4277dadb997881"
 };
 
-// Global Variables
 var db = null;
 var companies = [];
 var sectors = ['Health Care', 'AI/SaaS', 'Finance', 'Consumer', 'Logistics', 'Other'];
@@ -948,53 +908,290 @@ var parsedActions = [];
 var currentView = 'fund4';
 var addModalDefaultFund = '';
 
+// ESG state
+var esgNotes = [];
+var esgComments = [];
+var templateFiles = [];
+var templateNote = '';
+var esgDataLoaded = false;
+
 // ══════════════════════════════════════════════════════
-// LOGO THEME ADAPTATION
-// Swap wordmark color based on theme
+// LOGO THEME
 // ══════════════════════════════════════════════════════
 function updateLogoTheme(theme) {
   var wordmark = document.querySelector('.sidebar-logo .logo-wordmark');
   if (!wordmark) return;
-  if (theme === 'dark') {
-    wordmark.setAttribute('fill', '#ffffff');
-  } else {
-    wordmark.setAttribute('fill', '#14305A');
-  }
+  wordmark.setAttribute('fill', theme === 'dark' ? '#ffffff' : '#14305A');
 }
 
 // ══════════════════════════════════════════════════════
-// VIEW SWITCHING (Sidebar Navigation)
+// VIEW SWITCHING
 // ══════════════════════════════════════════════════════
 function switchView(view) {
   currentView = view;
-  
-  // Update sidebar active state
   document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
-  var navMap = { fund4: 'navFund4', fund5: 'navFund5', analytics: 'navAnalytics' };
+  var navMap = { fund4:'navFund4', fund5:'navFund5', analytics:'navAnalytics', esg:'navESG', discussions:'navDiscussions', templates:'navTemplates' };
   var navEl = document.getElementById(navMap[view]);
   if(navEl) navEl.classList.add('active');
-  
-  // Update topbar title
-  var titles = { fund4: 'Fund IV', fund5: 'Fund V', analytics: 'Analytics' };
+  var titles = { fund4:'Fund IV', fund5:'Fund V', analytics:'Analytics', esg:'ESG for Blume', discussions:'ESG Discussions', templates:'Templates' };
   document.getElementById('topbarTitle').textContent = titles[view] || '';
-  
-  // Toggle views
   document.querySelectorAll('.view').forEach(function(el){ el.classList.remove('on'); });
-  var viewMap = { fund4: 'vFund4', fund5: 'vFund5', analytics: 'vAnalytics' };
+  var viewMap = { fund4:'vFund4', fund5:'vFund5', analytics:'vAnalytics', esg:'vESG', discussions:'vDiscussions', templates:'vTemplates' };
   var viewEl = document.getElementById(viewMap[view]);
   if(viewEl) viewEl.classList.add('on');
-  
-  // Render
-  if(view === 'fund4' || view === 'fund5') {
-    renderFundView(view);
-  } else if(view === 'analytics') {
-    populateAnalyticsFilters();
-    renderAnalytics();
-  }
+  if(view === 'fund4' || view === 'fund5') renderFundView(view);
+  else if(view === 'analytics'){ populateAnalyticsFilters(); renderAnalytics(); }
+  else if(view === 'esg') renderESGView();
+  else if(view === 'discussions') renderDiscussions();
+  else if(view === 'templates') renderTemplatesView();
 }
 
 // ══════════════════════════════════════════════════════
-// FUND-SPECIFIC RENDERING
+// ESG TAB TOGGLE
+// ══════════════════════════════════════════════════════
+function esgTab(tab, el) {
+  document.querySelectorAll('#vESG .tab-item').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('esgTabIC').style.display = tab === 'ic' ? 'block' : 'none';
+  document.getElementById('esgTabAnnexures').style.display = tab === 'annexures' ? 'block' : 'none';
+}
+
+function toggleAnnexure(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+  var btn = el.previousElementSibling;
+  var arrow = el.classList.contains('open') ? '▼ ' : '';
+  btn.textContent = btn.textContent.replace(/^[▼ ]*/, arrow);
+}
+
+// ══════════════════════════════════════════════════════
+// ESG VIEW RENDER
+// ══════════════════════════════════════════════════════
+function renderESGView() {
+  var editBar = document.getElementById('esgEditBar');
+  var postArea = document.getElementById('esgPostArea');
+  if(editBar) editBar.style.display = isEditMode ? 'flex' : 'none';
+  if(postArea) postArea.style.display = isEditMode ? 'block' : 'none';
+  renderESGNotes();
+}
+
+function renderESGNotes() {
+  var list = document.getElementById('esgNotesList');
+  if(!list) return;
+  if(!esgNotes.length){ list.innerHTML = ''; return; }
+  list.innerHTML = esgNotes.map(function(n, i){
+    var html = '<div class="comment-card">';
+    html += '<div class="comment-meta"><span class="comment-author">Note</span><span>' + esc(n.time) + '</span></div>';
+    if(n.label && n.url) html += '<div style="margin-bottom:6px"><a href="'+esc(n.url)+'" target="_blank" style="color:var(--acc);text-decoration:underline">'+esc(n.label)+'</a></div>';
+    if(n.text) html += '<div class="comment-text">'+esc(n.text)+'</div>';
+    if(isEditMode) html += '<div class="comment-actions"><button class="comment-action-btn danger" onclick="deleteESGNote('+i+')">Delete</button></div>';
+    html += '</div>';
+    return html;
+  }).join('');
+}
+
+function postESGNote() {
+  if(!isEditMode) return;
+  var label = document.getElementById('esgLinkLabel').value.trim();
+  var url = document.getElementById('esgLinkUrl').value.trim();
+  var text = document.getElementById('esgNoteText').value.trim();
+  if(!text && !label){ toast('Enter a note or link label'); return; }
+  var note = { label:label, url:url, text:text, time: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) };
+  esgNotes.push(note);
+  saveESGData();
+  document.getElementById('esgLinkLabel').value = '';
+  document.getElementById('esgLinkUrl').value = '';
+  document.getElementById('esgNoteText').value = '';
+  renderESGNotes();
+  toast('Note posted');
+}
+
+function deleteESGNote(i) {
+  if(!isEditMode) return;
+  esgNotes.splice(i, 1);
+  saveESGData();
+  renderESGNotes();
+  toast('Note deleted');
+}
+
+// ══════════════════════════════════════════════════════
+// DISCUSSIONS
+// ══════════════════════════════════════════════════════
+function renderDiscussions() {
+  renderCommentsList();
+}
+
+function renderCommentsList() {
+  var list = document.getElementById('commentsList');
+  if(!list) return;
+  if(!esgComments.length){ list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--txtf);font-family:var(--font-mono);font-size:.8rem">No comments yet — be the first to post!</div>'; return; }
+  list.innerHTML = esgComments.map(function(c, i){
+    var html = '<div class="comment-card">';
+    html += '<div class="comment-meta"><span class="comment-author">'+esc(c.author)+'</span><span>'+esc(c.time)+'</span></div>';
+    html += '<div class="comment-text">'+esc(c.text)+'</div>';
+    html += '<div class="comment-actions">';
+    if(isEditMode) html += '<button class="comment-action-btn" onclick="showReplyBox('+i+')">↩ Reply</button>';
+    if(isEditMode) html += '<button class="comment-action-btn danger" onclick="deleteComment('+i+')">Delete</button>';
+    html += '</div>';
+    if(c.replies && c.replies.length){
+      html += '<div class="reply-thread">';
+      c.replies.forEach(function(r, ri){
+        html += '<div class="reply-item"><div class="reply-meta">'+esc(r.author)+' · '+esc(r.time)+'</div>'+esc(r.text)+'</div>';
+      });
+      html += '</div>';
+    }
+    if(isEditMode){
+      html += '<div class="reply-box" id="replyBox'+i+'">';
+      html += '<textarea class="post-input" id="replyText'+i+'" placeholder="Write a reply..." style="min-height:50px;margin-top:8px"></textarea>';
+      html += '<div style="display:flex;justify-content:flex-end;margin-top:6px"><button class="btn primary" style="font-size:.68rem;padding:6px 14px" onclick="postReply('+i+')">Post Reply</button></div>';
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }).join('');
+}
+
+function postComment() {
+  var name = document.getElementById('commenterName').value.trim() || 'Anonymous';
+  var text = document.getElementById('newComment').value.trim();
+  if(!text){ toast('Write something first'); return; }
+  var now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  esgComments.push({ author:name, text:text, time:now, replies:[] });
+  saveESGData();
+  document.getElementById('newComment').value = '';
+  document.getElementById('commenterName').value = '';
+  renderCommentsList();
+  toast('Comment posted');
+}
+
+function deleteComment(i) {
+  if(!isEditMode) return;
+  esgComments.splice(i, 1);
+  saveESGData();
+  renderCommentsList();
+  toast('Comment deleted');
+}
+
+function showReplyBox(i) {
+  var box = document.getElementById('replyBox'+i);
+  if(box) box.classList.toggle('open');
+}
+
+function postReply(i) {
+  if(!isEditMode) return;
+  var textarea = document.getElementById('replyText'+i);
+  var text = textarea ? textarea.value.trim() : '';
+  if(!text){ toast('Write a reply first'); return; }
+  if(!esgComments[i].replies) esgComments[i].replies = [];
+  var now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  esgComments[i].replies.push({ author:'Team', text:text, time:now });
+  saveESGData();
+  renderCommentsList();
+  toast('Reply posted');
+}
+
+// ══════════════════════════════════════════════════════
+// TEMPLATES
+// ══════════════════════════════════════════════════════
+function renderTemplatesView() {
+  var editArea = document.getElementById('templateEditArea');
+  if(editArea) editArea.style.display = isEditMode ? 'block' : 'none';
+  var noteDisplay = document.getElementById('templateNoteDisplay');
+  if(noteDisplay){
+    if(templateNote){ noteDisplay.style.display='block'; noteDisplay.textContent = templateNote; }
+    else { noteDisplay.style.display='none'; }
+  }
+  renderTemplateFiles();
+}
+
+function renderTemplateFiles() {
+  var list = document.getElementById('templateFilesList');
+  var empty = document.getElementById('templateEmptyMsg');
+  if(!list) return;
+  if(!templateFiles.length){ list.innerHTML=''; if(empty) empty.style.display='block'; return; }
+  if(empty) empty.style.display='none';
+  list.innerHTML = templateFiles.map(function(f, i){
+    var html = '<div class="template-file-item">';
+    html += '<div class="template-file-icon">📄</div>';
+    html += '<div style="flex:1"><div class="template-file-name">'+esc(f.name)+'</div><div class="template-file-size">'+esc(f.size||'')+'</div></div>';
+    if(f.data) html += '<a href="'+f.data+'" download="'+esc(f.name)+'" class="btn secondary" style="font-size:.65rem;padding:5px 10px;text-decoration:none">📥 Download</a>';
+    if(isEditMode) html += '<button class="btn danger" style="font-size:.65rem;padding:5px 10px;margin-left:6px" onclick="deleteTemplateFile('+i+')">Delete</button>';
+    html += '</div>';
+    return html;
+  }).join('');
+}
+
+function handleTemplateFileUpload(input) {
+  var files = input.files;
+  if(!files || !files.length) return;
+  var file = files[0];
+  var size = file.size > 1024*1024 ? (file.size/1024/1024).toFixed(1)+' MB' : Math.round(file.size/1024)+' KB';
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    templateFiles.push({ name:file.name, size:size, data:e.target.result, uploadedAt:new Date().toISOString() });
+    saveESGData();
+    renderTemplateFiles();
+    toast('File uploaded: '+file.name);
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function deleteTemplateFile(i) {
+  if(!isEditMode) return;
+  if(!confirm('Delete this file?')) return;
+  templateFiles.splice(i, 1);
+  saveESGData();
+  renderTemplatesView();
+  toast('File deleted');
+}
+
+function saveTemplateNote() {
+  if(!isEditMode) return;
+  templateNote = document.getElementById('templateNoteInput').value.trim();
+  saveESGData();
+  var noteDisplay = document.getElementById('templateNoteDisplay');
+  if(noteDisplay){
+    if(templateNote){ noteDisplay.style.display='block'; noteDisplay.textContent=templateNote; }
+    else { noteDisplay.style.display='none'; }
+  }
+  toast('Note saved');
+}
+
+// ══════════════════════════════════════════════════════
+// FIREBASE ESG DATA (stored in 'esgData' collection, doc 'main')
+// ══════════════════════════════════════════════════════
+function loadESGData() {
+  if(!db) return;
+  db.collection('esgData').doc('main').onSnapshot(function(doc) {
+    if(doc.exists){
+      var data = doc.data();
+      esgNotes = data.notes || [];
+      esgComments = data.comments || [];
+      templateFiles = data.templateFiles || [];
+      templateNote = data.templateNote || '';
+    }
+    esgDataLoaded = true;
+    if(currentView === 'esg') renderESGView();
+    else if(currentView === 'discussions') renderCommentsList();
+    else if(currentView === 'templates') renderTemplatesView();
+  }, function(err){ console.warn('ESG data load error:', err); });
+}
+
+function saveESGData() {
+  if(!db) return;
+  var data = {
+    notes: esgNotes,
+    comments: esgComments,
+    templateFiles: templateFiles,
+    templateNote: templateNote,
+    updatedAt: new Date().toISOString()
+  };
+  db.collection('esgData').doc('main').set(data, {merge:true}).catch(function(e){ toast('Save error: '+e.message, true); });
+}
+
+// ══════════════════════════════════════════════════════
+// FUND RENDERING (unchanged)
 // ══════════════════════════════════════════════════════
 function getFundCompanies(fundKey) {
   var fundName = fundKey === 'fund4' ? 'Fund IV' : 'Fund V';
@@ -1009,9 +1206,7 @@ function renderFundView(fundKey) {
   var si = document.getElementById('si' + suffix);
   var q = si ? si.value.toLowerCase() : '';
   var f = curFilters[fundKey] || 'all';
-  
   var fundCos = companies.filter(function(c) { return c.fund === fundName; });
-  
   var cos = fundCos.filter(function(c) {
     if(q && !c.name.toLowerCase().includes(q)) return false;
     var p = pct(c);
@@ -1020,144 +1215,100 @@ function renderFundView(fundKey) {
     if(f === 'new') return p === 0;
     return true;
   });
-  
-  if(!cos.length) {
-    gr.innerHTML = '';
-    em.style.display = 'block';
-  } else {
-    em.style.display = 'none';
+  if(!cos.length){ gr.innerHTML=''; em.style.display='block'; }
+  else {
+    em.style.display='none';
     gr.innerHTML = cos.map(function(c) {
-      var p = pct(c), done = (c.items || []).filter(function(i) { return i.status === 'done'; }).length, tot = (c.items || []).length;
-      var fc = p >= 70 ? '' : p >= 30 ? 'w' : 'l';
+      var p = pct(c), done = (c.items||[]).filter(function(i){return i.status==='done';}).length, tot = (c.items||[]).length;
+      var fc = p>=70?'':p>=30?'w':'l';
       var partnerSectorText = '';
       if(c.team) partnerSectorText += esc(c.team);
-      if(c.sector) partnerSectorText += (c.team ? ' · ' : '') + esc(c.sector);
-      
-      return '<div class="card" onclick="showDetail(\'' + c.id + '\')">'
-        + '<div class="card-hd"><div>'
-        + '<div class="cname">' + esc(c.name) + '</div>'
-        + '<div class="cid">' + partnerSectorText + '</div>'
-        + (c.startDate ? '<div class="cstart">📅 Start: ' + fmt(c.startDate) + '</div>' : '<div class="cstart" style="color:var(--warn)">⚠ No start date set</div>')
-        + '</div>' + chipHtml(p) + '</div>'
-        + '<div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>' + p + '%</strong></div>'
-        + '<div class="prog-bg"><div class="prog-fill ' + fc + '" style="width:' + p + '%"></div></div></div>'
-        + '<div class="cmeta"><div class="mi"><strong>' + tot + '</strong>Total</div><div class="mi"><strong>' + done + '</strong>Done</div><div class="mi"><strong>' + (tot - done) + '</strong>Pending</div></div>'
-        + (isEditMode ? '<div class="cact">'
-        + '<button class="del-card-btn" onclick="event.stopPropagation();askDel(\'' + c.id + '\')">🗑 Delete</button>'
-        + '</div>' : '')
-        + '</div>';
+      if(c.sector) partnerSectorText += (c.team?' · ':'')+esc(c.sector);
+      return '<div class="card" onclick="showDetail(\''+c.id+'\')"><div class="card-hd"><div>'
+        +'<div class="cname">'+esc(c.name)+'</div>'
+        +'<div class="cid">'+partnerSectorText+'</div>'
+        +(c.startDate?'<div class="cstart">📅 Start: '+fmt(c.startDate)+'</div>':'<div class="cstart" style="color:var(--warn)">⚠ No start date set</div>')
+        +'</div>'+chipHtml(p)+'</div>'
+        +'<div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>'+p+'%</strong></div>'
+        +'<div class="prog-bg"><div class="prog-fill '+fc+'" style="width:'+p+'%"></div></div></div>'
+        +'<div class="cmeta"><div class="mi"><strong>'+tot+'</strong>Total</div><div class="mi"><strong>'+done+'</strong>Done</div><div class="mi"><strong>'+(tot-done)+'</strong>Pending</div></div>'
+        +(isEditMode?'<div class="cact"><button class="del-card-btn" onclick="event.stopPropagation();askDel(\''+c.id+'\')">🗑 Delete</button></div>':'')
+        +'</div>';
     }).join('');
   }
-  
-  // Update stats for this fund
-  var all = fundCos.flatMap(function(c) { return c.items || []; });
-  var dn = all.filter(function(i) { return i.status === 'done'; }).length;
-  var avg = fundCos.length ? Math.round(fundCos.map(pct).reduce(function(a, b) { return a + b; }, 0) / fundCos.length) : 0;
-  document.getElementById('s0_f' + suffix).textContent = fundCos.length;
-  document.getElementById('s1_f' + suffix).textContent = all.length;
-  document.getElementById('s2_f' + suffix).textContent = dn;
-  document.getElementById('s3_f' + suffix).textContent = avg + '%';
+  var all = fundCos.flatMap(function(c){return c.items||[];});
+  var dn = all.filter(function(i){return i.status==='done';}).length;
+  var avg = fundCos.length ? Math.round(fundCos.map(pct).reduce(function(a,b){return a+b;},0)/fundCos.length) : 0;
+  document.getElementById('s0_f'+suffix).textContent = fundCos.length;
+  document.getElementById('s1_f'+suffix).textContent = all.length;
+  document.getElementById('s2_f'+suffix).textContent = dn;
+  document.getElementById('s3_f'+suffix).textContent = avg+'%';
 }
 
 function updateSidebarCounts() {
-  var f4 = companies.filter(function(c) { return c.fund === 'Fund IV'; }).length;
-  var f5 = companies.filter(function(c) { return c.fund === 'Fund V'; }).length;
+  var f4 = companies.filter(function(c){return c.fund==='Fund IV';}).length;
+  var f5 = companies.filter(function(c){return c.fund==='Fund V';}).length;
   document.getElementById('navFund4Count').textContent = f4;
   document.getElementById('navFund5Count').textContent = f5;
 }
 
 // ══════════════════════════════════════════════════════
-// ANALYTICS
+// ANALYTICS (unchanged)
 // ══════════════════════════════════════════════════════
 function populateAnalyticsFilters() {
-  var partners = [], sectorsList = [], companyNames = [];
-  companies.forEach(function(c) {
-    if(c.team && partners.indexOf(c.team) === -1) partners.push(c.team);
-    if(c.sector && sectorsList.indexOf(c.sector) === -1) sectorsList.push(c.sector);
+  var partners=[], sectorsList=[], companyNames=[];
+  companies.forEach(function(c){
+    if(c.team && partners.indexOf(c.team)===-1) partners.push(c.team);
+    if(c.sector && sectorsList.indexOf(c.sector)===-1) sectorsList.push(c.sector);
     companyNames.push(c.name);
   });
-  
-  document.getElementById('aFilterPartner').innerHTML = '<option value="">All Partners</option>' +
-    partners.sort().map(function(p) { return '<option value="' + esc(p) + '">' + esc(p) + '</option>'; }).join('');
-  
-  document.getElementById('aFilterSector').innerHTML = '<option value="">All Sectors</option>' +
-    sectorsList.sort().map(function(s) { return '<option value="' + esc(s) + '">' + esc(s) + '</option>'; }).join('');
-  
-  document.getElementById('aFilterCompany').innerHTML = '<option value="">All Companies</option>' +
-    companyNames.sort().map(function(n) { return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join('');
+  document.getElementById('aFilterPartner').innerHTML = '<option value="">All Partners</option>'+partners.sort().map(function(p){return '<option value="'+esc(p)+'">'+esc(p)+'</option>';}).join('');
+  document.getElementById('aFilterSector').innerHTML = '<option value="">All Sectors</option>'+sectorsList.sort().map(function(s){return '<option value="'+esc(s)+'">'+esc(s)+'</option>';}).join('');
+  document.getElementById('aFilterCompany').innerHTML = '<option value="">All Companies</option>'+companyNames.sort().map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('');
 }
 
 function renderAnalytics() {
-  var fund = document.getElementById('aFilterFund').value;
-  var partner = document.getElementById('aFilterPartner').value;
-  var sector = document.getElementById('aFilterSector').value;
-  var company = document.getElementById('aFilterCompany').value;
-  
-  var filtered = companies.filter(function(c) {
-    if(fund && c.fund !== fund) return false;
-    if(partner && c.team !== partner) return false;
-    if(sector && c.sector !== sector) return false;
-    if(company && c.name !== company) return false;
+  var fund=document.getElementById('aFilterFund').value;
+  var partner=document.getElementById('aFilterPartner').value;
+  var sector=document.getElementById('aFilterSector').value;
+  var company=document.getElementById('aFilterCompany').value;
+  var filtered = companies.filter(function(c){
+    if(fund && c.fund!==fund) return false;
+    if(partner && c.team!==partner) return false;
+    if(sector && c.sector!==sector) return false;
+    if(company && c.name!==company) return false;
     return true;
   });
-  
-  // Summary cards
-  var totalItems = 0, doneItems = 0, overdueItems = 0;
-  filtered.forEach(function(c) {
-    var items = c.items || [];
-    totalItems += items.length;
-    items.forEach(function(i) {
-      if(i.status === 'done') doneItems++;
-      else {
-        var dl = resolveDeadline(i, c);
-        if(dl && daysTo(dl) < 0) overdueItems++;
-      }
+  var totalItems=0, doneItems=0, overdueItems=0;
+  filtered.forEach(function(c){
+    var items=c.items||[];
+    totalItems+=items.length;
+    items.forEach(function(i){
+      if(i.status==='done') doneItems++;
+      else { var dl=resolveDeadline(i,c); if(dl&&daysTo(dl)<0) overdueItems++; }
     });
   });
-  
-  var avgProg = filtered.length ? Math.round(filtered.map(pct).reduce(function(a, b) { return a + b; }, 0) / filtered.length) : 0;
-  
+  var avgProg = filtered.length ? Math.round(filtered.map(pct).reduce(function(a,b){return a+b;},0)/filtered.length) : 0;
   document.getElementById('analyticsSummary').innerHTML =
-    '<div class="as-card"><h4>Total Companies</h4><div class="as-val">' + filtered.length + '</div><div class="as-sub">Matching filters</div></div>' +
-    '<div class="as-card"><h4>Open Actions</h4><div class="as-val" style="color:var(--warn)">' + (totalItems - doneItems) + '</div><div class="as-sub">' + overdueItems + ' overdue</div></div>' +
-    '<div class="as-card"><h4>Avg Progress</h4><div class="as-val">' + avgProg + '%</div><div class="as-sub">' + doneItems + ' of ' + totalItems + ' completed</div></div>';
-  
-  // Table
-  if(filtered.length === 0) {
-    document.getElementById('analyticsTable').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txtf);font-family:var(--font-mono)">No companies match the selected filters</div>';
-    return;
-  }
-  
-  var rows = filtered.map(function(c) {
-    var p = pct(c);
-    var items = c.items || [];
-    var done = items.filter(function(i) { return i.status === 'done'; }).length;
-    var overdue = items.filter(function(i) {
-      if(i.status === 'done') return false;
-      var dl = resolveDeadline(i, c);
-      return dl && daysTo(dl) < 0;
-    }).length;
-    var fc = p >= 70 ? '' : p >= 30 ? 'w' : 'l';
-    
-    return '<tr style="cursor:pointer" onclick="showDetail(\'' + c.id + '\')">'
-      + '<td style="font-weight:700">' + esc(c.name) + '</td>'
-      + '<td>' + esc(c.fund || '—') + '</td>'
-      + '<td>' + esc(c.team || '—') + '</td>'
-      + '<td>' + esc(c.sector || '—') + '</td>'
-      + '<td><div class="at-progress"><div class="prog-bg"><div class="prog-fill ' + fc + '" style="width:' + p + '%"></div></div><span>' + p + '%</span></div></td>'
-      + '<td style="font-family:var(--font-mono);font-size:.78rem">' + done + '/' + items.length + '</td>'
-      + '<td style="font-family:var(--font-mono);font-size:.78rem;color:' + (overdue > 0 ? 'var(--red);font-weight:700' : 'var(--txtm)') + '">' + overdue + '</td>'
-      + '</tr>';
+    '<div class="as-card"><h4>Total Companies</h4><div class="as-val">'+filtered.length+'</div><div class="as-sub">Matching filters</div></div>'+
+    '<div class="as-card"><h4>Open Actions</h4><div class="as-val" style="color:var(--warn)">'+(totalItems-doneItems)+'</div><div class="as-sub">'+overdueItems+' overdue</div></div>'+
+    '<div class="as-card"><h4>Avg Progress</h4><div class="as-val">'+avgProg+'%</div><div class="as-sub">'+doneItems+' of '+totalItems+' completed</div></div>';
+  if(!filtered.length){ document.getElementById('analyticsTable').innerHTML='<div style="padding:40px;text-align:center;color:var(--txtf);font-family:var(--font-mono)">No companies match the selected filters</div>'; return; }
+  var rows = filtered.map(function(c){
+    var p=pct(c),items=c.items||[],done=items.filter(function(i){return i.status==='done';}).length;
+    var overdue=items.filter(function(i){if(i.status==='done')return false;var dl=resolveDeadline(i,c);return dl&&daysTo(dl)<0;}).length;
+    var fc=p>=70?'':p>=30?'w':'l';
+    return '<tr style="cursor:pointer" onclick="showDetail(\''+c.id+'\')">'
+      +'<td style="font-weight:700">'+esc(c.name)+'</td><td>'+esc(c.fund||'—')+'</td><td>'+esc(c.team||'—')+'</td><td>'+esc(c.sector||'—')+'</td>'
+      +'<td><div class="at-progress"><div class="prog-bg"><div class="prog-fill '+fc+'" style="width:'+p+'%"></div></div><span>'+p+'%</span></div></td>'
+      +'<td style="font-family:var(--font-mono);font-size:.78rem">'+done+'/'+items.length+'</td>'
+      +'<td style="font-family:var(--font-mono);font-size:.78rem;color:'+(overdue>0?'var(--red);font-weight:700':'var(--txtm)')+'">'+overdue+'</td></tr>';
   }).join('');
-  
-  document.getElementById('analyticsTable').innerHTML =
-    '<table><thead><tr>'
-    + '<th>Company</th><th>Fund</th><th>Partner</th><th>Sector</th><th>Progress</th><th>Done/Total</th><th>Overdue</th>'
-    + '</tr></thead><tbody>' + rows + '</tbody></table>';
+  document.getElementById('analyticsTable').innerHTML='<table><thead><tr><th>Company</th><th>Fund</th><th>Partner</th><th>Sector</th><th>Progress</th><th>Done/Total</th><th>Overdue</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 // ══════════════════════════════════════════════════════
-// TIMELINE PARSER HELPER
+// TIMELINE PARSER (unchanged)
 // ══════════════════════════════════════════════════════
 function parseTimeline(timelineStr) {
   if (!timelineStr || typeof timelineStr !== 'string') return null;
@@ -1170,9 +1321,9 @@ function parseTimeline(timelineStr) {
   if (!isNaN(number) && number > 0) return { type: 'offset', days: number };
   return null;
 }
-  
+
 // ══════════════════════════════════════════════════════
-// FLEXIBLE EXCEL PARSER (unchanged)
+// EXCEL PARSER (unchanged)
 // ══════════════════════════════════════════════════════
 function parseESAPExcel(file) {
   return new Promise(function(resolve, reject) {
@@ -1181,12 +1332,11 @@ function parseESAPExcel(file) {
       try {
         var data = new Uint8Array(e.target.result);
         var workbook = XLSX.read(data, { type: 'array' });
-        var allActions = [];
-        var errors = [];
+        var allActions = [], errors = [];
         workbook.SheetNames.forEach(function(sheetName) {
           try {
             var worksheet = workbook.Sheets[sheetName];
-            var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null, blankrows: false, raw: false });
+            var jsonData = XLSX.utils.sheet_to_json(worksheet, { header:1, defval:null, blankrows:false, raw:false });
             if (jsonData.length === 0) return;
             var headerRowIndex = findHeaderRow(jsonData);
             if (headerRowIndex === -1) return;
@@ -1199,41 +1349,24 @@ function parseESAPExcel(file) {
               if (!row || row.every(function(cell) { return !cell; })) continue;
               var actionText = columnMap.action !== -1 ? row[columnMap.action] : null;
               if (!actionText || !actionText.toString().trim()) continue;
-              var action = {
-                id: 'i_' + Date.now() + '_' + actionsFound,
-                action: cleanText(actionText),
-                title: cleanText(actionText).substring(0, 100),
-                status: mapStatus(columnMap.status !== -1 ? row[columnMap.status] : ''),
-                createdAt: new Date().toISOString()
-              };
+              var action = { id:'i_'+Date.now()+'_'+actionsFound, action:cleanText(actionText), title:cleanText(actionText).substring(0,100), status:mapStatus(columnMap.status !== -1 ? row[columnMap.status] : ''), createdAt:new Date().toISOString() };
               var timelineStr = columnMap.timeline !== -1 ? cleanText(row[columnMap.timeline]) : '';
               var timelineInfo = parseTimeline(timelineStr);
               if (timelineInfo) {
                 if (timelineInfo.type === 'offset' && timelineInfo.days) {
                   action.offsetDays = timelineInfo.days;
-                  var today = new Date(); today.setHours(0, 0, 0, 0);
-                  var dueDate = new Date(today);
-                  dueDate.setDate(today.getDate() + timelineInfo.days);
+                  var today = new Date(); today.setHours(0,0,0,0);
+                  var dueDate = new Date(today); dueDate.setDate(today.getDate()+timelineInfo.days);
                   action.deadline = dueDate.toISOString().split('T')[0];
-                } else if (timelineInfo.type === 'specific') {
-                  action.deadline = timelineInfo.date;
-                }
+                } else if (timelineInfo.type === 'specific') { action.deadline = timelineInfo.date; }
               }
-              allActions.push(action);
-              actionsFound++;
+              allActions.push(action); actionsFound++;
             }
-          } catch (err) {
-            errors.push('Sheet "' + sheetName + '": ' + err.message);
-          }
+          } catch (err) { errors.push('Sheet "'+sheetName+'": '+err.message); }
         });
-        if (allActions.length === 0) {
-          reject(new Error('No action items found in Excel file.'));
-        } else {
-          resolve({ actions: allActions, count: allActions.length, errors: errors });
-        }
-      } catch (err) {
-        reject(new Error('Failed to parse Excel file: ' + err.message));
-      }
+        if (allActions.length === 0) reject(new Error('No action items found in Excel file.'));
+        else resolve({ actions:allActions, count:allActions.length, errors:errors });
+      } catch (err) { reject(new Error('Failed to parse Excel file: '+err.message)); }
     };
     reader.onerror = function() { reject(new Error('Failed to read file')); };
     reader.readAsArrayBuffer(file);
@@ -1241,558 +1374,436 @@ function parseESAPExcel(file) {
 }
 
 function findHeaderRow(data) {
-  var keywords = ['action', 's.no', 's. no', 'timeline', 'status', 'aspect', 'risk', 'deadline'];
+  var keywords = ['action','s.no','s. no','timeline','status','aspect','risk','deadline'];
   for (var i = 0; i < Math.min(15, data.length); i++) {
     var row = data[i];
     if (!row || row.length === 0) continue;
-    var rowText = row.map(function(cell) { return (cell || '').toString().toLowerCase(); }).join(' ');
-    var matches = keywords.filter(function(k) { return rowText.indexOf(k) !== -1; }).length;
+    var rowText = row.map(function(cell){return (cell||'').toString().toLowerCase();}).join(' ');
+    var matches = keywords.filter(function(k){return rowText.indexOf(k)!==-1;}).length;
     if (matches >= 2) return i;
   }
   return 0;
 }
 
 function mapColumns(headers) {
-  var mapping = { serialNo: -1, action: -1, timeline: -1, status: -1 };
-  headers.forEach(function(header, index) {
-    if (!header) return;
+  var mapping = {serialNo:-1,action:-1,timeline:-1,status:-1};
+  headers.forEach(function(header,index){
+    if(!header) return;
     var h = header.toString().toLowerCase().trim();
-    if ((h.indexOf('s.no') !== -1 || h.indexOf('s. no') !== -1 || h === '#' || h === 's.no.' || h === 'sno' || h === 'sr.no' || h === 'sr. no.') && mapping.serialNo === -1) mapping.serialNo = index;
-    if ((h === 'action' || h === 'actions' || h.indexOf('action item') !== -1 || h.indexOf('esap action') !== -1 || h.indexOf('activity') !== -1) && h.indexOf('interaction') === -1 && mapping.action === -1) mapping.action = index;
-    if ((h.indexOf('timeline') !== -1 || h.indexOf('deadline') !== -1 || h.indexOf('due') !== -1 || h.indexOf('completion') !== -1) && mapping.timeline === -1) mapping.timeline = index;
-    if (h.indexOf('status') !== -1 && mapping.status === -1) mapping.status = index;
+    if((h.indexOf('s.no')!==-1||h.indexOf('s. no')!==-1||h==='#'||h==='s.no.'||h==='sno'||h==='sr.no'||h==='sr. no.')&&mapping.serialNo===-1) mapping.serialNo=index;
+    if((h==='action'||h==='actions'||h.indexOf('action item')!==-1||h.indexOf('esap action')!==-1||h.indexOf('activity')!==-1)&&h.indexOf('interaction')===-1&&mapping.action===-1) mapping.action=index;
+    if((h.indexOf('timeline')!==-1||h.indexOf('deadline')!==-1||h.indexOf('due')!==-1||h.indexOf('completion')!==-1)&&mapping.timeline===-1) mapping.timeline=index;
+    if(h.indexOf('status')!==-1&&mapping.status===-1) mapping.status=index;
   });
   return mapping;
 }
 
-function cleanText(value) {
-  if (value === null || value === undefined) return '';
-  return value.toString().trim().replace(/\s+/g, ' ');
-}
-
-function mapStatus(statusText) {
-  if (!statusText) return 'progress';
-  var s = statusText.toString().toLowerCase();
-  if (s.indexOf('complet') !== -1 || s.indexOf('done') !== -1) return 'done';
-  return 'progress';
-}
+function cleanText(value){ if(value===null||value===undefined) return ''; return value.toString().trim().replace(/\s+/g,' '); }
+function mapStatus(statusText){ if(!statusText) return 'progress'; var s=statusText.toString().toLowerCase(); if(s.indexOf('complet')!==-1||s.indexOf('done')!==-1) return 'done'; return 'progress'; }
 
 // ══════════════════════════════════════════════════════
-// FILE UPLOAD HANDLER (unchanged)
+// FILE UPLOAD (unchanged)
 // ══════════════════════════════════════════════════════
 function handleESAPUpload(event) {
   var file = event.target.files[0];
   if (!file) return;
-  if (file.size > 10 * 1024 * 1024) { toast('File too large. Maximum size is 10MB', true); event.target.value = ''; return; }
+  if (file.size > 10*1024*1024) { toast('File too large. Maximum size is 10MB', true); event.target.value=''; return; }
   var isExcel = file.name.match(/\.(xlsx|xls)$/i);
   if (isExcel) {
-    document.getElementById('parseStatus').style.display = 'block';
-    document.getElementById('parseStatus').textContent = '⏳ Parsing Excel file...';
-    document.getElementById('parseStatus').style.color = 'var(--warn)';
-    parseESAPExcel(file).then(function(result) {
-      parsedActions = result.actions;
-      document.getElementById('parseStatus').textContent = '✅ Found ' + result.count + ' action items in Excel file';
-      document.getElementById('parseStatus').style.color = 'var(--acc)';
-      toast('Excel parsed: ' + result.count + ' actions found');
-      var reader = new FileReader();
-      reader.onload = function(e) { pendingESAPFile = e.target.result; pendingESAPFileName = file.name; document.getElementById('esapFileName').textContent = file.name; };
-      reader.readAsDataURL(file);
-    }).catch(function(err) {
-      document.getElementById('parseStatus').textContent = '❌ ' + err.message;
-      document.getElementById('parseStatus').style.color = 'var(--red)';
-      toast('Failed to parse Excel: ' + err.message, true);
-      var reader = new FileReader();
-      reader.onload = function(e) { pendingESAPFile = e.target.result; pendingESAPFileName = file.name; document.getElementById('esapFileName').textContent = file.name; };
-      reader.readAsDataURL(file);
+    document.getElementById('parseStatus').style.display='block';
+    document.getElementById('parseStatus').textContent='⏳ Parsing Excel file...';
+    document.getElementById('parseStatus').style.color='var(--warn)';
+    parseESAPExcel(file).then(function(result){
+      parsedActions=result.actions;
+      document.getElementById('parseStatus').textContent='✅ Found '+result.count+' action items in Excel file';
+      document.getElementById('parseStatus').style.color='var(--acc)';
+      toast('Excel parsed: '+result.count+' actions found');
+      var reader=new FileReader(); reader.onload=function(e){pendingESAPFile=e.target.result;pendingESAPFileName=file.name;document.getElementById('esapFileName').textContent=file.name;}; reader.readAsDataURL(file);
+    }).catch(function(err){
+      document.getElementById('parseStatus').textContent='❌ '+err.message;
+      document.getElementById('parseStatus').style.color='var(--red)';
+      toast('Failed to parse Excel: '+err.message,true);
+      var reader=new FileReader(); reader.onload=function(e){pendingESAPFile=e.target.result;pendingESAPFileName=file.name;document.getElementById('esapFileName').textContent=file.name;}; reader.readAsDataURL(file);
     });
   } else {
-    parsedActions = [];
-    document.getElementById('parseStatus').style.display = 'none';
-    var reader = new FileReader();
-    reader.onload = function(e) { pendingESAPFile = e.target.result; pendingESAPFileName = file.name; document.getElementById('esapFileName').textContent = file.name; toast('File ready to upload'); };
-    reader.onerror = function() { toast('Error reading file', true); };
-    reader.readAsDataURL(file);
+    parsedActions=[];
+    document.getElementById('parseStatus').style.display='none';
+    var reader=new FileReader(); reader.onload=function(e){pendingESAPFile=e.target.result;pendingESAPFileName=file.name;document.getElementById('esapFileName').textContent=file.name;toast('File ready to upload');}; reader.onerror=function(){toast('Error reading file',true);}; reader.readAsDataURL(file);
   }
 }
 
 function removeESAP() {
-  if (!checkEditMode()) return;
-  if (!confirm('Remove ESAP document?')) return;
-  if (editingId) {
-    fsSet(editingId, { esapFile: null, esapFileName: null }).then(function() { toast('ESAP removed'); document.getElementById('currentESAP').style.display = 'none'; }).catch(function(e) { toast('Error: ' + e.message, true); });
-  } else {
-    pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = [];
-    document.getElementById('esapFileName').textContent = 'No file selected';
-    document.getElementById('esapFile').value = '';
-    document.getElementById('parseStatus').style.display = 'none';
-  }
+  if(!checkEditMode()) return;
+  if(!confirm('Remove ESAP document?')) return;
+  if(editingId){ fsSet(editingId,{esapFile:null,esapFileName:null}).then(function(){toast('ESAP removed');document.getElementById('currentESAP').style.display='none';}).catch(function(e){toast('Error: '+e.message,true);}); }
+  else { pendingESAPFile=null;pendingESAPFileName='';parsedActions=[];document.getElementById('esapFileName').textContent='No file selected';document.getElementById('esapFile').value='';document.getElementById('parseStatus').style.display='none'; }
 }
 
-// ── NUDGE FUNCTIONS (unchanged) ────────────────────────
+// ══════════════════════════════════════════════════════
+// NUDGE (unchanged)
+// ══════════════════════════════════════════════════════
 function addNudgeEmail() {
-  var input = document.getElementById('newNudgeEmail');
-  var email = input.value.trim();
-  if (!email) { toast('Enter an email address'); return; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Invalid email address', true); return; }
-  var c = companies.find(function(x){ return x.id === curId; });
-  if (!c) return;
-  var emails = c.additionalNudgeEmails || [];
-  if (emails.indexOf(email) !== -1) { toast('Email already added'); return; }
+  var input=document.getElementById('newNudgeEmail'); var email=input.value.trim();
+  if(!email){toast('Enter an email address');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Invalid email address',true);return;}
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var emails=c.additionalNudgeEmails||[];
+  if(emails.indexOf(email)!==-1){toast('Email already added');return;}
   emails.push(email);
-  fsSet(curId, { additionalNudgeEmails: emails }).then(function(){ input.value = ''; showDetail(curId); toast('Email added'); }).catch(function(e){ toast('Error: ' + e.message, true); });
+  fsSet(curId,{additionalNudgeEmails:emails}).then(function(){input.value='';showDetail(curId);toast('Email added');}).catch(function(e){toast('Error: '+e.message,true);});
 }
 
 function removeNudgeEmail(idx) {
-  var c = companies.find(function(x){ return x.id === curId; });
-  if (!c) return;
-  var emails = c.additionalNudgeEmails || [];
-  emails.splice(idx, 1);
-  fsSet(curId, { additionalNudgeEmails: emails }).then(function(){ showDetail(curId); toast('Email removed'); }).catch(function(e){ toast('Error: ' + e.message, true); });
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var emails=c.additionalNudgeEmails||[]; emails.splice(idx,1);
+  fsSet(curId,{additionalNudgeEmails:emails}).then(function(){showDetail(curId);toast('Email removed');}).catch(function(e){toast('Error: '+e.message,true);});
 }
 
 function sendNudge() {
-  var c = companies.find(function(x){ return x.id === curId; });
-  if (!c) return;
-  var spocName = document.getElementById('nudgeSpocName').value.trim();
-  var spocEmail = document.getElementById('nudgeSpocEmail').value.trim();
-  var additionalEmails = c.additionalNudgeEmails || [];
-  if (!spocEmail && additionalEmails.length === 0) { toast('Add at least one email address', true); return; }
-  fsSet(curId, { spocName: spocName, spocEmail: spocEmail }).then(function(){
-    var recipients = [];
-    if (spocEmail) recipients.push(spocEmail);
-    recipients = recipients.concat(additionalEmails);
-    var progress = pct(c);
-    var items = c.items || [];
-    var completed = items.filter(function(i){ return i.status === 'done'; }).length;
-    var pending = items.length - completed;
-    var overdue = items.filter(function(i){ if(i.status === 'done') return false; var deadline = resolveDeadline(i, c); return deadline && daysTo(deadline) < 0; }).length;
-    var subject = 'ESAP Implementation Status Update Request - ' + c.name;
-    var body = 'Dear ' + (spocName || 'Team') + ',\n\n';
-    body += 'This is a gentle reminder to provide an update on the ESAP implementation progress for ' + c.name + '.\n\n';
-    body += 'Current Status:\n';
-    body += '• Overall Progress: ' + progress + '%\n';
-    body += '• Total Actions: ' + items.length + '\n';
-    body += '• Completed: ' + completed + '\n';
-    body += '• Pending: ' + pending + '\n';
-    if(overdue > 0) body += '• Overdue: ' + overdue + '\n';
-    body += '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-    body += 'ACTION ITEMS LIST\n';
-    body += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-    items.forEach(function(item, idx) {
-      var num = (idx + 1);
-      var action = item.action || item.title || 'Untitled';
-      var deadline = resolveDeadline(item, c);
-      var deadlineText = deadline ? (typeof deadline === 'string' ? deadline : fmt(deadline)) : 'Not set';
-      var status = item.status === 'done' ? '✓ Completed' : '⏳ Pending';
-      body += num + '. ' + action + '\n';
-      body += '   Timeline: ' + deadlineText + '\n';
-      body += '   Status: ' + status + '\n\n';
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var spocName=document.getElementById('nudgeSpocName').value.trim();
+  var spocEmail=document.getElementById('nudgeSpocEmail').value.trim();
+  var additionalEmails=c.additionalNudgeEmails||[];
+  if(!spocEmail&&additionalEmails.length===0){toast('Add at least one email address',true);return;}
+  fsSet(curId,{spocName:spocName,spocEmail:spocEmail}).then(function(){
+    var recipients=[]; if(spocEmail) recipients.push(spocEmail); recipients=recipients.concat(additionalEmails);
+    var progress=pct(c),items=c.items||[],completed=items.filter(function(i){return i.status==='done';}).length,pending=items.length-completed;
+    var overdue=items.filter(function(i){if(i.status==='done')return false;var deadline=resolveDeadline(i,c);return deadline&&daysTo(deadline)<0;}).length;
+    var subject='ESAP Implementation Status Update Request - '+c.name;
+    var body='Dear '+(spocName||'Team')+',\n\nThis is a gentle reminder to provide an update on the ESAP implementation progress for '+c.name+'.\n\nCurrent Status:\n• Overall Progress: '+progress+'%\n• Total Actions: '+items.length+'\n• Completed: '+completed+'\n• Pending: '+pending+'\n'+(overdue>0?'• Overdue: '+overdue+'\n':'')+'\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nACTION ITEMS LIST\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+    items.forEach(function(item,idx){
+      var action=item.action||item.title||'Untitled';
+      var deadline=resolveDeadline(item,c);
+      var deadlineText=deadline?(typeof deadline==='string'?deadline:fmt(deadline)):'Not set';
+      var status=item.status==='done'?'✓ Completed':'⏳ Pending';
+      body+=(idx+1)+'. '+action+'\n   Timeline: '+deadlineText+'\n   Status: '+status+'\n\n';
     });
-    body += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-    body += 'Please update us on the latest status of pending action items.\n\n';
-    body += 'Best regards,\nESAP Tracking Team';
-    var mailto = 'mailto:' + recipients.join(',') + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    window.location.href = mailto;
-    var nudgeHistory = c.nudgeHistory || [];
-    nudgeHistory.push({ date: new Date().toISOString(), recipients: recipients, sentBy: 'User' });
-    fsSet(curId, { nudgeHistory: nudgeHistory, lastNudgeSent: new Date().toISOString() }).then(function(){ toast('📧 Nudge email opened in your email client'); });
-  }).catch(function(e){ toast('Error: ' + e.message, true); });
+    body+='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nPlease update us on the latest status of pending action items.\n\nBest regards,\nESAP Tracking Team';
+    window.location.href='mailto:'+recipients.join(',')+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+    var nudgeHistory=c.nudgeHistory||[];
+    nudgeHistory.push({date:new Date().toISOString(),recipients:recipients,sentBy:'User'});
+    fsSet(curId,{nudgeHistory:nudgeHistory,lastNudgeSent:new Date().toISOString()}).then(function(){toast('📧 Nudge email opened in your email client');});
+  }).catch(function(e){toast('Error: '+e.message,true);});
 }
 
-// ── INITIALIZATION ─────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// INITIALIZATION
+// ══════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function(){
   var params = new URLSearchParams(window.location.search);
   isEditMode = params.get('edit') === 'true';
   updateEditBadge();
-  
   var saved = localStorage.getItem('st_theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
-  document.getElementById('theme-toggle').textContent = saved === 'dark' ? '🌙' : '☀️';
+  document.getElementById('theme-toggle').textContent = saved==='dark'?'🌙':'☀️';
   updateLogoTheme(saved);
-  
   loadCustomSectors();
-  
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.firestore();
     db.enablePersistence({synchronizeTabs:true}).catch(function(e){ console.warn('Persistence unavailable:', e.code); });
     startListener();
+    loadESGData();
   } catch(e) {
-    if(e.code === 'app/duplicate-app'){
-      db = firebase.firestore();
-      startListener();
-    } else {
-      showBootError(e);
-    }
+    if(e.code==='app/duplicate-app'){ db=firebase.firestore(); startListener(); loadESGData(); }
+    else { showBootError(e); }
   }
 });
 
-// ── EDIT MODE ──────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// EDIT MODE
+// ══════════════════════════════════════════════════════
 function updateEditBadge(){
-  var badge = document.getElementById('editBadge');
-  var modeText = document.getElementById('editMode');
+  var badge=document.getElementById('editBadge');
+  var modeText=document.getElementById('editMode');
   if(isEditMode){
     badge.classList.remove('view-only');
-    modeText.textContent = '🔓 Edit Mode';
-    ['btnAdd4','btnAdd5'].forEach(function(id){ var btn = document.getElementById(id); if(btn) btn.disabled = false; });
+    modeText.textContent='🔓 Edit Mode';
+    ['btnAdd4','btnAdd5'].forEach(function(id){var btn=document.getElementById(id);if(btn)btn.disabled=false;});
   } else {
     badge.classList.add('view-only');
-    modeText.textContent = '🔒 View Only';
-    ['btnAdd4','btnAdd5'].forEach(function(id){ var btn = document.getElementById(id); if(btn) btn.disabled = true; });
+    modeText.textContent='🔒 View Only';
+    ['btnAdd4','btnAdd5'].forEach(function(id){var btn=document.getElementById(id);if(btn)btn.disabled=true;});
   }
 }
 
 function checkEditMode(){
-  if(!isEditMode){ toast('You are in view-only mode. Add ?edit=true to URL for edit access', true); return false; }
+  if(!isEditMode){toast('You are in view-only mode. Add ?edit=true to URL for edit access',true);return false;}
   return true;
 }
 
-// ── THEME ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════════════
 function toggleTheme(){
-  var html = document.documentElement;
-  var isDark = html.getAttribute('data-theme') === 'dark';
-  var next = isDark ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('st_theme', next);
-  document.getElementById('theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  var next=isDark?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('st_theme',next);
+  document.getElementById('theme-toggle').textContent=next==='dark'?'🌙':'☀️';
   updateLogoTheme(next);
 }
 
-// ── FILTERS ────────────────────────────────────────────
-function setF(btn, f, fundKey){
-  curFilters[fundKey] = f;
+// ══════════════════════════════════════════════════════
+// FILTERS
+// ══════════════════════════════════════════════════════
+function setF(btn,f,fundKey){
+  curFilters[fundKey]=f;
   document.querySelectorAll('[data-vf="'+fundKey+'"]').forEach(function(b){b.classList.remove('on');});
   btn.classList.add('on');
   renderFundView(fundKey);
 }
 
-// ── CUSTOM SECTORS ─────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// CUSTOM SECTORS
+// ══════════════════════════════════════════════════════
 function loadCustomSectors(){
-  try {
-    var custom = JSON.parse(localStorage.getItem('fund_sectors') || '[]');
-    sectors = ['Health Care', 'AI/SaaS', 'Finance', 'Consumer', 'Logistics', 'Other'];
-    custom.forEach(function(s){ if(sectors.indexOf(s) === -1) sectors.push(s); });
-  } catch(e){}
+  try { var custom=JSON.parse(localStorage.getItem('fund_sectors')||'[]'); sectors=['Health Care','AI/SaaS','Finance','Consumer','Logistics','Other']; custom.forEach(function(s){if(sectors.indexOf(s)===-1)sectors.push(s);}); } catch(e){}
 }
-
 function saveCustomSectors(){
-  var defaults = ['Health Care', 'AI/SaaS', 'Finance', 'Consumer', 'Logistics', 'Other'];
-  var custom = sectors.filter(function(s){ return defaults.indexOf(s) === -1; });
-  localStorage.setItem('fund_sectors', JSON.stringify(custom));
+  var defaults=['Health Care','AI/SaaS','Finance','Consumer','Logistics','Other'];
+  var custom=sectors.filter(function(s){return defaults.indexOf(s)===-1;});
+  localStorage.setItem('fund_sectors',JSON.stringify(custom));
 }
-
 function addCustomSector(){
-  var input = document.getElementById('customSector');
-  var value = input.value.trim();
-  if(!value){ toast('Enter sector name'); return; }
-  if(sectors.indexOf(value) !== -1){ toast('Sector already exists'); return; }
-  sectors.push(value);
-  saveCustomSectors();
-  renderSectorChips();
-  input.value = '';
-  toast('Sector added');
+  var input=document.getElementById('customSector'); var value=input.value.trim();
+  if(!value){toast('Enter sector name');return;}
+  if(sectors.indexOf(value)!==-1){toast('Sector already exists');return;}
+  sectors.push(value); saveCustomSectors(); renderSectorChips(); input.value=''; toast('Sector added');
 }
 
-// ── FIREBASE ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// FIREBASE
+// ══════════════════════════════════════════════════════
 function startListener(){
-  setSyncStatus('loading', 'Connecting...');
+  setSyncStatus('loading','Connecting...');
   unsubscribe = db.collection('companies').orderBy('createdAt','asc').onSnapshot(
     function(snap){
-      companies = [];
-      snap.forEach(function(doc){ var d = doc.data(); d.id = doc.id; companies.push(d); });
+      companies=[];
+      snap.forEach(function(doc){var d=doc.data();d.id=doc.id;companies.push(d);});
       showApp();
-      setSyncStatus('live', 'Live · ' + companies.length + ' companies');
+      setSyncStatus('live','Live · '+companies.length+' companies');
       renderAll();
       refreshN();
-      try {
-        localStorage.setItem('esap_auto_backup', JSON.stringify({ timestamp: new Date().toISOString(), companies: companies, sectors: sectors }));
-      } catch(e) {}
+      try { localStorage.setItem('esap_auto_backup',JSON.stringify({timestamp:new Date().toISOString(),companies:companies,sectors:sectors})); } catch(e){}
     },
     function(err){
       showApp();
       setSyncStatus('err','Connection failed');
-      toast('Sync error: ' + err.message, true);
+      toast('Sync error: '+err.message,true);
       try {
-        var backupToUse = localStorage.getItem('esap_full_backup') || localStorage.getItem('esap_auto_backup');
-        if (backupToUse && companies.length === 0) {
-          var backup = JSON.parse(backupToUse);
-          companies = backup.companies || [];
-          if (companies.length > 0) { renderAll(); toast('📦 Loaded from backup'); setSyncStatus('loading', 'Backup mode · ' + companies.length + ' companies'); }
-        }
-      } catch(e) {}
+        var backupToUse=localStorage.getItem('esap_full_backup')||localStorage.getItem('esap_auto_backup');
+        if(backupToUse&&companies.length===0){var backup=JSON.parse(backupToUse);companies=backup.companies||[];if(companies.length>0){renderAll();toast('📦 Loaded from backup');setSyncStatus('loading','Backup mode · '+companies.length+' companies');}}
+      } catch(e){}
     }
   );
 }
 
-function renderAll() {
+function renderAll(){
   updateSidebarCounts();
   renderFundView('fund4');
   renderFundView('fund5');
-  if(currentView === 'analytics') { populateAnalyticsFilters(); renderAnalytics(); }
+  if(currentView==='analytics'){populateAnalyticsFilters();renderAnalytics();}
 }
 
-function renderDash() { renderAll(); }
+function renderDash(){renderAll();}
 
-function setSyncStatus(state, label){
-  var dot = document.getElementById('sync-dot');
-  var lbl = document.getElementById('sync-label');
-  dot.className = 'sync-dot' + (state==='live'?' live':state==='err'?' err':state==='loading'?' loading':'');
-  lbl.textContent = label;
+function setSyncStatus(state,label){
+  var dot=document.getElementById('sync-dot');
+  var lbl=document.getElementById('sync-label');
+  dot.className='sync-dot'+(state==='live'?' live':state==='err'?' err':state==='loading'?' loading':'');
+  lbl.textContent=label;
 }
 
-function fsAdd(data){ return db.collection('companies').add(data); }
-function fsSet(id, data){ return db.collection('companies').doc(id).set(data, {merge:true}); }
-function fsDel(id){ return db.collection('companies').doc(id).delete(); }
+function fsAdd(data){return db.collection('companies').add(data);}
+function fsSet(id,data){return db.collection('companies').doc(id).set(data,{merge:true});}
+function fsDel(id){return db.collection('companies').doc(id).delete();}
 
-// ── BOOT ───────────────────────────────────────────────
-function showApp(){
-  document.getElementById('boot').style.display = 'none';
-  document.getElementById('main-app').style.display = 'block';
-}
+function showApp(){ document.getElementById('boot').style.display='none'; document.getElementById('main-app').style.display='block'; }
+function showBootError(e){ document.getElementById('boot-spinner').style.display='none'; document.getElementById('boot-err').textContent='Error: '+e.message; document.getElementById('boot-err').style.display='block'; setSyncStatus('err','Connection failed'); }
 
-function showBootError(e){
-  document.getElementById('boot-spinner').style.display = 'none';
-  document.getElementById('boot-err').textContent = 'Error: ' + e.message;
-  document.getElementById('boot-err').style.display = 'block';
-  setSyncStatus('err','Connection failed');
-}
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+function pct(c){ if(!c.items||!c.items.length) return 0; return Math.round(c.items.filter(function(i){return i.status==='done';}).length/c.items.length*100); }
+function chipHtml(p){ if(p===100) return '<span class="chip chip-done">Complete</span>'; if(p>0) return '<span class="chip chip-prog">In Progress</span>'; return '<span class="chip chip-new">Not Started</span>'; }
 
-// ── HELPERS ────────────────────────────────────────────
-function pct(c){
-  if(!c.items||!c.items.length) return 0;
-  return Math.round(c.items.filter(function(i){return i.status==='done';}).length / c.items.length * 100);
-}
-
-function chipHtml(p){
-  if(p===100) return '<span class="chip chip-done">Complete</span>';
-  if(p>0) return '<span class="chip chip-prog">In Progress</span>';
-  return '<span class="chip chip-new">Not Started</span>';
-}
-
-// ── ADD/EDIT COMPANY ───────────────────────────────────
+// ══════════════════════════════════════════════════════
+// ADD/EDIT COMPANY
+// ══════════════════════════════════════════════════════
 function openAddModal(defaultFund){
   if(!checkEditMode()) return;
-  editingId = null;
-  addModalDefaultFund = defaultFund || '';
-  document.getElementById('modalAddTitle').textContent = 'Add Company';
-  document.getElementById('btnSave').textContent = 'Save Company';
-  document.getElementById('cn').value = '';
-  document.getElementById('csd').value = '';
-  document.getElementById('spocName').value = '';
-  document.getElementById('spocEmail').value = '';
-  document.getElementById('fundSelect').value = addModalDefaultFund;
-  pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = [];
-  document.getElementById('esapFile').value = '';
-  document.getElementById('esapFileName').textContent = 'No file selected';
-  document.getElementById('currentESAP').style.display = 'none';
-  document.getElementById('parseStatus').style.display = 'none';
-  renderSectorChips();
-  renderTeamChips();
-  openM('mAdd');
+  editingId=null; addModalDefaultFund=defaultFund||'';
+  document.getElementById('modalAddTitle').textContent='Add Company';
+  document.getElementById('btnSave').textContent='Save Company';
+  document.getElementById('cn').value='';
+  document.getElementById('csd').value='';
+  document.getElementById('spocName').value='';
+  document.getElementById('spocEmail').value='';
+  document.getElementById('fundSelect').value=addModalDefaultFund;
+  pendingESAPFile=null;pendingESAPFileName='';parsedActions=[];
+  document.getElementById('esapFile').value='';
+  document.getElementById('esapFileName').textContent='No file selected';
+  document.getElementById('currentESAP').style.display='none';
+  document.getElementById('parseStatus').style.display='none';
+  renderSectorChips(); renderTeamChips(); openM('mAdd');
 }
 
 function renderSectorChips(){
-  var selected = editingId ? (companies.find(function(c){return c.id===editingId}) || {}).sector : '';
-  document.getElementById('sectorChips').innerHTML = sectors.map(function(s){
-    return '<div class="chip-option'+(s===selected?' selected':'')+'" onclick="selectSector(\''+esc(s)+'\')">'+esc(s)+'</div>';
-  }).join('');
+  var selected=editingId?(companies.find(function(c){return c.id===editingId;})||{}).sector:'';
+  document.getElementById('sectorChips').innerHTML=sectors.map(function(s){return '<div class="chip-option'+(s===selected?' selected':'')+'" onclick="selectSector(\''+esc(s)+'\')">'+esc(s)+'</div>';}).join('');
 }
-
-function selectSector(sector){
-  document.querySelectorAll('#sectorChips .chip-option').forEach(function(el){ el.classList.remove('selected'); });
-  event.target.classList.add('selected');
-}
-
+function selectSector(sector){ document.querySelectorAll('#sectorChips .chip-option').forEach(function(el){el.classList.remove('selected');}); event.target.classList.add('selected'); }
 function renderTeamChips(){
-  var selected = editingId ? (companies.find(function(c){return c.id===editingId}) || {}).team : '';
-  document.getElementById('teamChips').innerHTML = teamMembers.map(function(t){
-    return '<div class="chip-option'+(t===selected?' selected':'')+'" onclick="selectTeam(\''+esc(t)+'\')">'+esc(t)+'</div>';
-  }).join('');
+  var selected=editingId?(companies.find(function(c){return c.id===editingId;})||{}).team:'';
+  document.getElementById('teamChips').innerHTML=teamMembers.map(function(t){return '<div class="chip-option'+(t===selected?' selected':'')+'" onclick="selectTeam(\''+esc(t)+'\')">'+esc(t)+'</div>';}).join('');
 }
-
-function selectTeam(team){
-  document.querySelectorAll('#teamChips .chip-option').forEach(function(el){ el.classList.remove('selected'); });
-  event.target.classList.add('selected');
-}
+function selectTeam(team){ document.querySelectorAll('#teamChips .chip-option').forEach(function(el){el.classList.remove('selected');}); event.target.classList.add('selected'); }
 
 function saveCompany(){
-  var name = document.getElementById('cn').value.trim();
-  if(!name){ toast('Enter company name'); return; }
-  var sectorEl = document.querySelector('#sectorChips .chip-option.selected');
-  var teamEl = document.querySelector('#teamChips .chip-option.selected');
-  var data = {
-    name: name,
-    sector: sectorEl ? sectorEl.textContent.trim() : '',
-    team: teamEl ? teamEl.textContent.trim() : '',
-    fund: document.getElementById('fundSelect').value,
-    startDate: document.getElementById('csd').value,
-    spocName: document.getElementById('spocName').value.trim(),
-    spocEmail: document.getElementById('spocEmail').value.trim(),
-    createdAt: new Date().toISOString()
-  };
-  if(pendingESAPFile){ data.esapFile = pendingESAPFile; data.esapFileName = pendingESAPFileName; }
-  if(parsedActions && parsedActions.length > 0){
-    data.items = editingId ? (companies.find(function(c){return c.id===editingId}) || {}).items || [] : [];
-    data.items = data.items.concat(parsedActions);
-  } else if(!editingId){ data.items = []; }
-  if(editingId){
-    fsSet(editingId, data).then(function(){ closeM('mAdd'); toast('Company updated' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : '')); pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = []; }).catch(function(e){ toast('Error: ' + e.message, true); });
-  } else {
-    fsAdd(data).then(function(){ closeM('mAdd'); toast('Company added' + (parsedActions.length > 0 ? ' with ' + parsedActions.length + ' actions' : '')); pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = []; }).catch(function(e){ toast('Error: ' + e.message, true); });
-  }
+  var name=document.getElementById('cn').value.trim();
+  if(!name){toast('Enter company name');return;}
+  var sectorEl=document.querySelector('#sectorChips .chip-option.selected');
+  var teamEl=document.querySelector('#teamChips .chip-option.selected');
+  var data={name:name,sector:sectorEl?sectorEl.textContent.trim():'',team:teamEl?teamEl.textContent.trim():'',fund:document.getElementById('fundSelect').value,startDate:document.getElementById('csd').value,spocName:document.getElementById('spocName').value.trim(),spocEmail:document.getElementById('spocEmail').value.trim(),createdAt:new Date().toISOString()};
+  if(pendingESAPFile){data.esapFile=pendingESAPFile;data.esapFileName=pendingESAPFileName;}
+  if(parsedActions&&parsedActions.length>0){data.items=editingId?(companies.find(function(c){return c.id===editingId;})||{}).items||[]:[]; data.items=data.items.concat(parsedActions);}
+  else if(!editingId){data.items=[];}
+  if(editingId){ fsSet(editingId,data).then(function(){closeM('mAdd');toast('Company updated'+(parsedActions.length>0?' with '+parsedActions.length+' actions':''));pendingESAPFile=null;pendingESAPFileName='';parsedActions=[];}).catch(function(e){toast('Error: '+e.message,true);}); }
+  else { fsAdd(data).then(function(){closeM('mAdd');toast('Company added'+(parsedActions.length>0?' with '+parsedActions.length+' actions':''));pendingESAPFile=null;pendingESAPFileName='';parsedActions=[];}).catch(function(e){toast('Error: '+e.message,true);}); }
 }
 
-// ── COMPANY DETAIL ─────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// COMPANY DETAIL
+// ══════════════════════════════════════════════════════
 function showDetail(id){
-  curId = id;
-  var c = companies.find(function(x){ return x.id === id; });
-  if(!c) return;
-  document.getElementById('detailTitle').textContent = c.name;
-  var html = '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px">';
-  html += '<div><strong>Partner:</strong> '+(c.team || 'Not assigned')+'</div>';
-  html += '<div><strong>Sector:</strong> '+(c.sector || 'N/A')+'</div>';
-  html += '<div><strong>Fund:</strong> '+(c.fund || 'Not assigned')+'</div>';
-  html += '<div><strong>Start Date:</strong> '+(c.startDate ? fmt(c.startDate) : 'Not set')+'</div>';
-  html += '<div><strong>SPOC:</strong> '+(c.spocName || 'N/A')+'</div>';
-  html += '<div><strong>Email:</strong> '+(c.spocEmail || 'N/A')+'</div>';
-  html += '</div>';
+  curId=id;
+  var c=companies.find(function(x){return x.id===id;}); if(!c) return;
+  document.getElementById('detailTitle').textContent=c.name;
+  var html='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px">';
+  html+='<div><strong>Partner:</strong> '+(c.team||'Not assigned')+'</div>';
+  html+='<div><strong>Sector:</strong> '+(c.sector||'N/A')+'</div>';
+  html+='<div><strong>Fund:</strong> '+(c.fund||'Not assigned')+'</div>';
+  html+='<div><strong>Start Date:</strong> '+(c.startDate?fmt(c.startDate):'Not set')+'</div>';
+  html+='<div><strong>SPOC:</strong> '+(c.spocName||'N/A')+'</div>';
+  html+='<div><strong>Email:</strong> '+(c.spocEmail||'N/A')+'</div>';
+  html+='</div>';
   if(c.esapFile){
-    html += '<div style="margin-bottom:20px;padding:12px;background:var(--accd);border:1px solid var(--acc);border-radius:10px">';
-    html += '<div style="display:flex;align-items:center;gap:12px"><span style="font-size:2rem">📄</span><div style="flex:1"><div style="font-weight:700;margin-bottom:4px">ESAP Document</div><div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">'+esc(c.esapFileName || 'Document.pdf')+'</div></div>';
-    html += '<a href="'+c.esapFile+'" download="'+esc(c.esapFileName || 'ESAP.pdf')+'" class="btn primary" style="text-decoration:none">📥 Download</a></div></div>';
+    html+='<div style="margin-bottom:20px;padding:12px;background:var(--accd);border:1px solid var(--acc);border-radius:10px">';
+    html+='<div style="display:flex;align-items:center;gap:12px"><span style="font-size:2rem">📄</span><div style="flex:1"><div style="font-weight:700;margin-bottom:4px">ESAP Document</div><div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtm)">'+esc(c.esapFileName||'Document.pdf')+'</div></div>';
+    html+='<a href="'+c.esapFile+'" download="'+esc(c.esapFileName||'ESAP.pdf')+'" class="btn primary" style="text-decoration:none">📥 Download</a></div></div>';
   }
-  var progress = pct(c);
-  html += '<div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>Overall Progress</strong><span style="font-family:var(--font-mono);font-weight:700;color:var(--acc)">'+progress+'%</span></div><div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div></div>';
-  
-  if(isEditMode) {
-    html += '<div style="margin-top:24px;padding:24px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px">';
-    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px"><span style="font-size:1.2rem">📧</span><h3 style="font-size:1rem;font-weight:700">Point of Contact & Nudge Settings</h3></div>';
-    html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">';
-    html += '<div><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC NAME</label>';
-    html += '<input type="text" id="nudgeSpocName" value="'+(c.spocName||'')+'" placeholder="Enter contact name" style="width:100%;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)"></div>';
-    html += '<div><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC EMAIL</label>';
-    html += '<input type="email" id="nudgeSpocEmail" value="'+(c.spocEmail||'')+'" placeholder="contact@company.com" style="width:100%;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)"></div></div>';
-    html += '<div style="margin-bottom:16px"><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">ADDITIONAL EMAIL RECIPIENTS</label>';
-    html += '<div id="additionalEmails" style="padding:12px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;min-height:48px;margin-bottom:8px">';
-    var additionalEmails = c.additionalNudgeEmails || [];
-    if(additionalEmails.length === 0) html += '<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtf)">No additional emails</div>';
-    else additionalEmails.forEach(function(email, idx){
-      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-family:var(--font-mono);font-size:.75rem;flex:1">'+esc(email)+'</span>';
-      html += '<button onclick="removeNudgeEmail('+idx+')" style="background:var(--redd);border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:6px;font-size:.7rem;cursor:pointer">Remove</button></div>';
-    });
-    html += '</div>';
-    html += '<div style="display:flex;gap:8px"><input type="email" id="newNudgeEmail" placeholder="Add email address..." style="flex:1;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.75rem">';
-    html += '<button onclick="addNudgeEmail()" style="background:var(--accd);border:1px solid var(--acc);color:var(--acc);padding:10px 16px;border-radius:8px;font-family:var(--font-mono);font-size:.68rem;font-weight:600;cursor:pointer;text-transform:uppercase">+ Add</button></div></div>';
-    html += '<button onclick="sendNudge()" style="width:100%;background:var(--acc);border:1px solid var(--acc);color:#fff;padding:12px;border-radius:8px;font-family:var(--font-mono);font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:all .2s">';
-    html += '<span style="font-size:1.2rem">📧</span><span>Send Nudge</span></button>';
-    html += '<div style="font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);text-align:center;margin-top:8px">Request implementation status update</div></div>';
+  var progress=pct(c);
+  html+='<div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>Overall Progress</strong><span style="font-family:var(--font-mono);font-weight:700;color:var(--acc)">'+progress+'%</span></div><div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div></div>';
+  if(isEditMode){
+    html+='<div style="margin-top:24px;padding:24px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px">';
+    html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px"><span style="font-size:1.2rem">📧</span><h3 style="font-size:1rem;font-weight:700">Point of Contact & Nudge Settings</h3></div>';
+    html+='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">';
+    html+='<div><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC NAME</label><input type="text" id="nudgeSpocName" value="'+(c.spocName||'')+'" placeholder="Enter contact name" style="width:100%;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)"></div>';
+    html+='<div><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">SPOC EMAIL</label><input type="email" id="nudgeSpocEmail" value="'+(c.spocEmail||'')+'" placeholder="contact@company.com" style="width:100%;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.8rem;color:var(--txt)"></div></div>';
+    html+='<div style="margin-bottom:16px"><label style="display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);margin-bottom:8px;text-transform:uppercase">ADDITIONAL EMAIL RECIPIENTS</label>';
+    html+='<div id="additionalEmails" style="padding:12px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;min-height:48px;margin-bottom:8px">';
+    var additionalEmails=c.additionalNudgeEmails||[];
+    if(!additionalEmails.length) html+='<div style="font-family:var(--font-mono);font-size:.75rem;color:var(--txtf)">No additional emails</div>';
+    else additionalEmails.forEach(function(email,idx){ html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-family:var(--font-mono);font-size:.75rem;flex:1">'+esc(email)+'</span><button onclick="removeNudgeEmail('+idx+')" style="background:var(--redd);border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:6px;font-size:.7rem;cursor:pointer">Remove</button></div>'; });
+    html+='</div>';
+    html+='<div style="display:flex;gap:8px"><input type="email" id="newNudgeEmail" placeholder="Add email address..." style="flex:1;padding:10px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;font-family:var(--font-mono);font-size:.75rem">';
+    html+='<button onclick="addNudgeEmail()" style="background:var(--accd);border:1px solid var(--acc);color:var(--acc);padding:10px 16px;border-radius:8px;font-family:var(--font-mono);font-size:.68rem;font-weight:600;cursor:pointer;text-transform:uppercase">+ Add</button></div></div>';
+    html+='<button onclick="sendNudge()" style="width:100%;background:var(--acc);border:1px solid var(--acc);color:#fff;padding:12px;border-radius:8px;font-family:var(--font-mono);font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:all .2s"><span style="font-size:1.2rem">📧</span><span>Send Nudge</span></button>';
+    html+='<div style="font-family:var(--font-mono);font-size:.68rem;color:var(--txtm);text-align:center;margin-top:8px">Request implementation status update</div></div>';
   }
-  
-  document.getElementById('detailContent').innerHTML = html;
+  document.getElementById('detailContent').innerHTML=html;
   renderItems();
-  document.getElementById('btnAddItem').disabled = !isEditMode;
-  document.getElementById('btnEdit').disabled = !isEditMode;
-  document.getElementById('btnDelete').disabled = !isEditMode;
+  document.getElementById('btnAddItem').disabled=!isEditMode;
+  document.getElementById('btnEdit').disabled=!isEditMode;
+  document.getElementById('btnDelete').disabled=!isEditMode;
   openM('mDetail');
 }
 
 function renderItems(){
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  var items = (c.items || []).slice().sort(function(a, b){
-    var aDate = resolveDeadline(a, c), bDate = resolveDeadline(b, c);
-    if(!aDate && !bDate) return 0; if(!aDate) return 1; if(!bDate) return -1;
-    return new Date(aDate) - new Date(bDate);
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var items=(c.items||[]).slice().sort(function(a,b){
+    var aDate=resolveDeadline(a,c),bDate=resolveDeadline(b,c);
+    if(!aDate&&!bDate) return 0; if(!aDate) return 1; if(!bDate) return -1;
+    return new Date(aDate)-new Date(bDate);
   });
-  if(items.length === 0){
-    document.getElementById('itemsList').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--txtf);font-family:var(--font-mono);font-size:.85rem">No action items yet</div>';
-    return;
-  }
-  document.getElementById('itemsList').innerHTML = items.map(function(item){
-    var idx = c.items.indexOf(item);
-    var statusCls = item.status === 'done' ? 'done' : 'progress';
-    var deadline = resolveDeadline(item, c);
-    var daysLeft = deadline ? daysTo(deadline) : null;
-    var deadlineHtml = '';
+  if(!items.length){ document.getElementById('itemsList').innerHTML='<div style="text-align:center;padding:2rem;color:var(--txtf);font-family:var(--font-mono);font-size:.85rem">No action items yet</div>'; return; }
+  document.getElementById('itemsList').innerHTML=items.map(function(item){
+    var idx=c.items.indexOf(item);
+    var statusCls=item.status==='done'?'done':'progress';
+    var deadline=resolveDeadline(item,c);
+    var daysLeft=deadline?daysTo(deadline):null;
+    var deadlineHtml='';
     if(deadline){
-      var deadlineCls = '';
-      if(daysLeft !== null && daysLeft < 0 && item.status !== 'done'){ deadlineCls = 'overdue'; deadlineHtml = '⚠️ Overdue by ' + Math.abs(daysLeft) + ' days ('+fmt(deadline)+')'; }
-      else if(daysLeft !== null && daysLeft <= 7 && daysLeft >= 0 && item.status !== 'done'){ deadlineCls = 'warning'; deadlineHtml = '⏰ Due in ' + daysLeft + ' days ('+fmt(deadline)+')'; }
-      else { deadlineHtml = '📅 Due: ' + fmt(deadline); }
-      deadlineHtml = '<div class="item-deadline '+deadlineCls+'">'+deadlineHtml+'</div>';
+      var deadlineCls='';
+      if(daysLeft!==null&&daysLeft<0&&item.status!=='done'){deadlineCls='overdue';deadlineHtml='⚠️ Overdue by '+Math.abs(daysLeft)+' days ('+fmt(deadline)+')';}
+      else if(daysLeft!==null&&daysLeft<=7&&daysLeft>=0&&item.status!=='done'){deadlineCls='warning';deadlineHtml='⏰ Due in '+daysLeft+' days ('+fmt(deadline)+')';}
+      else{deadlineHtml='📅 Due: '+fmt(deadline);}
+      deadlineHtml='<div class="item-deadline '+deadlineCls+'">'+deadlineHtml+'</div>';
     }
-    var row = '<div class="item-row">';
-    if(isEditMode) row += '<div class="item-chk'+(item.status==='done'?' checked':'')+'" onclick="toggleItem('+idx+')"></div>';
-    row += '<div class="item-content"><div class="item-title'+(item.status==='done'?' done':'')+'">'+esc(item.action || item.title || 'Untitled')+'</div>'+deadlineHtml+'</div>';
-    row += '<div class="item-status '+statusCls+'">'+statusCls+'</div>';
-    if(isEditMode) row += '<div class="item-del" onclick="deleteItem('+idx+')">🗑</div>';
-    row += '</div>';
+    var row='<div class="item-row">';
+    if(isEditMode) row+='<div class="item-chk'+(item.status==='done'?' checked':'')+'" onclick="toggleItem('+idx+')"></div>';
+    row+='<div class="item-content"><div class="item-title'+(item.status==='done'?' done':'')+'">'+esc(item.action||item.title||'Untitled')+'</div>'+deadlineHtml+'</div>';
+    row+='<div class="item-status '+statusCls+'">'+statusCls+'</div>';
+    if(isEditMode) row+='<div class="item-del" onclick="deleteItem('+idx+')">🗑</div>';
+    row+='</div>';
     return row;
   }).join('');
 }
 
 function addItem(){
   if(!checkEditMode()) return;
-  var title = prompt('Enter action item title:');
-  if(!title) return;
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  var items = c.items || [];
-  items.push({ id: 'i_'+Date.now(), action: title, status: 'progress', createdAt: new Date().toISOString() });
-  fsSet(curId, { items: items }).then(function(){ renderItems(); toast('Item added'); }).catch(function(e){ toast('Error: ' + e.message, true); });
+  var title=prompt('Enter action item title:'); if(!title) return;
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var items=c.items||[];
+  items.push({id:'i_'+Date.now(),action:title,status:'progress',createdAt:new Date().toISOString()});
+  fsSet(curId,{items:items}).then(function(){renderItems();toast('Item added');}).catch(function(e){toast('Error: '+e.message,true);});
 }
 
 function toggleItem(idx){
   if(!checkEditMode()) return;
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  var items = c.items || [];
-  items[idx].status = items[idx].status === 'done' ? 'progress' : 'done';
-  fsSet(curId, { items: items }).then(function(){ renderItems(); }).catch(function(e){ toast('Error: ' + e.message, true); });
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var items=c.items||[]; items[idx].status=items[idx].status==='done'?'progress':'done';
+  fsSet(curId,{items:items}).then(function(){renderItems();}).catch(function(e){toast('Error: '+e.message,true);});
 }
 
 function deleteItem(idx){
   if(!checkEditMode()) return;
   if(!confirm('Delete this item?')) return;
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  var items = c.items || [];
-  items.splice(idx, 1);
-  fsSet(curId, { items: items }).then(function(){ renderItems(); toast('Item deleted'); }).catch(function(e){ toast('Error: ' + e.message, true); });
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var items=c.items||[]; items.splice(idx,1);
+  fsSet(curId,{items:items}).then(function(){renderItems();toast('Item deleted');}).catch(function(e){toast('Error: '+e.message,true);});
 }
 
 function editCompany(){
   if(!checkEditMode()) return;
-  var c = companies.find(function(x){ return x.id === curId; });
-  if(!c) return;
-  editingId = curId;
-  document.getElementById('modalAddTitle').textContent = 'Edit Company';
-  document.getElementById('btnSave').textContent = 'Update Company';
-  document.getElementById('cn').value = c.name || '';
-  document.getElementById('csd').value = c.startDate || '';
-  document.getElementById('spocName').value = c.spocName || '';
-  document.getElementById('spocEmail').value = c.spocEmail || '';
-  document.getElementById('fundSelect').value = c.fund || '';
-  pendingESAPFile = null; pendingESAPFileName = ''; parsedActions = [];
-  document.getElementById('esapFile').value = '';
-  document.getElementById('esapFileName').textContent = 'No file selected';
-  document.getElementById('parseStatus').style.display = 'none';
-  if(c.esapFile){ document.getElementById('currentESAP').style.display = 'block'; document.getElementById('currentESAPName').textContent = c.esapFileName || 'Document'; document.getElementById('downloadESAP').href = c.esapFile; document.getElementById('downloadESAP').download = c.esapFileName || 'ESAP.pdf'; }
-  else { document.getElementById('currentESAP').style.display = 'none'; }
-  renderSectorChips(); renderTeamChips();
-  closeM('mDetail'); openM('mAdd');
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  editingId=curId;
+  document.getElementById('modalAddTitle').textContent='Edit Company';
+  document.getElementById('btnSave').textContent='Update Company';
+  document.getElementById('cn').value=c.name||'';
+  document.getElementById('csd').value=c.startDate||'';
+  document.getElementById('spocName').value=c.spocName||'';
+  document.getElementById('spocEmail').value=c.spocEmail||'';
+  document.getElementById('fundSelect').value=c.fund||'';
+  pendingESAPFile=null;pendingESAPFileName='';parsedActions=[];
+  document.getElementById('esapFile').value='';
+  document.getElementById('esapFileName').textContent='No file selected';
+  document.getElementById('parseStatus').style.display='none';
+  if(c.esapFile){document.getElementById('currentESAP').style.display='block';document.getElementById('currentESAPName').textContent=c.esapFileName||'Document';document.getElementById('downloadESAP').href=c.esapFile;document.getElementById('downloadESAP').download=c.esapFileName||'ESAP.pdf';}
+  else{document.getElementById('currentESAP').style.display='none';}
+  renderSectorChips();renderTeamChips();closeM('mDetail');openM('mAdd');
 }
 
 function confirmDelete(){ if(!checkEditMode()) return; askDel(curId); }
+function askDel(id){ if(!confirm('Delete this company? This cannot be undone.')) return; fsDel(id).then(function(){closeM('mDetail');toast('Company deleted');}).catch(function(e){toast('Error: '+e.message,true);}); }
 
-function askDel(id){
-  if(!confirm('Delete this company? This cannot be undone.')) return;
-  fsDel(id).then(function(){ closeM('mDetail'); toast('Company deleted'); }).catch(function(e){ toast('Error: ' + e.message, true); });
-}
-
-// ── NOTIFICATIONS ──────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════════════
 function refreshN(){
-  var rm={}; notifications.forEach(function(n){rm[n.key]=n.read;});
+  var rm={};notifications.forEach(function(n){rm[n.key]=n.read;});
   var f=[];
   companies.forEach(function(co){
     (co.items||[]).forEach(function(item){
@@ -1804,15 +1815,15 @@ function refreshN(){
       else if(d<0) f.push({id:uid(),key:k+':ov',co:co.name,act:item.action||item.title||'Untitled',d:d,ov:true,read:rm[k+':ov']||false});
     });
   });
-  notifications=f; renderN();
+  notifications=f;renderN();
 }
 
 function renderN(){
   var u=notifications.filter(function(n){return !n.read;});
   var b=document.getElementById('bb');
-  b.textContent=u.length; b.classList.toggle('on',u.length>0);
+  b.textContent=u.length;b.classList.toggle('on',u.length>0);
   var l=document.getElementById('nl');
-  if(!notifications.length){ l.innerHTML='<div class="nempty">No pending reminders</div>'; return; }
+  if(!notifications.length){l.innerHTML='<div class="nempty">No pending reminders</div>';return;}
   l.innerHTML=notifications.map(function(n){
     return '<div class="notif-item'+(n.read?' read':'')+'" onclick="readN(\''+n.id+'\')">'
       +'<div class="ndot'+(n.ov?' ov':'')+'"></div>'
@@ -1821,89 +1832,66 @@ function renderN(){
   }).join('');
 }
 
-function readN(id){ var n=notifications.find(function(x){return x.id===id;}); if(n){n.read=true;renderN();} }
-function clearNotifs(){ notifications.forEach(function(n){n.read=true;}); renderN(); }
-function toggleNotif(){ document.getElementById('nd').classList.toggle('open'); }
+function readN(id){var n=notifications.find(function(x){return x.id===id;});if(n){n.read=true;renderN();}}
+function clearNotifs(){notifications.forEach(function(n){n.read=true;});renderN();}
+function toggleNotif(){document.getElementById('nd').classList.toggle('open');}
 
-// ── EXPORT ─────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// EXPORT / BACKUP
+// ══════════════════════════════════════════════════════
 function exportData(){
-  var data = companies.map(function(c){
-    return { Name: c.name, Partner: c.team, Sector: c.sector, Fund: c.fund, 'Start Date': c.startDate, 'SPOC Name': c.spocName, 'SPOC Email': c.spocEmail, Progress: pct(c) + '%', 'Total Items': (c.items || []).length, 'Completed': (c.items || []).filter(function(i){ return i.status === 'done'; }).length };
-  });
-  var ws = XLSX.utils.json_to_sheet(data);
-  var wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Companies');
-  XLSX.writeFile(wb, 'fund-esap-export-' + new Date().toISOString().split('T')[0] + '.xlsx');
+  var data=companies.map(function(c){ return {Name:c.name,Partner:c.team,Sector:c.sector,Fund:c.fund,'Start Date':c.startDate,'SPOC Name':c.spocName,'SPOC Email':c.spocEmail,Progress:pct(c)+'%','Total Items':(c.items||[]).length,'Completed':(c.items||[]).filter(function(i){return i.status==='done';}).length}; });
+  var ws=XLSX.utils.json_to_sheet(data);
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Companies');
+  XLSX.writeFile(wb,'fund-esap-export-'+new Date().toISOString().split('T')[0]+'.xlsx');
   toast('Exported successfully');
 }
 
 function backupData(){
-  var fundAllocation = {};
-  companies.forEach(function(c){
-    var fund = c.fund || 'Unassigned';
-    if (!fundAllocation[fund]) fundAllocation[fund] = [];
-    fundAllocation[fund].push({ id: c.id, name: c.name, partner: c.team || c.partner, sector: c.sector, startDate: c.startDate, itemCount: (c.items || []).length, completed: (c.items || []).filter(function(i){ return i.status === 'done'; }).length });
-  });
-  var backup = { timestamp: new Date().toISOString(), version: '3.0', companies: companies, fundAllocation: fundAllocation, sectors: sectors };
-  try { localStorage.setItem('esap_full_backup', JSON.stringify(backup)); } catch(e) {}
-  var json = JSON.stringify(backup, null, 2);
-  var blob = new Blob([json], {type: 'application/json'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a'); a.href = url; a.download = 'ESAP_Backup_' + new Date().toISOString().split('T')[0] + '.json'; a.click();
+  var fundAllocation={};
+  companies.forEach(function(c){ var fund=c.fund||'Unassigned'; if(!fundAllocation[fund]) fundAllocation[fund]=[]; fundAllocation[fund].push({id:c.id,name:c.name,partner:c.team||c.partner,sector:c.sector,startDate:c.startDate,itemCount:(c.items||[]).length,completed:(c.items||[]).filter(function(i){return i.status==='done';}).length}); });
+  var backup={timestamp:new Date().toISOString(),version:'3.0',companies:companies,fundAllocation:fundAllocation,sectors:sectors};
+  try{localStorage.setItem('esap_full_backup',JSON.stringify(backup));}catch(e){}
+  var json=JSON.stringify(backup,null,2);
+  var blob=new Blob([json],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download='ESAP_Backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();
   URL.revokeObjectURL(url);
   toast('✅ Backup created');
 }
 
 setInterval(function(){
-  if (companies.length > 0) {
-    try { localStorage.setItem('esap_auto_backup', JSON.stringify({ timestamp: new Date().toISOString(), companies: companies, sectors: sectors })); } catch(e) {}
-  }
-}, 5 * 60 * 1000);
+  if(companies.length>0){ try{localStorage.setItem('esap_auto_backup',JSON.stringify({timestamp:new Date().toISOString(),companies:companies,sectors:sectors}));}catch(e){} }
+},5*60*1000);
 
-// ── MODALS ─────────────────────────────────────────────
-function openM(id){ document.getElementById(id).classList.add('on'); }
-function closeM(id){ document.getElementById(id).classList.remove('on'); }
+// ══════════════════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════════════════
+function openM(id){document.getElementById(id).classList.add('on');}
+function closeM(id){document.getElementById(id).classList.remove('on');}
 
-// ── UTILITIES ──────────────────────────────────────────
-function uid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36); }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function trunc(s,n){ return s&&s.length>n ? s.slice(0,n)+'...' : s; }
-
-function addDays(iso, n){ var d=new Date(iso); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
-
-function resolveDeadline(item, co){
-  if(item.deadlineDays != null && co && co.startDate) return addDays(co.startDate, item.deadlineDays);
-  if(item.offsetDays != null && co && co.startDate) return addDays(co.startDate, item.offsetDays);
+// ══════════════════════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════════════════════
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'...':s;}
+function addDays(iso,n){var d=new Date(iso);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function resolveDeadline(item,co){
+  if(item.deadlineDays!=null&&co&&co.startDate) return addDays(co.startDate,item.deadlineDays);
+  if(item.offsetDays!=null&&co&&co.startDate) return addDays(co.startDate,item.offsetDays);
   if(item.deadlineDate) return item.deadlineDate;
   if(item.deadline) return item.deadline;
   return null;
 }
+function daysTo(iso){ if(!iso) return null; var d=new Date(iso);if(isNaN(d)) return null; var n=new Date();n.setHours(0,0,0,0); return Math.round((d-n)/86400000); }
+function fmt(iso){ if(!iso) return '--'; var d=new Date(iso);if(isNaN(d)) return iso; return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function toast(msg,isError){ var t=document.getElementById('toast');t.textContent=msg;if(isError)t.classList.add('error');else t.classList.remove('error');t.classList.add('on');setTimeout(function(){t.classList.remove('on');},3000); }
 
-function daysTo(iso){
-  if(!iso) return null;
-  var d=new Date(iso); if(isNaN(d)) return null;
-  var n=new Date(); n.setHours(0,0,0,0);
-  return Math.round((d-n)/86400000);
-}
+document.addEventListener('click',function(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('on');});
+document.addEventListener('click',function(e){var bell=document.querySelector('.bell-wrap');var dd=document.getElementById('nd');if(!bell.contains(e.target)&&dd.classList.contains('open'))dd.classList.remove('open');});
 
-function fmt(iso){
-  if(!iso) return '--';
-  var d=new Date(iso); if(isNaN(d)) return iso;
-  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-}
-
-function toast(msg, isError){
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  if(isError) t.classList.add('error'); else t.classList.remove('error');
-  t.classList.add('on');
-  setTimeout(function(){ t.classList.remove('on'); }, 3000);
-}
-
-document.addEventListener('click', function(e){ if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('on'); });
-document.addEventListener('click', function(e){ var bell = document.querySelector('.bell-wrap'); var dd = document.getElementById('nd'); if(!bell.contains(e.target) && dd.classList.contains('open')) dd.classList.remove('open'); });
-
-// Dummy for old compatibility
 function populateFilters(){}
 function toggleAdvFilters(){}
 function applyAdvFilters(){}
