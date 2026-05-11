@@ -349,6 +349,56 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 .add-custom button{padding:8px 16px;background:var(--accd);border:1px solid var(--acc);border-radius:8px;color:var(--acc);font-family:var(--font-mono);font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;text-transform:uppercase}
 .add-custom button:hover{background:var(--acc);color:#fff}
 
+<!-- Extend Due Date Modal -->
+<div class="modal-overlay" id="mExtend">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-hd">
+      <div class="modal-title">⏱ Extend Due Date</div>
+      <div class="modal-close" onclick="closeM('mExtend')">×</div>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:18px">
+
+      <!-- Action name (read-only) -->
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Action</div>
+        <div id="extendItemTitle" style="font-size:.88rem;font-weight:600;color:var(--txt);padding:10px 14px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;line-height:1.4"></div>
+      </div>
+
+      <!-- Current due date (read-only) -->
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Current Due Date</div>
+        <div id="extendCurrentDate" style="font-family:var(--font-mono);font-size:.88rem;font-weight:700;color:var(--warn);padding:10px 14px;background:var(--warnd);border:1px solid var(--warn);border-radius:8px"></div>
+      </div>
+
+      <!-- Days input -->
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Days to Extend *</div>
+        <input
+          type="number"
+          id="extendDays"
+          min="1" max="730"
+          placeholder="e.g. 14"
+          oninput="previewExtend()"
+          style="width:100%;padding:10px 14px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;color:var(--txt);font-family:var(--font-mono);font-size:1rem;font-weight:700;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--acc)'"
+          onblur="this.style.borderColor='var(--bor)'"
+        >
+      </div>
+
+      <!-- New date preview -->
+      <div id="extendPreviewBox" style="display:none;padding:14px 16px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.4);border-radius:10px">
+        <div style="font-family:var(--font-mono);font-size:.63rem;color:#16a34a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">New Due Date</div>
+        <div id="extendNewDate" style="font-family:var(--font-mono);font-size:1.1rem;font-weight:800;color:#16a34a"></div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" onclick="closeM('mExtend')">Cancel</button>
+      <button class="btn primary" onclick="confirmExtend()" id="btnConfirmExtend" disabled>Extend Deadline</button>
+    </div>
+  </div>
+</div>
+  
 /* Toast */
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--sur);border:1px solid var(--acc);border-radius:10px;padding:14px 20px;box-shadow:var(--shadow);font-family:var(--font-mono);font-size:.78rem;color:var(--txt);z-index:1000;display:none;animation:toastIn .3s}
 .toast.on{display:block}
@@ -1722,6 +1772,10 @@ function showDetail(id){
 }
 
 function renderItems(){
+  // state for extend modal
+var _extendIdx = null;
+
+function renderItems(){
   var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
   var items=(c.items||[]).slice().sort(function(a,b){
     var aDate=resolveDeadline(a,c),bDate=resolveDeadline(b,c);
@@ -1740,18 +1794,85 @@ function renderItems(){
       if(daysLeft!==null&&daysLeft<0&&item.status!=='done'){deadlineCls='overdue';deadlineHtml='⚠️ Overdue by '+Math.abs(daysLeft)+' days ('+fmt(deadline)+')';}
       else if(daysLeft!==null&&daysLeft<=7&&daysLeft>=0&&item.status!=='done'){deadlineCls='warning';deadlineHtml='⏰ Due in '+daysLeft+' days ('+fmt(deadline)+')';}
       else{deadlineHtml='📅 Due: '+fmt(deadline);}
+      // show original if date was extended
+      if(item.extendedFrom){
+        deadlineHtml+='<span style="margin-left:8px;font-size:.6rem;opacity:.6;text-decoration:line-through">was '+fmt(item.extendedFrom)+'</span>';
+      }
       deadlineHtml='<div class="item-deadline '+deadlineCls+'">'+deadlineHtml+'</div>';
+    }
+    var extendBtn='';
+    if(isEditMode){
+      extendBtn='<button onclick="event.stopPropagation();openExtend('+idx+')" title="Extend deadline" style="'
+        +'flex-shrink:0;padding:4px 10px;border-radius:6px;border:1px solid var(--acc);background:var(--accd);'
+        +'color:var(--acc);font-family:var(--font-mono);font-size:.62rem;font-weight:700;cursor:pointer;'
+        +'text-transform:uppercase;letter-spacing:.05em;transition:all .2s'
+        +'" onmouseover="this.style.background=\'var(--acc)\';this.style.color=\'#fff\'"'
+        +' onmouseout="this.style.background=\'var(--accd)\';this.style.color=\'var(--acc)\'"'
+        +'>⏱ Extend</button>';
     }
     var row='<div class="item-row">';
     if(isEditMode) row+='<div class="item-chk'+(item.status==='done'?' checked':'')+'" onclick="toggleItem('+idx+')"></div>';
     row+='<div class="item-content"><div class="item-title'+(item.status==='done'?' done':'')+'">'+esc(item.action||item.title||'Untitled')+'</div>'+deadlineHtml+'</div>';
+    row+='<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">';
     row+='<div class="item-status '+statusCls+'">'+statusCls+'</div>';
+    row+=extendBtn;
     if(isEditMode) row+='<div class="item-del" onclick="deleteItem('+idx+')">🗑</div>';
+    row+='</div>';
     row+='</div>';
     return row;
   }).join('');
 }
 
+function openExtend(idx){
+  if(!checkEditMode()) return;
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var item=c.items[idx]; if(!item) return;
+  var deadline=resolveDeadline(item,c);
+  if(!deadline){ toast('This item has no due date set','error'); return; }
+  _extendIdx=idx;
+  document.getElementById('extendItemTitle').textContent=item.action||item.title||'Untitled';
+  document.getElementById('extendCurrentDate').textContent=fmt(deadline);
+  document.getElementById('extendDays').value='';
+  document.getElementById('extendPreviewBox').style.display='none';
+  document.getElementById('btnConfirmExtend').disabled=true;
+  openM('mExtend');
+  setTimeout(function(){ document.getElementById('extendDays').focus(); },200);
+}
+
+function previewExtend(){
+  var days=parseInt(document.getElementById('extendDays').value)||0;
+  var btn=document.getElementById('btnConfirmExtend');
+  var box=document.getElementById('extendPreviewBox');
+  if(days<=0){ box.style.display='none'; btn.disabled=true; return; }
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var item=c.items[_extendIdx]; if(!item) return;
+  var deadline=resolveDeadline(item,c); if(!deadline) return;
+  var d=new Date(deadline); d.setDate(d.getDate()+days);
+  document.getElementById('extendNewDate').textContent=fmt(d.toISOString().slice(0,10));
+  box.style.display='block';
+  btn.disabled=false;
+}
+
+function confirmExtend(){
+  var days=parseInt(document.getElementById('extendDays').value)||0;
+  if(days<=0){ toast('Enter a valid number of days'); return; }
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var items=c.items||[];
+  var item=items[_extendIdx]; if(!item) return;
+  var deadline=resolveDeadline(item,c); if(!deadline) return;
+  var d=new Date(deadline); d.setDate(d.getDate()+days);
+  var newDate=d.toISOString().slice(0,10);
+  // keep the original for strikethrough display
+  if(!item.extendedFrom) item.extendedFrom=deadline;
+  item.deadline=newDate;
+  // clear offset so the explicit deadline takes precedence
+  delete item.offsetDays; delete item.deadlineDays;
+  fsSet(curId,{items:items}).then(function(){
+    closeM('mExtend');
+    renderItems();
+    toast('✅ Deadline extended by '+days+' day'+(days===1?'':'s')+' → '+fmt(newDate));
+  }).catch(function(e){ toast('Error: '+e.message,true); });
+}
 function addItem(){
   if(!checkEditMode()) return;
   var title=prompt('Enter action item title:'); if(!title) return;
