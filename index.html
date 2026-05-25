@@ -1467,7 +1467,7 @@ function sendNudge() {
   if(!spocEmail&&additionalEmails.length===0){toast('Add at least one email address',true);return;}
 
   // Show filter modal before drafting
-  showNudgeFilterModal(function(filter) {
+showNudgeFilterModal(function(filter, selectedMonth, selectedYear) {
     fsSet(curId,{spocName:spocName,spocEmail:spocEmail}).then(function(){
       var recipients=[]; if(spocEmail) recipients.push(spocEmail); recipients=recipients.concat(additionalEmails);
       var progress=pct(c), items=c.items||[];
@@ -1479,19 +1479,76 @@ function sendNudge() {
         return deadline&&daysTo(deadline)<0;
       });
 
+      // Summary counts always reflect the full picture
+      var completed=allCompleted.length, pending=allPending.length, overdue=allOverdue.length;
+
       // Filter items for the email body based on selection
       var filteredItems;
       if(filter==='pending')          filteredItems=allPending;
       else if(filter==='completed')   filteredItems=allCompleted;
       else if(filter==='overdue')     filteredItems=allOverdue;
+      else if(filter==='monthly'){
+        var now=new Date();
+        var pickedMonth=(selectedMonth||now.getMonth()+1)-1;
+        var pickedYear=selectedYear||now.getFullYear();
+        var monthName=monthNames[pickedMonth];
+
+        var dueThisMonth=items.filter(function(i){
+          if(i.status==='done') return false;
+          var d=resolveDeadline(i,c); if(!d) return false;
+          var dd=new Date(d);
+          return dd.getMonth()===pickedMonth&&dd.getFullYear()===pickedYear;
+        });
+
+        var pendingTillDate=items.filter(function(i){
+          if(i.status==='done') return false;
+          var d=resolveDeadline(i,c); if(!d) return false;
+          var dd=new Date(d);
+          return dd.getFullYear()<pickedYear||(dd.getFullYear()===pickedYear&&dd.getMonth()<pickedMonth);
+        });
+
+        var bodyMonthly='Dear '+(spocName||'Team')+',\n\nThis is your ESAP monthly reminder for '+monthName+' '+pickedYear+' for '+c.name+'.\n\nCurrent Status:\n• Overall Progress: '+progress+'%\n• Total Actions: '+items.length+'\n• Completed: '+completed+'\n• Pending: '+pending+'\n'+(overdue>0?'• Overdue: '+overdue+'\n':'')+'\n\n';
+
+        bodyMonthly+='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📅 DUE THIS MONTH ('+monthName.toUpperCase()+' '+pickedYear+')\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        if(!dueThisMonth.length){
+          bodyMonthly+='No items due in '+monthName+' '+pickedYear+'.\n\n';
+        } else {
+          dueThisMonth.forEach(function(item,idx){
+            var action=item.action||item.title||'Untitled';
+            var deadline=resolveDeadline(item,c);
+            var deadlineText=deadline?(typeof deadline==='string'?deadline:fmt(deadline)):'Not set';
+            var dLeft=daysTo(deadline);
+            var urgency=dLeft===0?'📌 Due today':dLeft>0?'⏰ Due in '+dLeft+' days':'🔴 Overdue by '+Math.abs(dLeft)+' days';
+            bodyMonthly+=(idx+1)+'. '+action+'\n   Deadline: '+deadlineText+'\n   '+urgency+'\n\n';
+          });
+        }
+
+        bodyMonthly+='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⏳ PENDING TILL DATE (BEFORE '+monthName.toUpperCase()+' '+pickedYear+')\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        if(!pendingTillDate.length){
+          bodyMonthly+='No pending items from before '+monthName+' '+pickedYear+'.\n\n';
+        } else {
+          pendingTillDate.forEach(function(item,idx){
+            var action=item.action||item.title||'Untitled';
+            var deadline=resolveDeadline(item,c);
+            var deadlineText=deadline?(typeof deadline==='string'?deadline:fmt(deadline)):'Not set';
+            var dLeft=daysTo(deadline);
+            bodyMonthly+=(idx+1)+'. '+action+'\n   Deadline: '+deadlineText+'\n   🔴 Overdue by '+Math.abs(dLeft)+' days\n\n';
+          });
+        }
+
+        bodyMonthly+='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nKindly ensure all due items are actioned at the earliest.\n\nBest regards,\nESAP Tracking Team';
+
+        window.location.href='mailto:'+recipients.join(',')+'?subject='+encodeURIComponent('ESAP Monthly Reminder — '+monthName+' '+pickedYear+' — '+c.name)+'&body='+encodeURIComponent(bodyMonthly);
+        var nudgeHistory=c.nudgeHistory||[];
+        nudgeHistory.push({date:new Date().toISOString(),recipients:recipients,sentBy:'User',filter:'monthly',month:monthName,year:pickedYear});
+        fsSet(curId,{nudgeHistory:nudgeHistory,lastNudgeSent:new Date().toISOString()}).then(function(){toast('📧 Monthly reminder for '+monthName+' '+pickedYear+' opened in your email client');});
+        return;
+      }
       else                            filteredItems=allPending.concat(allOverdue.filter(function(i){
-        return allPending.indexOf(i)===-1; // avoid dupes (overdue are already in pending)
+        return allPending.indexOf(i)===-1;
       }));
 
-      // Summary counts always reflect the full picture
-      var completed=allCompleted.length, pending=allPending.length, overdue=allOverdue.length;
-
-      var filterLabels={
+        var filterLabels={
         pending:'Pending Items',
         completed:'Completed Items',
         overdue:'Overdue Items',
@@ -1526,34 +1583,65 @@ function sendNudge() {
 }
 
 function showNudgeFilterModal(onConfirm) {
-  // Remove any existing instance
   var existing=document.getElementById('nudgeFilterModal');
   if(existing) existing.remove();
+
+  var now=new Date();
+  var currentMonth=now.getMonth()+1; // 1-12
+  var currentYear=now.getFullYear();
+
+  // Build month options
+  var monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  // Build year options (current year ± 1)
+  var yearOptions='';
+  for(var y=currentYear-1;y<=currentYear+2;y++){
+    yearOptions+='<option value="'+y+'"'+(y===currentYear?' selected':'')+'>'+y+'</option>';
+  }
 
   var overlay=document.createElement('div');
   overlay.id='nudgeFilterModal';
   overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;';
 
   overlay.innerHTML=`
-    <div style="background:var(--bg-card,#fff);border-radius:14px;padding:28px 32px;width:360px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,0.18);font-family:inherit;">
+    <div style="background:var(--bg-card,#fff);border-radius:14px;padding:28px 32px;width:380px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,0.18);font-family:inherit;">
       <h3 style="margin:0 0 6px;font-size:1.05rem;color:var(--text-primary,#111);">📧 What to include in the nudge?</h3>
       <p style="margin:0 0 20px;font-size:0.82rem;color:var(--text-secondary,#666);">Choose which action items to list in the email body.</p>
 
       <div id="nudgeFilterOptions" style="display:flex;flex-direction:column;gap:10px;">
         ${[
-          {val:'pending',      icon:'⏳', label:'Pending items only'},
-          {val:'overdue',      icon:'🔴', label:'Overdue items only'},
-          {val:'pendingOverdue',icon:'⚠️', label:'Pending + Overdue'},
-          {val:'completed',    icon:'✅', label:'Completed items only'},
+          {val:'pending',        icon:'⏳', label:'Pending items only'},
+          {val:'overdue',        icon:'🔴', label:'Overdue items only'},
+          {val:'pendingOverdue', icon:'⚠️', label:'Pending + Overdue'},
+          {val:'completed',      icon:'✅', label:'Completed items only'},
+          {val:'monthly',        icon:'📅', label:'Monthly reminder'},
         ].map(function(opt,i){return `
           <label style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1.5px solid ${i===0?'var(--primary,#2563eb)':'var(--border,#e2e8f0)'};cursor:pointer;transition:border-color .15s;background:${i===0?'var(--primary-light,#eff6ff)':'transparent'};"
             onmouseover="this.style.borderColor='var(--primary,#2563eb)'"
             onmouseout="if(!this.querySelector('input').checked)this.style.borderColor='var(--border,#e2e8f0)'">
             <input type="radio" name="nudgeFilter" value="${opt.val}" ${i===0?'checked':''} style="accent-color:var(--primary,#2563eb);"
-              onchange="document.querySelectorAll('#nudgeFilterOptions label').forEach(function(l){l.style.borderColor='var(--border,#e2e8f0)';l.style.background='transparent';});this.closest('label').style.borderColor='var(--primary,#2563eb)';this.closest('label').style.background='var(--primary-light,#eff6ff)';">
+              onchange="
+                document.querySelectorAll('#nudgeFilterOptions label').forEach(function(l){l.style.borderColor='var(--border,#e2e8f0)';l.style.background='transparent';});
+                this.closest('label').style.borderColor='var(--primary,#2563eb)';
+                this.closest('label').style.background='var(--primary-light,#eff6ff)';
+                document.getElementById('monthPickerRow').style.display=this.value==='monthly'?'flex':'none';
+              ">
             <span style="font-size:1.1rem;">${opt.icon}</span>
             <span style="font-size:0.9rem;color:var(--text-primary,#111);">${opt.label}</span>
           </label>`;}).join('')}
+      </div>
+
+      <!-- Month picker — only visible when Monthly is selected -->
+      <div id="monthPickerRow" style="display:none;align-items:center;gap:8px;margin-top:14px;padding:10px 14px;background:var(--bg-subtle,#f8fafc);border-radius:8px;border:1px solid var(--border,#e2e8f0);">
+        <span style="font-size:0.82rem;color:var(--text-secondary,#666);white-space:nowrap;">Reminder for:</span>
+        <select id="nudgeMonth" style="flex:1;padding:5px 8px;border-radius:6px;border:1px solid var(--border,#e2e8f0);font-size:0.85rem;background:var(--bg-input,#fff);color:var(--text-primary,#111);">
+          ${monthNames.map(function(m,i){
+            return '<option value="'+(i+1)+'"'+((i+1)===currentMonth?' selected':'')+'>'+m+'</option>';
+          }).join('')}
+        </select>
+        <select id="nudgeYear" style="width:80px;padding:5px 8px;border-radius:6px;border:1px solid var(--border,#e2e8f0);font-size:0.85rem;background:var(--bg-input,#fff);color:var(--text-primary,#111);">
+          ${yearOptions}
+        </select>
       </div>
 
       <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
@@ -1565,8 +1653,10 @@ function showNudgeFilterModal(onConfirm) {
           var sel=document.querySelector('#nudgeFilterOptions input[name=nudgeFilter]:checked');
           if(!sel) return;
           var filter=sel.value;
+          var selectedMonth=parseInt(document.getElementById('nudgeMonth').value);
+          var selectedYear=parseInt(document.getElementById('nudgeYear').value);
           document.getElementById('nudgeFilterModal').remove();
-          window._nudgeFilterCallback(filter);"
+          window._nudgeFilterCallback(filter,selectedMonth,selectedYear);"
           style="padding:8px 20px;border-radius:8px;border:none;background:var(--primary,#2563eb);color:#fff;cursor:pointer;font-size:0.88rem;font-weight:600;">
           Draft Email →
         </button>
@@ -1575,11 +1665,7 @@ function showNudgeFilterModal(onConfirm) {
 
   window._nudgeFilterCallback=onConfirm;
   document.body.appendChild(overlay);
-
-  // Close on backdrop click
-  overlay.addEventListener('click',function(e){
-    if(e.target===overlay) overlay.remove();
-  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay) overlay.remove(); });
 }
 // ══════════════════════════════════════════════════════
 // INITIALIZATION
@@ -1964,26 +2050,42 @@ function askDel(id){ if(!confirm('Delete this company? This cannot be undone.'))
 // ══════════════════════════════════════════════════════
 // NOTIFICATIONS
 // ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════════════
+function getReadKeys(){
+  return db.collection('meta').doc('notifRead').get().then(function(doc){
+    return doc.exists ? (doc.data().keys||[]) : [];
+  }).catch(function(){ return []; });
+}
+function saveReadKeys(keys){
+  return db.collection('meta').doc('notifRead').set({keys:keys},{merge:false});
+}
+
 function refreshN(){
-  var rm={};notifications.forEach(function(n){rm[n.key]=n.read;});
-  var f=[];
-  companies.forEach(function(co){
-    (co.items||[]).forEach(function(item){
-      if(item.status==='done') return;
-      var rd=resolveDeadline(item,co),d=daysTo(rd);
-      if(d===null) return;
-      var k=co.id+':'+item.id;
-      if(d<=15&&d>=0) f.push({id:uid(),key:k,co:co.name,act:item.action||item.title||'Untitled',d:d,ov:false,read:rm[k]||false});
-      else if(d<0) f.push({id:uid(),key:k+':ov',co:co.name,act:item.action||item.title||'Untitled',d:d,ov:true,read:rm[k+':ov']||false});
+  getReadKeys().then(function(readKeys){
+    var readSet={};
+    readKeys.forEach(function(k){ readSet[k]=true; });
+    var f=[];
+    companies.forEach(function(co){
+      (co.items||[]).forEach(function(item){
+        if(item.status==='done') return;
+        var rd=resolveDeadline(item,co), d=daysTo(rd);
+        if(d===null) return;
+        var k=co.id+':'+item.id;
+        if(d<=15&&d>=0) f.push({id:uid(),key:k,co:co.name,act:item.action||item.title||'Untitled',d:d,ov:false,read:!!readSet[k]});
+        else if(d<0)    f.push({id:uid(),key:k+':ov',co:co.name,act:item.action||item.title||'Untitled',d:d,ov:true,read:!!readSet[k+':ov']});
+      });
     });
+    notifications=f;
+    renderN();
   });
-  notifications=f;renderN();
 }
 
 function renderN(){
   var u=notifications.filter(function(n){return !n.read;});
   var b=document.getElementById('bb');
-  b.textContent=u.length;b.classList.toggle('on',u.length>0);
+  b.textContent=u.length; b.classList.toggle('on',u.length>0);
   var l=document.getElementById('nl');
   if(!notifications.length){l.innerHTML='<div class="nempty">No pending reminders</div>';return;}
   l.innerHTML=notifications.map(function(n){
@@ -1994,8 +2096,21 @@ function renderN(){
   }).join('');
 }
 
-function readN(id){var n=notifications.find(function(x){return x.id===id;});if(n){n.read=true;renderN();}}
-function clearNotifs(){notifications.forEach(function(n){n.read=true;});renderN();}
+function readN(id){
+  var n=notifications.find(function(x){return x.id===id;}); if(!n) return;
+  n.read=true;
+  var readKeys=notifications.filter(function(x){return x.read;}).map(function(x){return x.key;});
+  saveReadKeys(readKeys).catch(function(e){console.warn('readN save failed',e);});
+  renderN();
+}
+
+function clearNotifs(){
+  notifications.forEach(function(n){n.read=true;});
+  var readKeys=notifications.map(function(n){return n.key;});
+  saveReadKeys(readKeys).catch(function(e){console.warn('clearNotifs save failed',e);});
+  renderN();
+}
+
 function toggleNotif(){document.getElementById('nd').classList.toggle('open');}
 
 // ══════════════════════════════════════════════════════
