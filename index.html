@@ -1837,14 +1837,87 @@ function renderItems(){
       else{deadlineHtml='📅 Due: '+fmt(deadline);}
       deadlineHtml='<div class="item-deadline '+deadlineCls+'">'+deadlineHtml+'</div>';
     }
+
+    // Extension badge — shows if an extension was previously granted
+    var extBadge='';
+    if(item.extensionDays){
+      extBadge='<div style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;color:var(--warning,#d97706);background:var(--warning-light,#fef3c7);border:1px solid var(--warning-border,#fde68a);border-radius:5px;padding:2px 7px;margin-top:4px;">'+
+        '📆 Extended by '+item.extensionDays+' day'+(item.extensionDays===1?'':'s')+
+        (item.extensionHistory&&item.extensionHistory.length>1?' (×'+item.extensionHistory.length+')':'')+
+      '</div>';
+    }
+
+    // Extension input row — only in edit mode, and only for non-completed items
+    var extRow='';
+    if(isEditMode&&item.status!=='done'){
+      extRow='<div class="item-ext-row" style="display:flex;align-items:center;gap:6px;margin-top:6px;">'+
+        '<input type="number" min="1" id="ext_'+idx+'" placeholder="Days" '+
+          'style="width:72px;padding:3px 7px;border-radius:6px;border:1px solid var(--border,#e2e8f0);font-size:0.8rem;background:var(--bg-input,#f8fafc);color:var(--text-primary,#111);" '+
+          'onkeydown="if(event.key===\'Enter\')applyExtension('+idx+')">'+
+        '<button onclick="applyExtension('+idx+')" '+
+          'style="padding:3px 10px;border-radius:6px;border:none;background:var(--primary,#2563eb);color:#fff;font-size:0.78rem;cursor:pointer;font-weight:500;white-space:nowrap;">'+
+          '＋ Extension'+
+        '</button>'+
+      '</div>';
+    }
+
     var row='<div class="item-row">';
     if(isEditMode) row+='<div class="item-chk'+(item.status==='done'?' checked':'')+'" onclick="toggleItem('+idx+')"></div>';
-    row+='<div class="item-content"><div class="item-title'+(item.status==='done'?' done':'')+'">'+esc(item.action||item.title||'Untitled')+'</div>'+deadlineHtml+'</div>';
+    row+='<div class="item-content">'+
+           '<div class="item-title'+(item.status==='done'?' done':'')+'">'+esc(item.action||item.title||'Untitled')+'</div>'+
+           deadlineHtml+
+           extBadge+
+           extRow+
+         '</div>';
     row+='<div class="item-status '+statusCls+'">'+statusCls+'</div>';
     if(isEditMode) row+='<div class="item-del" onclick="deleteItem('+idx+')">🗑</div>';
     row+='</div>';
     return row;
   }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// EXTENSION HANDLER
+// ══════════════════════════════════════════════════════
+function applyExtension(idx){
+  var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
+  var item=c.items[idx]; if(!item) return;
+
+  var input=document.getElementById('ext_'+idx);
+  var days=parseInt(input.value);
+  if(!days||days<1){toast('Enter a valid number of days',true);input.focus();return;}
+
+  var currentDeadline=resolveDeadline(item,c);
+  if(!currentDeadline){toast('This item has no deadline to extend',true);return;}
+
+  // Calculate new deadline
+  var base=new Date(currentDeadline); base.setHours(0,0,0,0);
+  base.setDate(base.getDate()+days);
+  var newDeadline=base.toISOString().split('T')[0];
+
+  // Track full extension history
+  var history=item.extensionHistory||[];
+  history.push({
+    grantedOn: new Date().toISOString(),
+    days: days,
+    from: currentDeadline,
+    to: newDeadline
+  });
+
+  var totalExtended=(item.extensionDays||0)+days;
+
+  var updated=Object.assign({},item,{
+    deadline: newDeadline,
+    offsetDays: null,           // pin to absolute date going forward
+    extensionDays: totalExtended,
+    extensionHistory: history
+  });
+
+  c.items[idx]=updated;
+  fsSet(curId,{items:c.items}).then(function(){
+    toast('📆 Deadline extended by '+days+' day'+(days===1?'':'s')+' → '+fmt(newDeadline));
+    showDetail(curId);
+  }).catch(function(e){toast('Error: '+e.message,true);});
 }
 
 function addItem(){
