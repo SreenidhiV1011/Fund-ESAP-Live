@@ -1463,8 +1463,7 @@ function sendNudge() {
   var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
   var spocName=document.getElementById('nudgeSpocName').value.trim();
   var spocEmail=document.getElementById('nudgeSpocEmail').value.trim();
-  var additionalEmails=c.additionalNudgeEmails||[];
-  if(!spocEmail&&additionalEmails.length===0){toast('Add at least one email address',true);return;}
+var monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];  if(!spocEmail&&additionalEmails.length===0){toast('Add at least one email address',true);return;}
 
   // Show filter modal before drafting
 showNudgeFilterModal(function(filter, selectedMonth, selectedYear) {
