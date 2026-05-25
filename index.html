@@ -1440,7 +1440,7 @@ function removeESAP() {
 }
 
 // ══════════════════════════════════════════════════════
-// NUDGE (unchanged)
+// NUDGE
 // ══════════════════════════════════════════════════════
 function addNudgeEmail() {
   var input=document.getElementById('newNudgeEmail'); var email=input.value.trim();
@@ -1465,27 +1465,122 @@ function sendNudge() {
   var spocEmail=document.getElementById('nudgeSpocEmail').value.trim();
   var additionalEmails=c.additionalNudgeEmails||[];
   if(!spocEmail&&additionalEmails.length===0){toast('Add at least one email address',true);return;}
-  fsSet(curId,{spocName:spocName,spocEmail:spocEmail}).then(function(){
-    var recipients=[]; if(spocEmail) recipients.push(spocEmail); recipients=recipients.concat(additionalEmails);
-    var progress=pct(c),items=c.items||[],completed=items.filter(function(i){return i.status==='done';}).length,pending=items.length-completed;
-    var overdue=items.filter(function(i){if(i.status==='done')return false;var deadline=resolveDeadline(i,c);return deadline&&daysTo(deadline)<0;}).length;
-    var subject='ESAP Implementation Status Update Request - '+c.name;
-    var body='Dear '+(spocName||'Team')+',\n\nThis is a gentle reminder to provide an update on the ESAP implementation progress for '+c.name+'.\n\nCurrent Status:\n• Overall Progress: '+progress+'%\n• Total Actions: '+items.length+'\n• Completed: '+completed+'\n• Pending: '+pending+'\n'+(overdue>0?'• Overdue: '+overdue+'\n':'')+'\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nACTION ITEMS LIST\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-    items.forEach(function(item,idx){
-      var action=item.action||item.title||'Untitled';
-      var deadline=resolveDeadline(item,c);
-      var deadlineText=deadline?(typeof deadline==='string'?deadline:fmt(deadline)):'Not set';
-      var status=item.status==='done'?'✓ Completed':'⏳ Pending';
-      body+=(idx+1)+'. '+action+'\n   Timeline: '+deadlineText+'\n   Status: '+status+'\n\n';
-    });
-    body+='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nPlease update us on the latest status of pending action items.\n\nBest regards,\nESAP Tracking Team';
-    window.location.href='mailto:'+recipients.join(',')+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-    var nudgeHistory=c.nudgeHistory||[];
-    nudgeHistory.push({date:new Date().toISOString(),recipients:recipients,sentBy:'User'});
-    fsSet(curId,{nudgeHistory:nudgeHistory,lastNudgeSent:new Date().toISOString()}).then(function(){toast('📧 Nudge email opened in your email client');});
-  }).catch(function(e){toast('Error: '+e.message,true);});
+
+  // Show filter modal before drafting
+  showNudgeFilterModal(function(filter) {
+    fsSet(curId,{spocName:spocName,spocEmail:spocEmail}).then(function(){
+      var recipients=[]; if(spocEmail) recipients.push(spocEmail); recipients=recipients.concat(additionalEmails);
+      var progress=pct(c), items=c.items||[];
+      var allCompleted=items.filter(function(i){return i.status==='done';});
+      var allPending=items.filter(function(i){return i.status!=='done';});
+      var allOverdue=items.filter(function(i){
+        if(i.status==='done') return false;
+        var deadline=resolveDeadline(i,c);
+        return deadline&&daysTo(deadline)<0;
+      });
+
+      // Filter items for the email body based on selection
+      var filteredItems;
+      if(filter==='pending')          filteredItems=allPending;
+      else if(filter==='completed')   filteredItems=allCompleted;
+      else if(filter==='overdue')     filteredItems=allOverdue;
+      else                            filteredItems=allPending.concat(allOverdue.filter(function(i){
+        return allPending.indexOf(i)===-1; // avoid dupes (overdue are already in pending)
+      }));
+
+      // Summary counts always reflect the full picture
+      var completed=allCompleted.length, pending=allPending.length, overdue=allOverdue.length;
+
+      var filterLabels={
+        pending:'Pending Items',
+        completed:'Completed Items',
+        overdue:'Overdue Items',
+        pendingOverdue:'Pending & Overdue Items'
+      };
+
+      var subject='ESAP Implementation Status Update Request - '+c.name;
+      var body='Dear '+(spocName||'Team')+',\n\nThis is a gentle reminder to provide an update on the ESAP implementation progress for '+c.name+'.\n\nCurrent Status:\n• Overall Progress: '+progress+'%\n• Total Actions: '+items.length+'\n• Completed: '+completed+'\n• Pending: '+pending+'\n'+(overdue>0?'• Overdue: '+overdue+'\n':'')+'\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'+filterLabels[filter].toUpperCase()+'\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+      if(filteredItems.length===0){
+        body+='No items in this category.\n\n';
+      } else {
+        filteredItems.forEach(function(item,idx){
+          var action=item.action||item.title||'Untitled';
+          var deadline=resolveDeadline(item,c);
+          var deadlineText=deadline?(typeof deadline==='string'?deadline:fmt(deadline)):'Not set';
+          var isOverdue=item.status!=='done'&&deadline&&daysTo(deadline)<0;
+          var status=item.status==='done'?'✓ Completed':(isOverdue?'🔴 Overdue':'⏳ Pending');
+          body+=(idx+1)+'. '+action+'\n   Timeline: '+deadlineText+'\n   Status: '+status+'\n\n';
+        });
+      }
+
+      body+='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nPlease update us on the latest status of the above action items.\n\nBest regards,\nESAP Tracking Team';
+
+      window.location.href='mailto:'+recipients.join(',')+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+
+      var nudgeHistory=c.nudgeHistory||[];
+      nudgeHistory.push({date:new Date().toISOString(),recipients:recipients,sentBy:'User',filter:filter});
+      fsSet(curId,{nudgeHistory:nudgeHistory,lastNudgeSent:new Date().toISOString()}).then(function(){toast('📧 Nudge email opened in your email client');});
+    }).catch(function(e){toast('Error: '+e.message,true);});
+  });
 }
 
+function showNudgeFilterModal(onConfirm) {
+  // Remove any existing instance
+  var existing=document.getElementById('nudgeFilterModal');
+  if(existing) existing.remove();
+
+  var overlay=document.createElement('div');
+  overlay.id='nudgeFilterModal';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;';
+
+  overlay.innerHTML=`
+    <div style="background:var(--bg-card,#fff);border-radius:14px;padding:28px 32px;width:360px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,0.18);font-family:inherit;">
+      <h3 style="margin:0 0 6px;font-size:1.05rem;color:var(--text-primary,#111);">📧 What to include in the nudge?</h3>
+      <p style="margin:0 0 20px;font-size:0.82rem;color:var(--text-secondary,#666);">Choose which action items to list in the email body.</p>
+
+      <div id="nudgeFilterOptions" style="display:flex;flex-direction:column;gap:10px;">
+        ${[
+          {val:'pending',      icon:'⏳', label:'Pending items only'},
+          {val:'overdue',      icon:'🔴', label:'Overdue items only'},
+          {val:'pendingOverdue',icon:'⚠️', label:'Pending + Overdue'},
+          {val:'completed',    icon:'✅', label:'Completed items only'},
+        ].map(function(opt,i){return `
+          <label style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1.5px solid ${i===0?'var(--primary,#2563eb)':'var(--border,#e2e8f0)'};cursor:pointer;transition:border-color .15s;background:${i===0?'var(--primary-light,#eff6ff)':'transparent'};"
+            onmouseover="this.style.borderColor='var(--primary,#2563eb)'"
+            onmouseout="if(!this.querySelector('input').checked)this.style.borderColor='var(--border,#e2e8f0)'">
+            <input type="radio" name="nudgeFilter" value="${opt.val}" ${i===0?'checked':''} style="accent-color:var(--primary,#2563eb);"
+              onchange="document.querySelectorAll('#nudgeFilterOptions label').forEach(function(l){l.style.borderColor='var(--border,#e2e8f0)';l.style.background='transparent';});this.closest('label').style.borderColor='var(--primary,#2563eb)';this.closest('label').style.background='var(--primary-light,#eff6ff)';">
+            <span style="font-size:1.1rem;">${opt.icon}</span>
+            <span style="font-size:0.9rem;color:var(--text-primary,#111);">${opt.label}</span>
+          </label>`;}).join('')}
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
+        <button onclick="document.getElementById('nudgeFilterModal').remove();"
+          style="padding:8px 18px;border-radius:8px;border:1.5px solid var(--border,#e2e8f0);background:transparent;color:var(--text-secondary,#666);cursor:pointer;font-size:0.88rem;">
+          Cancel
+        </button>
+        <button onclick="
+          var sel=document.querySelector('#nudgeFilterOptions input[name=nudgeFilter]:checked');
+          if(!sel) return;
+          var filter=sel.value;
+          document.getElementById('nudgeFilterModal').remove();
+          window._nudgeFilterCallback(filter);"
+          style="padding:8px 20px;border-radius:8px;border:none;background:var(--primary,#2563eb);color:#fff;cursor:pointer;font-size:0.88rem;font-weight:600;">
+          Draft Email →
+        </button>
+      </div>
+    </div>`;
+
+  window._nudgeFilterCallback=onConfirm;
+  document.body.appendChild(overlay);
+
+  // Close on backdrop click
+  overlay.addEventListener('click',function(e){
+    if(e.target===overlay) overlay.remove();
+  });
+}
 // ══════════════════════════════════════════════════════
 // INITIALIZATION
 // ══════════════════════════════════════════════════════
