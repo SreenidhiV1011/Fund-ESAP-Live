@@ -1882,46 +1882,38 @@ function renderItems(){
 function applyExtension(idx){
   var c=companies.find(function(x){return x.id===curId;}); if(!c) return;
   var item=c.items[idx]; if(!item) return;
-
   var input=document.getElementById('ext_'+idx);
   var days=parseInt(input.value);
   if(!days||days<1){toast('Enter a valid number of days',true);input.focus();return;}
-
   var currentDeadline=resolveDeadline(item,c);
   if(!currentDeadline){toast('This item has no deadline to extend',true);return;}
 
-  // Calculate new deadline
   var base=new Date(currentDeadline); base.setHours(0,0,0,0);
   base.setDate(base.getDate()+days);
   var newDeadline=base.toISOString().split('T')[0];
 
-  // Track full extension history
   var history=item.extensionHistory||[];
-  history.push({
-    grantedOn: new Date().toISOString(),
-    days: days,
-    from: currentDeadline,
-    to: newDeadline
-  });
-
+  history.push({grantedOn:new Date().toISOString(),days:days,from:currentDeadline,to:newDeadline});
   var totalExtended=(item.extensionDays||0)+days;
 
-var updated=Object.assign({},item,{
-  deadline: newDeadline,
-  offsetDays: null,
-  deadlineDays: null,           // ← add this
-  extensionDays: totalExtended,
-  extensionHistory: history,
-  status: 'progress'
-});
+  var updated=Object.assign({},item,{
+    deadline:        newDeadline,
+    offsetDays:      null,
+    deadlineDays:    null,
+    extensionDays:   totalExtended,
+    extensionHistory:history,
+    status:          'progress'
+  });
 
-  c.items[idx]=updated;
-  fsSet(curId,{items:c.items}).then(function(){
+  var newItems=c.items.map(function(it,i){ return i===idx ? updated : it; });
+  c.items=newItems;
+
+  // Use .update() instead of fsSet — this replaces the items array entirely
+  db.collection('companies').doc(curId).update({items:newItems}).then(function(){
     toast('📆 Deadline extended by '+days+' day'+(days===1?'':'s')+' → '+fmt(newDeadline));
     showDetail(curId);
   }).catch(function(e){toast('Error: '+e.message,true);});
 }
-
 function addItem(){
   if(!checkEditMode()) return;
   var title=prompt('Enter action item title:'); if(!title) return;
