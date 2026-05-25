@@ -1906,12 +1906,14 @@ function applyExtension(idx){
 
   var totalExtended=(item.extensionDays||0)+days;
 
-  var updated=Object.assign({},item,{
-    deadline: newDeadline,
-    offsetDays: null,           // pin to absolute date going forward
-    extensionDays: totalExtended,
-    extensionHistory: history
-  });
+var updated=Object.assign({},item,{
+  deadline: newDeadline,
+  offsetDays: null,
+  deadlineDays: null,           // ← add this
+  extensionDays: totalExtended,
+  extensionHistory: history,
+  status: 'progress'
+});
 
   c.items[idx]=updated;
   fsSet(curId,{items:c.items}).then(function(){
@@ -2047,10 +2049,10 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'...':s;}
 function addDays(iso,n){var d=new Date(iso);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
 function resolveDeadline(item,co){
+  if(item.deadline) return item.deadline;           // ← moved to top
+  if(item.deadlineDate) return item.deadlineDate;
   if(item.deadlineDays!=null&&co&&co.startDate) return addDays(co.startDate,item.deadlineDays);
   if(item.offsetDays!=null&&co&&co.startDate) return addDays(co.startDate,item.offsetDays);
-  if(item.deadlineDate) return item.deadlineDate;
-  if(item.deadline) return item.deadline;
   return null;
 }
 function daysTo(iso){ if(!iso) return null; var d=new Date(iso);if(isNaN(d)) return null; var n=new Date();n.setHours(0,0,0,0); return Math.round((d-n)/86400000); }
