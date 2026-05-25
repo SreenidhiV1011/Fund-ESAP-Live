@@ -944,6 +944,7 @@ function switchView(view) {
   else if(view === 'esg') renderESGView();
   else if(view === 'discussions') renderDiscussions();
   else if(view === 'templates') renderTemplatesView();
+  refreshN(); // ← just this one line added
 }
 
 // ══════════════════════════════════════════════════════
@@ -2066,16 +2067,20 @@ function refreshN(){
     var readSet={};
     readKeys.forEach(function(k){ readSet[k]=true; });
     var f=[];
-    companies.forEach(function(co){
-      (co.items||[]).forEach(function(item){
-        if(item.status==='done') return;
-        var rd=resolveDeadline(item,co), d=daysTo(rd);
-        if(d===null) return;
-        var k=co.id+':'+item.id;
-        if(d<=15&&d>=0) f.push({id:uid(),key:k,co:co.name,act:item.action||item.title||'Untitled',d:d,ov:false,read:!!readSet[k]});
-        else if(d<0)    f.push({id:uid(),key:k+':ov',co:co.name,act:item.action||item.title||'Untitled',d:d,ov:true,read:!!readSet[k+':ov']});
+    if(currentView==='fund4'||currentView==='fund5'){
+      var activeFundName=currentView==='fund4'?'Fund IV':'Fund V';
+      companies.forEach(function(co){
+        if(co.fund!==activeFundName) return;
+        (co.items||[]).forEach(function(item){
+          if(item.status==='done') return;
+          var rd=resolveDeadline(item,co), d=daysTo(rd);
+          if(d===null) return;
+          var k=co.id+':'+item.id;
+          if(d<=15&&d>=0) f.push({id:uid(),key:k,co:co.name,act:item.action||item.title||'Untitled',d:d,ov:false,read:!!readSet[k]});
+          else if(d<0)    f.push({id:uid(),key:k+':ov',co:co.name,act:item.action||item.title||'Untitled',d:d,ov:true,read:!!readSet[k+':ov']});
+        });
       });
-    });
+    }
     notifications=f;
     renderN();
   });
