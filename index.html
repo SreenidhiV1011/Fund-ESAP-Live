@@ -1220,7 +1220,12 @@ function renderFundView(fundKey) {
   else {
     em.style.display='none';
     gr.innerHTML = cos.map(function(c) {
-      var p = pct(c), done = (c.items||[]).filter(function(i){return i.status==='done';}).length, tot = (c.items||[]).length;
+var p = pct(c), done = (c.items||[]).filter(function(i){return i.status==='done';}).length, tot = (c.items||[]).length;
+var overdue = (c.items||[]).filter(function(i){
+  if(i.status==='done') return false;
+  var d=resolveDeadline(i,c);
+  return d&&daysTo(d)<0;
+}).length;
       var fc = p>=70?'':p>=30?'w':'l';
       var partnerSectorText = '';
       if(c.team) partnerSectorText += esc(c.team);
@@ -1232,8 +1237,7 @@ function renderFundView(fundKey) {
         +'</div>'+chipHtml(p)+'</div>'
         +'<div class="prog-wrap"><div class="prog-lbl"><span>Completion</span><strong>'+p+'%</strong></div>'
         +'<div class="prog-bg"><div class="prog-fill '+fc+'" style="width:'+p+'%"></div></div></div>'
-        +'<div class="cmeta"><div class="mi"><strong>'+tot+'</strong>Total</div><div class="mi"><strong>'+done+'</strong>Done</div><div class="mi"><strong>'+(tot-done)+'</strong>Pending</div></div>'
-        +(isEditMode?'<div class="cact"><button class="del-card-btn" onclick="event.stopPropagation();askDel(\''+c.id+'\')">🗑 Delete</button></div>':'')
++'<div class="cmeta"><div class="mi"><strong>'+tot+'</strong>Total</div><div class="mi"><strong>'+done+'</strong>Done</div><div class="mi"><strong>'+(tot-done)+'</strong>Pending</div>'+(overdue>0?'<div class="mi" style="color:var(--err,#dc2626)"><strong>'+overdue+'</strong>Overdue</div>':'')+'</div>'        +(isEditMode?'<div class="cact"><button class="del-card-btn" onclick="event.stopPropagation();askDel(\''+c.id+'\')">🗑 Delete</button></div>':'')
         +'</div>';
     }).join('');
   }
