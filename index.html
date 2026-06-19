@@ -527,29 +527,38 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
     </div>
   </div>
 
- <div class="topbar-right">
-  <div class="edit-badge view-only" id="editBadge">
-    <span id="editMode">🔒 View Only</span>
-  </div>
-
-  <button onclick="handleLogout()" style="
-    font-family:var(--font-mono);font-size:.65rem;padding:6px 12px;
-    border-radius:8px;background:var(--sur2);border:1px solid var(--bor);
-    color:var(--txtm);cursor:pointer">Sign Out</button>
-
-  <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-  <div class="bell-wrap">
-    <div class="bell-btn" onclick="toggleNotif()">🔔</div>
-    <div class="bell-badge on" id="bb">0</div>
-    <div class="notif-dd" id="nd">
-      <div class="notif-hd">
-        <span>Notifications</span>
-        <button class="notif-clear" onclick="clearNotifs()">Clear</button>
+<!-- ── MAIN CONTENT ─────────────────────────────────── -->
+  <div class="main-wrap">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title" id="topbarTitle">Fund IV</div>
       </div>
-      <div class="notif-list" id="nl"></div>
+      <div class="topbar-right">
+        <div class="edit-badge view-only" id="editBadge">
+          <span id="editMode">🔒 View Only</span>
+        </div>
+        <button onclick="handleLogout()" style="
+          font-family:var(--font-mono);font-size:.65rem;padding:6px 12px;
+          border-radius:8px;background:var(--sur2);border:1px solid var(--bor);
+          color:var(--txtm);cursor:pointer">Sign Out</button>
+        <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
+        <div class="bell-wrap">
+          <div class="bell-btn" onclick="toggleNotif()">🔔</div>
+          <div class="bell-badge on" id="bb">0</div>
+          <div class="notif-dd" id="nd">
+            <div class="notif-hd">
+              <span>Notifications</span>
+              <button class="notif-clear" onclick="clearNotifs()">Clear</button>
+            </div>
+            <div class="notif-list" id="nl"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+
+    <!-- ═══ VIEWS ═══ -->
+    <div class="main" id="main-app" style="display: block;">
     <!-- ═══ VIEWS ═══ -->
     <div class="main" id="main-app" style="display: block;">
 
