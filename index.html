@@ -434,8 +434,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
   <div class="boot-err" id="boot-err" style="display: block;">Error: firebase is not defined</div>
 </div>
 
-<!-- ═══ APP LAYOUT ═══ -->
-  <div id="login-screen" style="
+<!-- Login Screen -->
+<div id="login-screen" style="
   position:fixed;inset:0;background:var(--bg);
   display:flex;align-items:center;justify-content:center;z-index:999">
   
@@ -448,37 +448,22 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
       <div style="font-family:var(--font-mono);font-size:.7rem;
         color:var(--txtm);margin-top:4px">Sign in with your Blume email</div>
     </div>
-
-    <div style="margin-bottom:16px">
-      <label style="font-family:var(--font-mono);font-size:.68rem;
-        color:var(--txtm);display:block;margin-bottom:6px">EMAIL</label>
-      <input id="loginEmail" type="email" placeholder="you@blume.vc"
-        style="width:100%;padding:10px 14px;background:var(--sur2);
-        border:1px solid var(--bor);border-radius:8px;
-        color:var(--txt);font-family:var(--font-mono);font-size:.8rem">
-    </div>
-
-    <div style="margin-bottom:20px">
-      <label style="font-family:var(--font-mono);font-size:.68rem;
-        color:var(--txtm);display:block;margin-bottom:6px">PASSWORD</label>
-      <input id="loginPassword" type="password" placeholder="••••••••"
-        style="width:100%;padding:10px 14px;background:var(--sur2);
-        border:1px solid var(--bor);border-radius:8px;
-        color:var(--txt);font-family:var(--font-mono);font-size:.8rem"
-        onkeydown="if(event.key==='Enter')handleLogin()">
-    </div>
-
     <div id="loginError" style="color:var(--red);font-family:var(--font-mono);
       font-size:.72rem;margin-bottom:12px;min-height:18px"></div>
-
-    <button onclick="handleLogin()" style="width:100%;padding:12px;
-      background:var(--acc);border:none;border-radius:8px;color:#fff;
+    <button onclick="handleGoogleLogin()" style="
+      width:100%;padding:12px;background:#fff;
+      border:1px solid var(--bor);border-radius:8px;
       font-family:var(--font-mono);font-size:.8rem;font-weight:700;
-      cursor:pointer">Sign In →</button>
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+      Sign in with Google
+    </button>
   </div>
 </div>
-<div class="app-layout">
 
+<!-- ═══ APP LAYOUT ═══ -->
+<div class="app-layout">
+  
   <!-- ── SIDEBAR ──────────────────────────────────────── -->
   <div class="sidebar">
     <div class="sidebar-logo">
@@ -2245,20 +2230,21 @@ function toggleAdvFilters(){}
 function applyAdvFilters(){}
 
 // ── AUTH FUNCTIONS ──────────────────────────────────
-function handleLogin() {
-  var email = document.getElementById('loginEmail').value.trim();
-  var password = document.getElementById('loginPassword').value;
-  var errorEl = document.getElementById('loginError');
-  errorEl.textContent = '';
-
-  if (!email.endsWith('@blume.vc')) {
-    errorEl.textContent = 'Only @blume.vc emails are allowed.';
-    return;
-  }
-
-  firebase.auth().signInWithEmailAndPassword(email, password)
+function handleGoogleLogin() {
+  var provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ hd: 'blume.vc' });
+  
+  firebase.auth().signInWithPopup(provider)
+    .then(function(result) {
+      var user = result.user;
+      if (!user.email.endsWith('@blume.vc')) {
+        firebase.auth().signOut();
+        document.getElementById('loginError').textContent = 
+          'Only @blume.vc emails are allowed.';
+      }
+    })
     .catch(function(error) {
-      errorEl.textContent = error.message;
+      document.getElementById('loginError').textContent = error.message;
     });
 }
 
