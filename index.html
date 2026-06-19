@@ -435,6 +435,48 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 </div>
 
 <!-- ═══ APP LAYOUT ═══ -->
+  <div id="login-screen" style="
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;z-index:999">
+  
+  <div style="background:var(--sur);border:1px solid var(--bor);
+    border-radius:16px;padding:40px;width:360px;box-shadow:var(--shadow)">
+    
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:2rem;margin-bottom:8px">🔒</div>
+      <div style="font-size:1.3rem;font-weight:800">Fund ESAP Tracker</div>
+      <div style="font-family:var(--font-mono);font-size:.7rem;
+        color:var(--txtm);margin-top:4px">Sign in with your Blume email</div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <label style="font-family:var(--font-mono);font-size:.68rem;
+        color:var(--txtm);display:block;margin-bottom:6px">EMAIL</label>
+      <input id="loginEmail" type="email" placeholder="you@blume.vc"
+        style="width:100%;padding:10px 14px;background:var(--sur2);
+        border:1px solid var(--bor);border-radius:8px;
+        color:var(--txt);font-family:var(--font-mono);font-size:.8rem">
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label style="font-family:var(--font-mono);font-size:.68rem;
+        color:var(--txtm);display:block;margin-bottom:6px">PASSWORD</label>
+      <input id="loginPassword" type="password" placeholder="••••••••"
+        style="width:100%;padding:10px 14px;background:var(--sur2);
+        border:1px solid var(--bor);border-radius:8px;
+        color:var(--txt);font-family:var(--font-mono);font-size:.8rem"
+        onkeydown="if(event.key==='Enter')handleLogin()">
+    </div>
+
+    <div id="loginError" style="color:var(--red);font-family:var(--font-mono);
+      font-size:.72rem;margin-bottom:12px;min-height:18px"></div>
+
+    <button onclick="handleLogin()" style="width:100%;padding:12px;
+      background:var(--acc);border:none;border-radius:8px;color:#fff;
+      font-family:var(--font-mono);font-size:.8rem;font-weight:700;
+      cursor:pointer">Sign In →</button>
+  </div>
+</div>
 <div class="app-layout">
 
   <!-- ── SIDEBAR ──────────────────────────────────────── -->
@@ -500,32 +542,29 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
     </div>
   </div>
 
-  <!-- ── MAIN CONTENT ─────────────────────────────────── -->
-  <div class="main-wrap">
-    <!-- Top Bar -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="topbar-title" id="topbarTitle">Fund IV</div>
-      </div>
-      <div class="topbar-right">
-        <div class="edit-badge view-only" id="editBadge">
-          <span id="editMode">🔒 View Only</span>
-        </div>
-        <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-        <div class="bell-wrap">
-          <div class="bell-btn" onclick="toggleNotif()">🔔</div>
-          <div class="bell-badge on" id="bb">0</div>
-          <div class="notif-dd" id="nd">
-            <div class="notif-hd">
-              <span>Notifications</span>
-              <button class="notif-clear" onclick="clearNotifs()">Clear</button>
-            </div>
-            <div class="notif-list" id="nl"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+ <div class="topbar-right">
+  <div class="edit-badge view-only" id="editBadge">
+    <span id="editMode">🔒 View Only</span>
+  </div>
 
+  <button onclick="handleLogout()" style="
+    font-family:var(--font-mono);font-size:.65rem;padding:6px 12px;
+    border-radius:8px;background:var(--sur2);border:1px solid var(--bor);
+    color:var(--txtm);cursor:pointer">Sign Out</button>
+
+  <div class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀️</div>
+  <div class="bell-wrap">
+    <div class="bell-btn" onclick="toggleNotif()">🔔</div>
+    <div class="bell-badge on" id="bb">0</div>
+    <div class="notif-dd" id="nd">
+      <div class="notif-hd">
+        <span>Notifications</span>
+        <button class="notif-clear" onclick="clearNotifs()">Clear</button>
+      </div>
+      <div class="notif-list" id="nl"></div>
+    </div>
+  </div>
+</div>
     <!-- ═══ VIEWS ═══ -->
     <div class="main" id="main-app" style="display: block;">
 
@@ -875,7 +914,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  
 <script>
 // ═══════════════════════════════════════════════════════
 //  FUND ESAP TRACKER — All original + ESG sections
@@ -1675,24 +1715,47 @@ function showNudgeFilterModal(onConfirm) {
 // INITIALIZATION
 // ══════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function(){
-  var params = new URLSearchParams(window.location.search);
-  isEditMode = params.get('edit') === 'true';
-  updateEditBadge();
+  // Theme setup runs immediately, before auth
   var saved = localStorage.getItem('st_theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
   document.getElementById('theme-toggle').textContent = saved==='dark'?'🌙':'☀️';
   updateLogoTheme(saved);
   loadCustomSectors();
+
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.firestore();
-    db.enablePersistence({synchronizeTabs:true}).catch(function(e){ console.warn('Persistence unavailable:', e.code); });
-    startListener();
-    loadESGData();
+    db.enablePersistence({synchronizeTabs:true}).catch(function(e){
+      console.warn('Persistence unavailable:', e.code);
+    });
   } catch(e) {
-    if(e.code==='app/duplicate-app'){ db=firebase.firestore(); startListener(); loadESGData(); }
-    else { showBootError(e); }
+    if(e.code !== 'app/duplicate-app') { showBootError(e); return; }
+    db = firebase.firestore();
   }
+
+  // Auth state listener
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // Logged in — check if blume.vc email
+      if (!user.email.endsWith('@blume.vc')) {
+        firebase.auth().signOut();
+        document.getElementById('loginError').textContent = 
+          'Access restricted to @blume.vc emails only.';
+        return;
+      }
+      // Set edit mode based on email
+      isEditMode = (user.email === 'sreenidhi@blume.vc');
+      updateEditBadge();
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('main-app').style.display = 'block';
+      startListener();
+      loadESGData();
+    } else {
+      // Not logged in — show login screen
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('main-app').style.display = 'none';
+    }
+  });
 });
 
 // ══════════════════════════════════════════════════════
@@ -2180,6 +2243,32 @@ document.addEventListener('click',function(e){var bell=document.querySelector('.
 function populateFilters(){}
 function toggleAdvFilters(){}
 function applyAdvFilters(){}
+
+// ── AUTH FUNCTIONS ──────────────────────────────────
+function handleLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var password = document.getElementById('loginPassword').value;
+  var errorEl = document.getElementById('loginError');
+  errorEl.textContent = '';
+
+  if (!email.endsWith('@blume.vc')) {
+    errorEl.textContent = 'Only @blume.vc emails are allowed.';
+    return;
+  }
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .catch(function(error) {
+      errorEl.textContent = error.message;
+    });
+}
+
+function handleLogout() {
+  firebase.auth().signOut().then(function() {
+    companies = [];
+    if (unsubscribe) unsubscribe();
+  });
+}
+
 </script>
 
 </body></html>
