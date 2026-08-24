@@ -1393,10 +1393,12 @@ function parseESAPExcel(file) {
               var timelineInfo = parseTimeline(timelineStr);
               if (timelineInfo) {
                 if (timelineInfo.type === 'offset' && timelineInfo.days) {
+                  // Store the offset only. Do NOT bake in an absolute date here —
+                  // at import time we can't assume Start Date is even set yet, and
+                  // anchoring to "today" (upload day) instead of the company's
+                  // Start Date produces wrong deadlines. resolveDeadline() computes
+                  // the real due date from co.startDate + offsetDays whenever needed.
                   action.offsetDays = timelineInfo.days;
-                  var today = new Date(); today.setHours(0,0,0,0);
-                  var dueDate = new Date(today); dueDate.setDate(today.getDate()+timelineInfo.days);
-                  action.deadline = dueDate.toISOString().split('T')[0];
                 } else if (timelineInfo.type === 'specific') { action.deadline = timelineInfo.date; }
               }
               allActions.push(action); actionsFound++;
@@ -1939,6 +1941,10 @@ function showDetail(id){
   var progress=pct(c);
   html+='<div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>Overall Progress</strong><span style="font-family:var(--font-mono);font-weight:700;color:var(--acc)">'+progress+'%</span></div><div class="prog-bg"><div class="prog-fill" style="width:'+progress+'%"></div></div></div>';
   if(isEditMode){
+    html+='<div style="margin-bottom:20px"><button class="btn secondary" style="font-size:.68rem" onclick="recalcCompanyDeadlines(\''+c.id+'\')">🛠 Fix Deadlines from Start Date</button>';
+    html+='<span style="font-family:var(--font-mono);font-size:.65rem;color:var(--txtm);margin-left:10px">Use this if an Excel import baked in dates from the upload day instead of the Start Date</span></div>';
+  }
+  if(isEditMode){
     html+='<div style="margin-top:24px;padding:24px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px">';
     html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px"><span style="font-size:1.2rem">📧</span><h3 style="font-size:1rem;font-weight:700">Point of Contact & Nudge Settings</h3></div>';
     html+='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">';
@@ -2021,6 +2027,37 @@ function renderItems(){
     row+='</div>';
     return row;
   }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// DEADLINE REPAIR (fixes items whose deadline was wrongly
+// baked in from the Excel-upload date instead of Start Date)
+// ══════════════════════════════════════════════════════
+function recalcCompanyDeadlines(companyId){
+  if(!checkEditMode()) return;
+  var c = companies.find(function(x){return x.id===companyId;});
+  if(!c){ toast('Company not found', true); return; }
+  if(!c.startDate){ toast('Set a Start Date for this company first', true); return; }
+  var items = c.items || [];
+  var changed = 0;
+  var newItems = items.map(function(item){
+    // Leave manually-extended items alone — that date was set on purpose.
+    if(item.extensionDays) return item;
+    // Only items that came from an offset-style Excel timeline are affected.
+    if(item.offsetDays != null){
+      var correct = addDays(c.startDate, item.offsetDays);
+      if(item.deadline !== correct){
+        changed++;
+        return Object.assign({}, item, { deadline: correct });
+      }
+    }
+    return item;
+  });
+  if(!changed){ toast('Deadlines already match Start Date — nothing to fix'); return; }
+  db.collection('companies').doc(companyId).update({items:newItems}).then(function(){
+    toast('✅ Fixed '+changed+' deadline'+(changed===1?'':'s')+' for '+c.name);
+    if(curId===companyId) showDetail(companyId);
+  }).catch(function(e){toast('Error: '+e.message,true);});
 }
 
 // ══════════════════════════════════════════════════════
