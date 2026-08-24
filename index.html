@@ -571,7 +571,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
           </div>
           <div class="actions-row">
             <button class="action-btn primary" onclick="openAddModal('Fund IV')" id="btnAdd4" disabled><span>➕</span> Add Company</button>
-            <button class="action-btn" onclick="exportData()"><span>📥</span> Export</button>
+            <button class="action-btn" onclick="exportData('Fund IV')"><span>📥</span> Export</button>
             <button class="action-btn" onclick="backupData()"><span>💾</span> Backup</button>
           </div>
         </div>
@@ -601,7 +601,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
           </div>
           <div class="actions-row">
             <button class="action-btn primary" onclick="openAddModal('Fund V')" id="btnAdd5" disabled><span>➕</span> Add Company</button>
-            <button class="action-btn" onclick="exportData()"><span>📥</span> Export</button>
+            <button class="action-btn" onclick="exportData('Fund V')"><span>📥</span> Export</button>
           </div>
         </div>
         <div class="stats-row">
@@ -2181,13 +2181,75 @@ function toggleNotif(){document.getElementById('nd').classList.toggle('open');}
 // ══════════════════════════════════════════════════════
 // EXPORT / BACKUP
 // ══════════════════════════════════════════════════════
-function exportData(){
-  var data=companies.map(function(c){ return {Name:c.name,Partner:c.team,Sector:c.sector,Fund:c.fund,'Start Date':c.startDate,'SPOC Name':c.spocName,'SPOC Email':c.spocEmail,Progress:pct(c)+'%','Total Items':(c.items||[]).length,'Completed':(c.items||[]).filter(function(i){return i.status==='done';}).length}; });
-  var ws=XLSX.utils.json_to_sheet(data);
-  var wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Companies');
-  XLSX.writeFile(wb,'fund-esap-export-'+new Date().toISOString().split('T')[0]+'.xlsx');
-  toast('Exported successfully');
+function sanitizeSheetName(name, usedNames){
+  var clean = String(name||'Company').replace(/[:\\\/\?\*\[\]]/g,'').trim();
+  if(clean.length>31) clean = clean.substring(0,31);
+  if(!clean) clean = 'Company';
+  var base = clean, i = 1;
+  while(usedNames[clean]){
+    var suffix = '_'+i;
+    clean = base.substring(0, 31-suffix.length)+suffix;
+    i++;
+  }
+  usedNames[clean] = true;
+  return clean;
+}
+
+function exportData(fundFilter){
+  var filtered = fundFilter ? companies.filter(function(c){return c.fund===fundFilter;}) : companies;
+  if(!filtered.length){ toast('No companies to export'+(fundFilter?' for '+fundFilter:''), true); return; }
+
+  var wb = XLSX.utils.book_new();
+
+  // ── Summary tab: one row per company ──
+  var summaryData = filtered.map(function(c){
+    var items = c.items||[];
+    var overdue = items.filter(function(i){
+      if(i.status==='done') return false;
+      var dl=resolveDeadline(i,c);
+      return dl&&daysTo(dl)<0;
+    }).length;
+    return {
+      Company: c.name,
+      Partner: c.team||'',
+      Sector: c.sector||'',
+      Fund: c.fund||'',
+      'Start Date': c.startDate?fmt(c.startDate):'',
+      'SPOC Name': c.spocName||'',
+      'SPOC Email': c.spocEmail||'',
+      Progress: pct(c)+'%',
+      'Total Items': items.length,
+      Completed: items.filter(function(i){return i.status==='done';}).length,
+      Pending: items.filter(function(i){return i.status!=='done';}).length,
+      Overdue: overdue
+    };
+  });
+  var summaryWs = XLSX.utils.json_to_sheet(summaryData);
+  XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+
+  // ── One tab per company: item-level summary and status ──
+  var usedNames = { 'Summary': true };
+  filtered.forEach(function(c){
+    var items = c.items||[];
+    var itemRows = items.length ? items.map(function(item, idx){
+      var deadline = resolveDeadline(item, c);
+      var isOverdue = item.status!=='done' && deadline && daysTo(deadline)<0;
+      return {
+        '#': idx+1,
+        'Action Item Summary': item.action || item.title || 'Untitled',
+        'Status': item.status==='done' ? 'Completed' : (isOverdue ? 'Overdue' : 'Pending'),
+        'Deadline': deadline ? fmt(deadline) : 'Not set',
+        'Days Extended': item.extensionDays || 0
+      };
+    }) : [{ '#':'', 'Action Item Summary':'No action items for this company', 'Status':'', 'Deadline':'', 'Days Extended':'' }];
+    var ws = XLSX.utils.json_to_sheet(itemRows);
+    var sheetName = sanitizeSheetName(c.name, usedNames);
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  });
+
+  var fileLabel = fundFilter ? fundFilter.replace(/\s+/g,'-') : 'all-funds';
+  XLSX.writeFile(wb, fileLabel+'-esap-export-'+new Date().toISOString().split('T')[0]+'.xlsx');
+  toast('Exported '+filtered.length+' compan'+(filtered.length===1?'y':'ies')+(fundFilter?' from '+fundFilter:'')+' across '+(filtered.length+1)+' tabs');
 }
 
 function backupData(){
