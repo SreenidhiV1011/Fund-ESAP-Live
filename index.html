@@ -631,6 +631,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-sans);min-heig
           <div class="actions-row">
             <button class="action-btn" onclick="exportData()"><span>📥</span> Export</button>
             <button class="action-btn" onclick="backupData()"><span>💾</span> Backup</button>
+            <button class="action-btn" onclick="recalcAllDeadlines()" title="Fixes items whose due date was wrongly anchored to the Excel upload day instead of Start Date"><span>🛠</span> Fix All Deadlines</button>
           </div>
         </div>
         <div class="analytics-filters">
@@ -1362,7 +1363,8 @@ function parseTimeline(timelineStr) {
 }
 
 // ══════════════════════════════════════════════════════
-// EXCEL PARSER (unchanged)
+// EXCEL PARSER (offset-handling fixed — see comment below;
+// sheet reading / header detection / column mapping unchanged)
 // ══════════════════════════════════════════════════════
 function parseESAPExcel(file) {
   return new Promise(function(resolve, reject) {
@@ -2058,6 +2060,53 @@ function recalcCompanyDeadlines(companyId){
     toast('✅ Fixed '+changed+' deadline'+(changed===1?'':'s')+' for '+c.name);
     if(curId===companyId) showDetail(companyId);
   }).catch(function(e){toast('Error: '+e.message,true);});
+}
+
+function recalcAllDeadlines(){
+  if(!checkEditMode()) return;
+  if(!companies.length){ toast('No companies loaded'); return; }
+  if(!confirm('Recalculate deadlines for ALL companies?\n\nThis fixes any item whose due date was wrongly anchored to its Excel upload day instead of the company\'s Start Date. Manually-extended items are left untouched. Companies without a Start Date are skipped.')) return;
+
+  var totalItemsFixed = 0;
+  var companiesFixed = 0;
+  var skippedNoStart = [];
+  var writes = [];
+
+  companies.forEach(function(c){
+    if(!c.startDate){ if((c.items||[]).some(function(i){return i.offsetDays!=null;})) skippedNoStart.push(c.name); return; }
+    var items = c.items || [];
+    var changedHere = 0;
+    var newItems = items.map(function(item){
+      if(item.extensionDays) return item;              // manual extension — leave as-is
+      if(item.offsetDays != null){
+        var correct = addDays(c.startDate, item.offsetDays);
+        if(item.deadline !== correct){
+          changedHere++;
+          return Object.assign({}, item, { deadline: correct });
+        }
+      }
+      return item;
+    });
+    if(changedHere){
+      totalItemsFixed += changedHere;
+      companiesFixed++;
+      writes.push(db.collection('companies').doc(c.id).update({items:newItems}));
+    }
+  });
+
+  if(!writes.length){
+    toast(skippedNoStart.length
+      ? 'Nothing to fix. Skipped (no Start Date set): '+skippedNoStart.join(', ')
+      : 'All deadlines already correct');
+    return;
+  }
+
+  Promise.all(writes).then(function(){
+    var msg = '✅ Fixed '+totalItemsFixed+' deadline'+(totalItemsFixed===1?'':'s')+' across '+companiesFixed+' compan'+(companiesFixed===1?'y':'ies');
+    if(skippedNoStart.length) msg += ' · skipped (no Start Date): '+skippedNoStart.join(', ');
+    toast(msg);
+    if(curId) showDetail(curId);
+  }).catch(function(e){ toast('Error during bulk fix: '+e.message, true); });
 }
 
 // ══════════════════════════════════════════════════════
