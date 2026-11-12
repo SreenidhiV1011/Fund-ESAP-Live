@@ -16,7 +16,7 @@
 
 /* ── CONFIG ─────────────────────────────────────────────────────────── */
 var ENDPOINT    = 'https://script.google.com/macros/s/AKfycbw5iVNU1Tao04oSWJykyUuoASEuFrWwNBB3hzJckgZuJck_3yAmYGgoRAAxWljAtIlE/exec';      // Apps Script web app URL ("…/exec")
-var FEATURE_ON  = false;   // false = only visible with ?esgic=1 in the URL
+var FEATURE_ON  = true;    // true = visible to everyone; false = only with ?esgic=1 in the URL
 var REVIEW_MAIL = 'sreenidhi@blume.vc';
 
 var enabled = FEATURE_ON || /[?&]esgic=1(&|$)/.test(location.search);
