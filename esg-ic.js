@@ -239,8 +239,8 @@ function wholeNum(v) {
 var COUNTRIES = ['United States', 'United Kingdom', 'Singapore', 'United Arab Emirates',
   'Kenya', 'Nigeria', 'Canada', 'Germany', 'Australia', 'Indonesia'];
 var CONFIRMS = [
-  ['prohibition', 'Company does not fall under Blume’s Prohibition List (Annexure 1)'],
-  ['debarred',    'Company is not on the Debarred Firms & Individuals list'],
+  ['prohibition', 'Company does not fall under Blume’s Prohibition List (<a href="#" data-annex="ann1">Annexure 1</a>)'],
+  ['debarred',    'Company is not on the <a href="https://www.worldbank.org/en/projects-operations/procurement/debarred-firms" target="_blank" rel="noopener">Debarred Firms &amp; Individuals list</a>'],
   ['myanmar',     'Company has no operations or exposure in Myanmar or Afghanistan']
 ];
 var MANDATORY = ['fund operations in a Developing Country',
@@ -337,6 +337,7 @@ var CSS = `
 .ic-f:last-child{margin-bottom:0}
 .ic-lbl{display:block;font-family:var(--font-mono);font-size:.66rem;color:var(--txtm);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:7px}
 .ic-req{color:var(--red)}
+.ic-hint a,.ic-check a{color:var(--acc);text-decoration:underline;text-underline-offset:2px}
 .ic-f input[type=text],.ic-f input[type=number],.ic-f select,.ic-f textarea{width:100%;padding:10px 14px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;color:var(--txt);font-family:var(--font-mono);font-size:.8rem}
 .ic-f textarea{font-family:var(--font-sans);min-height:96px;resize:vertical;line-height:1.6}
 .ic-f input:focus,.ic-f select:focus,.ic-f textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--accd)}
@@ -387,8 +388,8 @@ function homeHtml() {
 }
 
 /* ── ESG IC FORM ────────────────────────────────────────────────────── */
-function checkRow(cls, label, attrs) {
-  return '<label class="ic-check"><input type="checkbox" class="' + cls + '" ' + (attrs || '') + '><span>' + escH(label) + '</span></label>';
+function checkRow(cls, label, attrs, isHtml) {
+  return '<label class="ic-check"><input type="checkbox" class="' + cls + '" ' + (attrs || '') + '><span>' + (isHtml ? label : escH(label)) + '</span></label>';
 }
 function formHtml() {
   var sectorOpts = '<option value="">Select sector</option>' + Object.keys(SECTOR_NAMES).map(function (k) {
@@ -415,10 +416,10 @@ function formHtml() {
     }).join('') + '</div>' +
     '<span class="ic-lbl">Other countries</span><div class="ic-f"><input type="text" id="icOther" placeholder="Comma-separated, e.g. Ghana, Vietnam" autocomplete="off"></div></div></div>' +
 
-    '<div class="ic-card"><h3>Eligibility confirmations <span class="ic-req">*</span></h3><div class="ic-hint">All three are required. Annexure 1 is under ESG for Blume.</div>' +
-    CONFIRMS.map(function (c) { return checkRow('ic-conf', c[1], 'data-k="' + c[0] + '"'); }).join('') + '</div>' +
+    '<div class="ic-card"><h3>Eligibility confirmations <span class="ic-req">*</span></h3><div class="ic-hint">All three are required. Read <a href="#" data-annex="ann1">Annexure 1</a> and the <a href="#" data-go="esg">IC requirements</a> under ESG for Blume.</div>' +
+    CONFIRMS.map(function (c) { return checkRow('ic-conf', c[1], 'data-k="' + c[0] + '"', true); }).join('') + '</div>' +
 
-    '<div class="ic-card"><h3>Developing Country requirement</h3><div class="ic-hint">Is the Company operating in a Developing Country (Annexure 2)? <span class="ic-req">*</span></div>' +
+    '<div class="ic-card"><h3>Developing Country requirement</h3><div class="ic-hint">Is the Company operating in a Developing Country (<a href="#" data-annex="ann2">Annexure 2</a>)? <span class="ic-req">*</span></div>' +
     '<label class="ic-check"><input type="radio" name="icDev" value="Yes"><span>Yes</span></label>' +
     '<label class="ic-check"><input type="radio" name="icDev" value="No"><span>No</span></label>' +
     '<div class="ic-note" id="icDevNo" style="display:none">Blume invests only in Companies operating in a Developing Country. If you submit, this response is flagged for review.</div>' +
@@ -428,7 +429,7 @@ function formHtml() {
     '<span class="ic-lbl">Secondary condition: at least one must be true <span class="ic-req">*</span></span>' +
     SECONDARY.map(function (m) { return checkRow('ic-sec', m, 'data-l="' + escH(m) + '"'); }).join('') + '</div></div>' +
 
-    '<div class="ic-card"><h3>SDG alignment</h3><div class="ic-hint">One paragraph on how this investment aligns with the SDGs. A sample is in Annexure 3 under ESG for Blume.</div>' +
+    '<div class="ic-card"><h3>SDG alignment</h3><div class="ic-hint">One paragraph on how this investment aligns with the <a href="https://sdgs.un.org/goals" target="_blank" rel="noopener">UN Sustainable Development Goals</a>. See the sample in <a href="#" data-annex="ann3">Annexure 3</a>.</div>' +
     '<div class="ic-f"><label class="ic-lbl" for="icSdg">SDG alignment paragraph <span class="ic-req">*</span></label><textarea id="icSdg" style="min-height:140px"></textarea></div></div>' +
 
     '<div class="ic-card"><h3>Employees</h3><div class="ic-hint">Enter 0 where there are none.</div><div class="ic-r3">' +
@@ -572,6 +573,11 @@ function wireForm() {
   });
   function toggleChip(c) { c.classList.toggle('selected'); }
   f.addEventListener('click', function (e) { var c = e.target.closest('.chip-option'); if (c) toggleChip(c); });
+  f.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-annex],a[data-go]'); if (!a) return;
+    e.preventDefault();
+    if (a.hasAttribute('data-annex')) openAnnex(a.getAttribute('data-annex')); else window.switchView(a.getAttribute('data-go'));
+  });
   f.addEventListener('keydown', function (e) {
     var c = e.target.closest && e.target.closest('.chip-option');
     if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggleChip(c); }
@@ -634,8 +640,23 @@ function injectViews() {
   var done = document.createElement('div'); done.className = 'modal-overlay'; done.id = 'icDone'; done.innerHTML = doneHtml();
   document.body.appendChild(done);
   $('#icDoneX').onclick = closeDone; $('#icDoneClose').onclick = closeDone;
+  var annex = document.createElement('div'); annex.className = 'modal-overlay'; annex.id = 'icAnnex';
+  annex.innerHTML = '<div class="modal" style="max-width:720px"><div class="modal-hd"><div class="modal-title" id="icAnnexTitle"></div>' +
+    '<div class="modal-close" id="icAnnexX" role="button" aria-label="Close">×</div></div>' +
+    '<div class="modal-body" id="icAnnexBody" style="font-size:.9rem;line-height:1.7"></div>' +
+    '<div class="modal-footer"><button type="button" class="btn secondary" id="icAnnexClose">Close</button></div></div>';
+  document.body.appendChild(annex);
+  $('#icAnnexX').onclick = function () { annex.classList.remove('on'); };
+  $('#icAnnexClose').onclick = function () { annex.classList.remove('on'); };
   $('#icDoneDl').onclick = function () { if (lastPayload) downloadXlsx(lastPayload); };
   wireForm();
+}
+var ANNEX_TITLES = { ann1: 'Annexure 1 — Prohibition List', ann2: 'Annexure 2 — Developing Countries', ann3: 'Annexure 3 — SDG Alignment Example' };
+function openAnnex(id) {
+  var src = document.getElementById(id);
+  $('#icAnnexTitle').textContent = ANNEX_TITLES[id] || 'Annexure';
+  $('#icAnnexBody').innerHTML = src ? src.innerHTML : '<p>This annexure isn’t available here. Open it under ESG for Blume.</p>';
+  $('#icAnnex').classList.add('on');
 }
 function wrapSwitch() {
   var orig = window.switchView; if (typeof orig !== 'function') return false;
