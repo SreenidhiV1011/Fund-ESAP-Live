@@ -10,13 +10,13 @@
    Hidden from everyone unless the URL has ?esgic=1 (or FEATURE_ON is true).
    Responses are written to the Google Sheet through the Apps Script web app
    in Code.gs. Paste its URL into ENDPOINT below.
-https://script.google.com/a/macros/blume.vc/s/AKfycbwc27E_i0cbondlrCKT_mMdytEPY9IAIKjdsJolUttSBQDfe7s_Ev5cd4o_QCWcJ4MZ/exec
    ════════════════════════════════════════════════════════════════════════ */
 (function () {
 'use strict';
 
 /* ── CONFIG ─────────────────────────────────────────────────────────── */
-var ENDPOINT    = '';      // Apps Script web app URL ("…/exec")
+var ENDPOINT    = 'https://script.google.com/a/macros/blume.vc/s/AKfycbwc27E_i0cbondlrCKT_mMdytEPY9IAIKjdsJolUttSBQDfe7s_Ev5cd4o_QCWcJ4MZ/exec
+';      // Apps Script web app URL ("…/exec")
 var FEATURE_ON  = false;   // false = only visible with ?esgic=1 in the URL
 var REVIEW_MAIL = 'sreenidhi@blume.vc';
 
