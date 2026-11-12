@@ -15,7 +15,7 @@
 'use strict';
 
 /* ── CONFIG ─────────────────────────────────────────────────────────── */
-var ENDPOINT    = 'https://script.google.com/a/macros/blume.vc/s/AKfycbwc27E_i0cbondlrCKT_mMdytEPY9IAIKjdsJolUttSBQDfe7s_Ev5cd4o_QCWcJ4MZ/exec';      // Apps Script web app URL ("…/exec")
+var ENDPOINT    = 'https://script.google.com/macros/s/AKfycbw5iVNU1Tao04oSWJykyUuoASEuFrWwNBB3hzJckgZuJck_3yAmYGgoRAAxWljAtIlE/exec';      // Apps Script web app URL ("…/exec")
 var FEATURE_ON  = false;   // false = only visible with ?esgic=1 in the URL
 var REVIEW_MAIL = 'sreenidhi@blume.vc';
 
