@@ -530,7 +530,7 @@ var lastPayload = null, lastSave = null;
 function doneHtml() {
   return '<div class="modal" style="max-width:520px"><div class="modal-hd"><div class="modal-title">ESG questionnaire ready</div>' +
     '<div class="modal-close" id="icDoneX" role="button" aria-label="Close">×</div></div>' +
-    '<div class="modal-body"><p style="font-size:.95rem;line-height:1.7">If this deal goes to IC 2, ask the promoter to fill this questionnaire.</p>' +
+    '<div class="modal-body"><p style="font-size:.95rem;line-height:1.7">Please download this initial screening questionnaire and send it to the promoter provided this goes to IC-2 with me in cc. I will take this forward with the promoter(s).</p>' +
     '<div class="ic-meta" id="icDoneMeta"></div><div id="icSaveState"></div></div>' +
     '<div class="modal-footer"><button type="button" class="btn secondary" id="icDoneClose">Close</button>' +
     '<button type="button" class="btn primary" id="icDoneDl">Download questionnaire (.xlsx)</button></div></div>';
